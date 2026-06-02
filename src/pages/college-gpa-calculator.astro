@@ -1,0 +1,1590 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "College GPA Calculator",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any",
+  "url": "https://gpacalculatorfree.com/college-gpa-calculator",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free college GPA calculator. Enter your courses, grades, and credits to calculate your semester GPA and cumulative GPA instantly on the 4.0 scale.",
+  "browserRequirements": "Requires JavaScript",
+  "featureList": [
+    "Semester GPA calculation by course",
+    "Cumulative GPA with previous semester data",
+    "Letter grade and percentage input modes",
+    "Multiple semesters with collapsible sections",
+    "Live GPA progress bar with Dean's List indicators",
+    "Share and print results"
+  ]
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a good college GPA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A GPA of 3.0 or above is considered good standing at most colleges. A 3.5 or above typically qualifies students for the Dean's List and is competitive for many scholarships. A 3.7 or above is considered excellent and positions you well for graduate school applications, honors at graduation, and top internship opportunities."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is college GPA calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "College GPA is calculated by converting each letter grade to grade points (A=4.0, B=3.0, C=2.0, D=1.0, F=0.0), multiplying by the course's credit hours to get quality points, then dividing the total quality points by total credit hours. For example, an A in a 3-credit course gives 12 quality points. Semester GPA = total quality points divided by total credits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What GPA do I need to maintain good academic standing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most colleges and universities require a minimum cumulative GPA of 2.0 to remain in good academic standing. Falling below 2.0 can result in academic probation, loss of financial aid eligibility, or suspension. Some programs — such as education, nursing, or engineering — may require a higher GPA of 2.5 or 3.0 to continue in the major."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I calculate cumulative college GPA with previous semesters?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Use Tab 2 — 'Include Previous GPA' — on this calculator. Enter your existing cumulative GPA and total credits completed, then add your current semester courses. The calculator automatically combines your previous academic record with your new courses to give you an updated cumulative GPA."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between semester GPA and cumulative GPA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Semester GPA reflects only the courses taken during a single term — it resets each semester. Cumulative GPA is the running weighted average of all courses taken across every semester you have completed. Your transcript shows both: semester GPA lets you see term-by-term performance, while cumulative GPA is what graduate schools, employers, and honor societies use to evaluate your overall academic record."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does college GPA include all courses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, in most cases college GPA includes all graded courses. Pass/Fail courses and official withdrawals (W) are excluded from the GPA calculation. If your college offers grade forgiveness or grade replacement for repeated courses, the earlier grade may be excluded — check your school's specific policy. Incomplete grades (I) are typically excluded until a final grade is assigned."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What GPA is needed for graduate school?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most graduate programs require a minimum undergraduate GPA of 3.0 for admission. Top programs and research universities typically expect 3.5 or higher. Highly competitive programs — such as top MBA programs, medical schools, and law schools — often see successful applicants with GPAs of 3.6 to 3.9. Some programs also consider your GPA in your major separately from your overall GPA."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I raise my college GPA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To raise your GPA, prioritize high-credit courses since they move your GPA more than 1-credit electives. If your school allows grade replacement, retaking courses where you earned a D or F can significantly boost your cumulative GPA. Focus on consistent A and B grades rather than overloading your schedule. Use office hours, tutoring, and study groups early in the semester. Use the GPA planning tool on this page to find out exactly what grades you need to reach your target."
+      }
+    }
+  ]
+};
+---
+
+<Layout
+  title="College GPA Calculator — Semester & Cumulative (Free)"
+  description="Free college GPA calculator. Enter your courses, grades, and credits to calculate your semester GPA and cumulative GPA instantly on the 4.0 scale."
+  canonical="/college-gpa-calculator"
+  schema={[webAppSchema, faqSchema]}
+>
+
+  <!-- ══════════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════════ -->
+  <section class="page-hero">
+    <div class="max-w-6xl mx-auto px-4">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb mb-4" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        <span aria-current="page">College GPA Calculator</span>
+      </nav>
+
+      <div class="max-w-2xl">
+        <h1 class="mb-3">College GPA Calculator</h1>
+        <p class="text-lg" style="color:var(--color-body)">
+          Enter your courses, grades, and credit hours to calculate your semester GPA and cumulative GPA instantly. Supports multiple semesters, percentage mode, and previous GPA rollover — all on the standard 4.0 scale.
+        </p>
+        <div class="flex flex-wrap gap-2 mt-4">
+          <span class="badge badge-blue">4.0 Scale</span>
+          <span class="badge badge-green">Live Calculation</span>
+          <span class="badge">Free &amp; No Signup</span>
+          <span class="badge badge-blue">Shareable Results</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       MAIN CALCULATOR
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-8" id="calculator" aria-labelledby="calc-heading">
+    <div class="grid lg:grid-cols-3 gap-6 items-start">
+
+      <!-- Left: Input panel (2/3 width on desktop) -->
+      <div class="lg:col-span-2 flex flex-col gap-4">
+
+        <!-- Tab switcher -->
+        <div class="card p-0 overflow-hidden">
+          <div class="tab-list" role="tablist" aria-label="Calculator mode">
+            <button class="tab-btn active" id="tab-semester" role="tab" aria-selected="true" aria-controls="panel-semester" type="button">
+              Semester GPA
+            </button>
+            <button class="tab-btn" id="tab-previous" role="tab" aria-selected="false" aria-controls="panel-previous" type="button">
+              Include Previous GPA
+            </button>
+          </div>
+        </div>
+
+        <!-- ── Tab 1: Semester GPA ── -->
+        <div id="panel-semester" role="tabpanel" aria-labelledby="tab-semester">
+
+          <!-- Global toggles row -->
+          <div class="card p-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <!-- Grade mode toggle -->
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium" style="color:var(--color-body)" id="grade-mode-label-1">Letter Grade</span>
+              <label class="toggle" aria-label="Toggle between letter grade and percentage input">
+                <input type="checkbox" id="pct-toggle-1" />
+                <span class="toggle-track"></span>
+                <span class="toggle-thumb"></span>
+              </label>
+              <span class="text-sm" style="color:var(--color-mute)">%</span>
+            </div>
+            <!-- Equal credits toggle -->
+            <div class="flex items-center gap-2">
+              <label class="toggle" aria-label="Weight all courses equally (no credit hours)">
+                <input type="checkbox" id="equal-credits-toggle" />
+                <span class="toggle-track"></span>
+                <span class="toggle-thumb"></span>
+              </label>
+              <span class="text-sm" style="color:var(--color-mute)">Equal credits (no weighting)</span>
+            </div>
+          </div>
+
+          <!-- Semesters container -->
+          <div id="semesters-container" class="flex flex-col gap-4 mt-4">
+            <!-- Semester blocks injected by JS -->
+          </div>
+
+          <!-- Add semester button -->
+          <button
+            id="add-semester-btn"
+            type="button"
+            class="btn btn-ghost btn-sm mt-4 w-full"
+            style="border: 1px dashed var(--color-hairline-strong); color: var(--color-brand);"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Add Semester
+          </button>
+
+        </div>
+
+        <!-- ── Tab 2: Include Previous GPA ── -->
+        <div id="panel-previous" role="tabpanel" aria-labelledby="tab-previous" class="hidden">
+
+          <!-- Previous GPA inputs -->
+          <div class="card p-5 mb-4">
+            <h2 class="text-base font-semibold mb-4" style="color:var(--color-ink); font-size:1rem;" id="calc-heading">Previous Academic Record</h2>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="prev-gpa" class="block text-sm font-medium mb-1" style="color:var(--color-body)">Previous Cumulative GPA</label>
+                <input
+                  type="number"
+                  id="prev-gpa"
+                  class="input"
+                  placeholder="e.g. 3.25"
+                  min="0"
+                  max="4"
+                  step="0.01"
+                  aria-describedby="prev-gpa-hint"
+                />
+                <p id="prev-gpa-hint" class="text-xs mt-1" style="color:var(--color-mute)">Your cumulative GPA before this semester (0.00 – 4.00)</p>
+              </div>
+              <div>
+                <label for="prev-credits" class="block text-sm font-medium mb-1" style="color:var(--color-body)">Credits Completed</label>
+                <input
+                  type="number"
+                  id="prev-credits"
+                  class="input"
+                  placeholder="e.g. 60"
+                  min="0"
+                  step="0.5"
+                  aria-describedby="prev-credits-hint"
+                />
+                <p id="prev-credits-hint" class="text-xs mt-1" style="color:var(--color-mute)">Total credit hours completed before this semester</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grade mode toggle for tab 2 -->
+          <div class="card p-4 flex flex-wrap items-center gap-x-6 gap-y-3 mb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium" style="color:var(--color-body)" id="grade-mode-label-2">Letter Grade</span>
+              <label class="toggle" aria-label="Toggle percentage input for tab 2">
+                <input type="checkbox" id="pct-toggle-2" />
+                <span class="toggle-track"></span>
+                <span class="toggle-thumb"></span>
+              </label>
+              <span class="text-sm" style="color:var(--color-mute)">%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="toggle" aria-label="Weight all courses equally in tab 2">
+                <input type="checkbox" id="equal-credits-toggle-2" />
+                <span class="toggle-track"></span>
+                <span class="toggle-thumb"></span>
+              </label>
+              <span class="text-sm" style="color:var(--color-mute)">Equal credits</span>
+            </div>
+          </div>
+
+          <!-- Current semester courses -->
+          <div class="card p-5">
+            <h3 class="text-sm font-semibold mb-3" style="color:var(--color-ink)">Current Semester Courses</h3>
+
+            <!-- Column headers -->
+            <div class="hidden sm:grid gap-3 mb-2 px-1" id="prev-course-headers" style="grid-template-columns: 1fr 120px 80px 36px;">
+              <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Course (optional)</span>
+              <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Grade</span>
+              <span class="text-xs font-semibold uppercase tracking-wide" id="prev-credits-header" style="color:var(--color-mute)">Credits</span>
+              <span></span>
+            </div>
+
+            <div id="prev-courses-container" class="flex flex-col gap-3">
+              <!-- Rows injected by JS -->
+            </div>
+
+            <button
+              id="add-prev-course-btn"
+              type="button"
+              class="btn btn-ghost btn-sm mt-4 w-full"
+              style="border: 1px dashed var(--color-hairline-strong); color: var(--color-brand);"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              Add Course
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex flex-wrap gap-2 pt-2">
+          <button id="reset-btn" type="button" class="btn btn-secondary btn-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Reset
+          </button>
+          <button id="share-btn" type="button" class="btn btn-secondary btn-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            <span id="share-btn-text">Share Result</span>
+          </button>
+          <button id="print-btn" type="button" class="btn btn-secondary btn-sm print:hidden">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print
+          </button>
+        </div>
+
+        <!-- Share toast -->
+        <div id="share-toast" class="hidden text-sm font-medium" style="color:var(--color-success)" role="status" aria-live="polite">
+          Link copied to clipboard!
+        </div>
+
+      </div>
+
+      <!-- Right: Sticky result panel (1/3 width on desktop) -->
+      <div class="flex flex-col gap-4 lg:sticky lg:top-20">
+
+        <!-- Main GPA result -->
+        <div class="result-panel" id="result-panel">
+          <div class="flex items-start justify-between gap-2 mb-1">
+            <p class="text-xs font-semibold uppercase tracking-widest" style="color:var(--color-brand)">Semester GPA</p>
+            <p class="text-xs font-semibold uppercase tracking-widest" id="cum-gpa-label" style="color:var(--color-mute); display:none">Cumulative GPA</p>
+          </div>
+
+          <div class="flex items-end gap-3 mb-1">
+            <span id="semester-gpa-result" class="tabular" style="font-size:3.25rem; font-weight:700; line-height:1; letter-spacing:-0.04em; color:var(--color-brand)">—</span>
+            <span class="text-base mb-1" style="color:var(--color-mute)">/&nbsp;4.00</span>
+          </div>
+
+          <!-- Cumulative GPA row (shown when tab 2 or multi-semester) -->
+          <div id="cum-gpa-row" class="hidden mt-2 mb-2 flex items-center gap-3">
+            <span class="text-xs uppercase tracking-wide font-semibold" style="color:var(--color-mute)">Cumulative:</span>
+            <span id="cum-gpa-result" class="tabular text-2xl font-bold" style="color:var(--color-brand)">—</span>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="gpa-meter-container mt-3 mb-1" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="gpa-meter-wrap" aria-label="GPA progress meter">
+            <div class="gpa-meter-fill" id="gpa-meter-fill" style="width:0%"></div>
+          </div>
+          <!-- Markers -->
+          <div class="relative mt-1" style="height:16px;">
+            <span class="absolute text-xs" style="left:50%;transform:translateX(-50%);color:var(--color-mute)">2.0</span>
+            <span class="absolute text-xs" style="left:75%;transform:translateX(-50%);color:var(--color-mute)">3.0</span>
+            <span class="absolute text-xs" style="left:87.5%;transform:translateX(-50%);color:var(--color-mute)">3.5</span>
+            <span class="absolute text-xs" style="right:0;color:var(--color-mute)">4.0</span>
+          </div>
+
+          <div class="flex items-center justify-between mt-3">
+            <span id="gpa-standing-label" class="text-sm font-semibold" style="color:var(--color-ink)"></span>
+            <span id="gpa-proximity" class="text-xs font-medium" style="color:var(--color-brand)"></span>
+          </div>
+        </div>
+
+        <!-- Stats card -->
+        <div class="card-soft p-4 grid grid-cols-2 gap-4 text-center">
+          <div>
+            <p class="text-xs uppercase tracking-wide mb-1 font-medium" style="color:var(--color-mute)">Total Credits</p>
+            <p id="stat-credits" class="tabular text-2xl font-bold" style="color:var(--color-ink)">—</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide mb-1 font-medium" style="color:var(--color-mute)">Quality Points</p>
+            <p id="stat-qp" class="tabular text-2xl font-bold" style="color:var(--color-ink)">—</p>
+          </div>
+        </div>
+
+        <!-- Proximity callout -->
+        <div id="proximity-callout" class="callout callout-blue hidden" role="status" aria-live="polite">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5" style="color:var(--color-brand)" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="proximity-callout-text" class="text-sm"></span>
+        </div>
+
+        <!-- GPA scale reference -->
+        <div class="card-soft p-4">
+          <p class="text-xs font-semibold uppercase tracking-wide mb-3" style="color:var(--color-mute)">GPA Thresholds</p>
+          <div class="flex flex-col gap-2 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:#0070f3"></span>
+                3.50 – 4.00
+              </span>
+              <span class="font-semibold" style="color:#0070f3">Dean's List</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:#16a34a"></span>
+                3.00 – 3.49
+              </span>
+              <span class="font-semibold" style="color:#16a34a">Good Standing</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:#f5a623"></span>
+                2.00 – 2.99
+              </span>
+              <span class="font-semibold" style="color:#f5a623">Satisfactory</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:#ee0000"></span>
+                0.00 – 1.99
+              </span>
+              <span class="font-semibold" style="color:#ee0000">Below Average</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       GPA PLANNING TOOL
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-6" aria-labelledby="planning-heading">
+    <div class="card p-6">
+      <h2 id="planning-heading" class="mb-1" style="font-size:1.15rem;">GPA Planning: What Grades Do I Need?</h2>
+      <p class="text-sm mb-5" style="color:var(--color-body)">
+        Enter your current GPA and credits, then set a target GPA to see what average grade you need going forward.
+      </p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        <div>
+          <label for="plan-current-gpa" class="block text-sm font-medium mb-1" style="color:var(--color-body)">Current GPA</label>
+          <input type="number" id="plan-current-gpa" class="input" placeholder="e.g. 3.00" min="0" max="4" step="0.01" />
+        </div>
+        <div>
+          <label for="plan-current-credits" class="block text-sm font-medium mb-1" style="color:var(--color-body)">Credits Completed</label>
+          <input type="number" id="plan-current-credits" class="input" placeholder="e.g. 60" min="0" step="0.5" />
+        </div>
+        <div>
+          <label for="plan-target-gpa" class="block text-sm font-medium mb-1" style="color:var(--color-body)">Target GPA</label>
+          <input type="number" id="plan-target-gpa" class="input" placeholder="e.g. 3.50" min="0" max="4" step="0.01" />
+        </div>
+        <div>
+          <label for="plan-future-credits" class="block text-sm font-medium mb-1" style="color:var(--color-body)">Future Credits Planned</label>
+          <input type="number" id="plan-future-credits" class="input" placeholder="e.g. 30" min="0" step="0.5" />
+        </div>
+      </div>
+      <div id="plan-result" class="hidden">
+        <div class="callout callout-blue">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5" style="color:var(--color-brand)" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="plan-result-text" class="text-sm"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       HOW COLLEGE GPA WORKS
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-6" aria-labelledby="how-gpa-works-heading">
+    <div class="grid md:grid-cols-2 gap-8">
+
+      <div class="prose">
+        <h2 id="how-gpa-works-heading">How College GPA Works</h2>
+        <p>
+          Your college GPA is a single number that summarizes your academic performance across all graded coursework. Nearly every U.S. college and university uses the <strong>4.0 scale</strong>, where A equals 4.0 points, B equals 3.0, C equals 2.0, D equals 1.0, and F equals 0.0. Plus and minus grades introduce intermediate values: an A- is 3.7, a B+ is 3.3, and so on down the scale.
+        </p>
+        <p>
+          To compute your GPA, each course's letter grade is first converted to grade points. Those grade points are then multiplied by the course's credit hours to produce <em>quality points</em>. Your semester GPA equals the total quality points divided by the total credit hours taken that semester. A 4-credit calculus course therefore has four times the impact on your GPA as a 1-credit physical education requirement.
+        </p>
+        <p>
+          Your <strong>cumulative GPA</strong> extends this calculation across all semesters. It is not an average of your semester GPAs — it is a single weighted average of every quality point you have ever earned, divided by every graded credit hour you have completed. This is why recovering a low GPA becomes progressively harder the further along you are in your degree: each new semester contributes a smaller fraction of your total credit hours.
+        </p>
+        <p>
+          Grades of P (Pass), W (Withdrawal), and I (Incomplete) are excluded from the GPA calculation at virtually all institutions. If your college has a grade forgiveness or grade replacement policy for repeated courses, only the most recent grade counts — but check your specific school's academic regulations since these policies vary.
+        </p>
+      </div>
+
+      <div class="prose">
+        <h2>Understanding the 4.0 GPA Scale</h2>
+        <p>
+          The 4.0 scale is a standardized system used to compare academic performance across different institutions and course loads. Here is the complete grade point mapping used by this calculator:
+        </p>
+
+        <!-- Grade scale table -->
+        <div class="overflow-x-auto rounded-lg mt-4" style="border:1px solid var(--color-hairline)">
+          <table class="w-full text-sm" style="border-collapse:collapse;margin:0">
+            <thead>
+              <tr style="background:var(--color-canvas-soft-2)">
+                <th class="text-left px-3 py-2 text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute);border-bottom:1px solid var(--color-hairline)">Grade</th>
+                <th class="text-center px-3 py-2 text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute);border-bottom:1px solid var(--color-hairline)">Points</th>
+                <th class="text-center px-3 py-2 text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute);border-bottom:1px solid var(--color-hairline)">Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["A+ / A","4.0","93–100%"],
+                ["A-","3.7","90–92%"],
+                ["B+","3.3","87–89%"],
+                ["B","3.0","83–86%"],
+                ["B-","2.7","80–82%"],
+                ["C+","2.3","77–79%"],
+                ["C","2.0","73–76%"],
+                ["C-","1.7","70–72%"],
+                ["D+","1.3","67–69%"],
+                ["D","1.0","63–66%"],
+                ["D-","0.7","60–62%"],
+                ["F","0.0","< 60%"],
+              ].map(([grade, pts, pct], i) => (
+                <tr style={i % 2 === 0 ? "" : "background:var(--color-canvas-soft-2)"}>
+                  <td class="px-3 py-2 font-semibold" style="color:var(--color-ink);border-bottom:1px solid var(--color-hairline);font-family:var(--font-mono)">{grade}</td>
+                  <td class="px-3 py-2 text-center font-bold tabular" style="color:var(--color-brand);border-bottom:1px solid var(--color-hairline)">{pts}</td>
+                  <td class="px-3 py-2 text-center" style="color:var(--color-body);border-bottom:1px solid var(--color-hairline)">{pct}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs mt-3" style="color:var(--color-mute)">
+          P (Pass), W (Withdrawal), and I (Incomplete) grades are excluded from GPA calculations.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       FAQ
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-6" aria-labelledby="faq-heading">
+    <div class="max-w-2xl">
+      <h2 id="faq-heading" class="mb-6">Frequently Asked Questions</h2>
+      <div>
+
+        <div class="faq-item open">
+          <button class="faq-question" type="button" aria-expanded="true">
+            What is a good college GPA?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            A GPA of 3.0 or above is considered good standing at most colleges. A 3.5 or above typically qualifies students for the Dean's List and is competitive for many scholarships. A 3.7 or above is considered excellent and positions you well for graduate school applications, honors at graduation (such as Magna Cum Laude or Summa Cum Laude), and top internship or job opportunities.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            How is college GPA calculated?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            College GPA is calculated by converting each letter grade to grade points (A = 4.0, B = 3.0, etc.), multiplying by credit hours to get quality points, then dividing total quality points by total credit hours. For example: an A in a 3-credit course = 12 quality points. An A- in a 4-credit course = 14.8 quality points. Sum all quality points, divide by total credits, and you have your GPA.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            What GPA do I need to maintain good academic standing?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            Most colleges and universities require a minimum cumulative GPA of 2.0 to remain in good academic standing. Falling below 2.0 can result in academic probation, loss of financial aid eligibility, or suspension. Some programs — such as nursing, education, or engineering — may require a higher GPA of 2.5 or 3.0 to continue in the major. Always check your institution's specific requirements.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            Can I calculate cumulative GPA with previous semesters?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            Yes. Use the "Include Previous GPA" tab on this calculator. Enter your existing cumulative GPA and total credits completed, then add your current semester's courses. The calculator automatically combines your previous academic record with your new courses to show your updated cumulative GPA in real time.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            What is the difference between semester GPA and cumulative GPA?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            Semester GPA reflects only the courses taken during a single term — it resets each semester. Cumulative GPA is the running weighted average of all courses taken across every semester you have completed. Your transcript shows both: semester GPA lets you see term-by-term performance, while cumulative GPA is what graduate schools, employers, and honor societies use to evaluate your overall academic record.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            Does college GPA include all courses?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            Yes, in most cases college GPA includes all graded courses. Pass/Fail courses and official withdrawals (W) are excluded from the GPA calculation. If your college has a grade forgiveness or grade replacement policy for repeated courses, the earlier grade may be excluded — check your school's specific academic policy. Incomplete grades (I) are typically excluded until a final grade is assigned.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            What GPA is needed for graduate school?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            Most graduate programs require a minimum undergraduate GPA of 3.0 for admission. Top research programs and highly competitive schools typically expect 3.5 or higher. Professional programs — such as top MBA, medical, and law schools — often see successful applicants with GPAs of 3.6 to 3.9. Some programs also evaluate your GPA in your major field separately from your overall cumulative GPA.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            How do I raise my college GPA?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            To raise your GPA effectively, prioritize high-credit courses since they move your GPA more than 1-credit electives. If your school allows grade replacement, retaking courses where you earned a D or F can significantly boost your cumulative GPA. Focus on earning consistent A and B grades rather than overloading your schedule. Attend office hours, join study groups, and seek tutoring early in the semester. Use the GPA planning tool on this page to calculate exactly what average grade you need to hit your target GPA.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       RELATED CALCULATORS
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-8" aria-labelledby="related-heading">
+    <h2 id="related-heading" class="mb-5">Related GPA Calculators</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <a href="/cumulative-gpa-calculator" class="card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors group" style="text-decoration:none">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style="background:var(--color-brand-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-brand)" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <p class="font-semibold text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" style="color:var(--color-ink)">Cumulative GPA Calculator</p>
+        <p class="text-xs" style="color:var(--color-mute)">Calculate overall GPA across multiple semesters by entering each semester's data.</p>
+      </a>
+
+      <a href="/what-if-gpa-calculator" class="card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors group" style="text-decoration:none">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style="background:var(--color-brand-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-brand)" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <p class="font-semibold text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" style="color:var(--color-ink)">What If GPA Calculator</p>
+        <p class="text-xs" style="color:var(--color-mute)">Simulate how future grades will affect your cumulative GPA before the semester ends.</p>
+      </a>
+
+      <a href="/weighted-gpa-calculator" class="card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors group" style="text-decoration:none">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style="background:var(--color-brand-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-brand)" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <p class="font-semibold text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" style="color:var(--color-ink)">Weighted GPA Calculator</p>
+        <p class="text-xs" style="color:var(--color-mute)">Factor in AP, IB, and Honors course bonuses for a weighted GPA calculation.</p>
+      </a>
+
+      <a href="/grade-calculator" class="card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors group" style="text-decoration:none">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style="background:var(--color-brand-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-brand)" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>
+        </div>
+        <p class="font-semibold text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" style="color:var(--color-ink)">Grade Calculator</p>
+        <p class="text-xs" style="color:var(--color-mute)">Calculate the final exam grade you need to hit your target course grade.</p>
+      </a>
+
+    </div>
+  </section>
+
+</Layout>
+
+<!-- ══════════════════════════════════════════════
+     CALCULATOR JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  // ── Grade constants ──────────────────────────────────────────────────────────
+
+  const GRADE_POINTS = {
+    'A+': 4.0, 'A': 4.0, 'A-': 3.7,
+    'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+    'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+    'D+': 1.3, 'D': 1.0, 'D-': 0.7,
+    'F': 0.0,
+    'P': null, 'W': null, 'I': null,
+  };
+
+  const GRADE_OPTIONS = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F','P','W'];
+
+  const GRADE_POINTS_TO_LETTER = [
+    { min: 4.0,  letter: 'A+' },
+    { min: 3.85, letter: 'A'  },
+    { min: 3.65, letter: 'A-' },
+    { min: 3.15, letter: 'B+' },
+    { min: 2.85, letter: 'B'  },
+    { min: 2.65, letter: 'B-' },
+    { min: 2.15, letter: 'C+' },
+    { min: 1.85, letter: 'C'  },
+    { min: 1.65, letter: 'C-' },
+    { min: 1.15, letter: 'D+' },
+    { min: 0.85, letter: 'D'  },
+    { min: 0.65, letter: 'D-' },
+    { min: 0.0,  letter: 'F'  },
+  ];
+
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+
+  function percentToLetter(pct) {
+    const p = parseFloat(pct);
+    if (isNaN(p)) return 'F';
+    if (p >= 97) return 'A+';
+    if (p >= 93) return 'A';
+    if (p >= 90) return 'A-';
+    if (p >= 87) return 'B+';
+    if (p >= 83) return 'B';
+    if (p >= 80) return 'B-';
+    if (p >= 77) return 'C+';
+    if (p >= 73) return 'C';
+    if (p >= 70) return 'C-';
+    if (p >= 67) return 'D+';
+    if (p >= 63) return 'D';
+    if (p >= 60) return 'D-';
+    return 'F';
+  }
+
+  function pointsToLetter(pts) {
+    for (const entry of GRADE_POINTS_TO_LETTER) {
+      if (pts >= entry.min) return entry.letter;
+    }
+    return 'F';
+  }
+
+  function formatGPA(g) {
+    return (g === null || g === undefined || isNaN(g)) ? '—' : g.toFixed(2);
+  }
+
+  function gpaColorHex(g) {
+    if (g === null || g === undefined || isNaN(g)) return '#888888';
+    if (g < 2.0) return '#ee0000';
+    if (g < 3.0) return '#f5a623';
+    if (g < 3.5) return '#16a34a';
+    return '#0070f3';
+  }
+
+  function gpaStandingLabel(g) {
+    if (g === null || g === undefined || isNaN(g)) return '';
+    if (g >= 3.9) return 'Summa Cum Laude';
+    if (g >= 3.7) return 'Magna Cum Laude';
+    if (g >= 3.5) return "Dean's List";
+    if (g >= 3.0) return 'Good Standing';
+    if (g >= 2.0) return 'Satisfactory';
+    if (g >= 1.0) return 'Below Average';
+    return 'Failing';
+  }
+
+  function gpaProximityMsg(g) {
+    if (g === null || g === undefined || isNaN(g)) return '';
+    const thresholds = [
+      { val: 4.0,  label: 'Perfect GPA (4.0)' },
+      { val: 3.9,  label: 'Summa Cum Laude (3.9)' },
+      { val: 3.7,  label: 'Magna Cum Laude (3.7)' },
+      { val: 3.5,  label: "Dean's List (3.5)" },
+      { val: 3.0,  label: 'Good Standing (3.0)' },
+      { val: 2.0,  label: 'Passing (2.0)' },
+    ];
+    for (const t of thresholds) {
+      if (g < t.val) {
+        const diff = t.val - g;
+        if (diff <= 0.30) {
+          return `${diff.toFixed(2)} away from ${t.label}`;
+        }
+        return '';
+      }
+    }
+    return '';
+  }
+
+  function buildGradeSelect(defaultGrade) {
+    const sel = document.createElement('select');
+    sel.className = 'input grade-select';
+    sel.style.cssText = 'font-size:0.875rem;width:100%;';
+    sel.setAttribute('aria-label', 'Letter grade');
+    GRADE_OPTIONS.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g;
+      opt.textContent = g;
+      if (g === (defaultGrade || 'A')) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    return sel;
+  }
+
+  function buildPctInput() {
+    const inp = document.createElement('input');
+    inp.type = 'number';
+    inp.min = '0';
+    inp.max = '100';
+    inp.step = '1';
+    inp.placeholder = '%';
+    inp.className = 'input pct-input';
+    inp.style.cssText = 'font-size:0.875rem;width:100%;text-align:center;';
+    inp.setAttribute('aria-label', 'Grade percentage');
+    return inp;
+  }
+
+  // ── State ────────────────────────────────────────────────────────────────────
+
+  let activeTab = 'semester'; // 'semester' | 'previous'
+  let pctMode1 = false;       // percentage mode for tab 1
+  let noCredits1 = false;     // equal credits mode for tab 1
+  let pctMode2 = false;       // percentage mode for tab 2
+  let noCredits2 = false;     // equal credits mode for tab 2
+  let semesterCounter = 0;
+  let courseCounter = 0;
+  let prevCourseCounter = 0;
+
+  // ── DOM refs ─────────────────────────────────────────────────────────────────
+
+  const tabSemesterBtn    = document.getElementById('tab-semester');
+  const tabPreviousBtn    = document.getElementById('tab-previous');
+  const panelSemester     = document.getElementById('panel-semester');
+  const panelPrevious     = document.getElementById('panel-previous');
+
+  const semestersContainer = document.getElementById('semesters-container');
+  const addSemesterBtn     = document.getElementById('add-semester-btn');
+
+  const prevGPAInput       = document.getElementById('prev-gpa');
+  const prevCreditsInput   = document.getElementById('prev-credits');
+  const prevCoursesContainer = document.getElementById('prev-courses-container');
+  const addPrevCourseBtn   = document.getElementById('add-prev-course-btn');
+
+  const pctToggle1         = document.getElementById('pct-toggle-1');
+  const equalCreditsToggle = document.getElementById('equal-credits-toggle');
+  const gradeModeLabel1    = document.getElementById('grade-mode-label-1');
+
+  const pctToggle2         = document.getElementById('pct-toggle-2');
+  const equalCreditsToggle2 = document.getElementById('equal-credits-toggle-2');
+  const gradeModeLabel2    = document.getElementById('grade-mode-label-2');
+
+  const resetBtn           = document.getElementById('reset-btn');
+  const shareBtn           = document.getElementById('share-btn');
+  const shareBtnText       = document.getElementById('share-btn-text');
+  const printBtn           = document.getElementById('print-btn');
+  const shareToast         = document.getElementById('share-toast');
+
+  // Result elements
+  const semGPAResult       = document.getElementById('semester-gpa-result');
+  const cumGPAResult       = document.getElementById('cum-gpa-result');
+  const cumGPARow          = document.getElementById('cum-gpa-row');
+  const cumGPALabel        = document.getElementById('cum-gpa-label');
+  const gpaMeterFill       = document.getElementById('gpa-meter-fill');
+  const gpaMeterWrap       = document.getElementById('gpa-meter-wrap');
+  const gpaStandingEl      = document.getElementById('gpa-standing-label');
+  const gpaProximEl        = document.getElementById('gpa-proximity');
+  const statCredits        = document.getElementById('stat-credits');
+  const statQP             = document.getElementById('stat-qp');
+  const proximityCallout   = document.getElementById('proximity-callout');
+  const proximityCallText  = document.getElementById('proximity-callout-text');
+
+  // ── Tab switching ────────────────────────────────────────────────────────────
+
+  function switchTab(tab) {
+    activeTab = tab;
+
+    tabSemesterBtn.classList.toggle('active', tab === 'semester');
+    tabPreviousBtn.classList.toggle('active', tab === 'previous');
+    tabSemesterBtn.setAttribute('aria-selected', String(tab === 'semester'));
+    tabPreviousBtn.setAttribute('aria-selected', String(tab === 'previous'));
+
+    panelSemester.classList.toggle('hidden', tab !== 'semester');
+    panelPrevious.classList.toggle('hidden', tab !== 'previous');
+
+    recalculate();
+  }
+
+  tabSemesterBtn.addEventListener('click', () => switchTab('semester'));
+  tabPreviousBtn.addEventListener('click', () => switchTab('previous'));
+
+  // Keyboard navigation for tabs
+  [tabSemesterBtn, tabPreviousBtn].forEach(btn => {
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') { tabPreviousBtn.focus(); switchTab('previous'); }
+      else if (e.key === 'ArrowLeft') { tabSemesterBtn.focus(); switchTab('semester'); }
+    });
+  });
+
+  // ── Semester block (Tab 1) ───────────────────────────────────────────────────
+
+  const SEMESTER_LABELS = [
+    'Fall 2024','Spring 2025','Summer 2025',
+    'Fall 2025','Spring 2026','Summer 2026',
+    'Fall 2026','Spring 2027','Summer 2027',
+    'Fall 2027','Spring 2028',
+  ];
+
+  function createCourseRowEl(rowId, pctMode, noCreditsMode, semId) {
+    const row = document.createElement('div');
+    row.className = 'course-row';
+    row.dataset.semId = semId;
+    row.style.gridTemplateColumns = noCreditsMode
+      ? '1fr 120px 36px'
+      : '1fr 120px 80px 36px';
+
+    // Course name
+    const nameWrap = document.createElement('div');
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = `Course ${rowId}`;
+    nameInput.className = 'input';
+    nameInput.style.fontSize = '0.875rem';
+    nameInput.setAttribute('aria-label', 'Course name (optional)');
+    nameInput.addEventListener('input', recalculate);
+    nameWrap.appendChild(nameInput);
+
+    // Grade
+    const gradeWrap = document.createElement('div');
+    let gradeEl;
+    if (pctMode) {
+      gradeEl = buildPctInput();
+    } else {
+      gradeEl = buildGradeSelect('A');
+    }
+    gradeEl.addEventListener('input', recalculate);
+    gradeEl.addEventListener('change', recalculate);
+    gradeWrap.appendChild(gradeEl);
+
+    // Credits
+    const creditsWrap = document.createElement('div');
+    const creditsInput = document.createElement('input');
+    creditsInput.type = 'number';
+    creditsInput.min = '0.5';
+    creditsInput.max = '12';
+    creditsInput.step = '0.5';
+    creditsInput.value = '3';
+    creditsInput.className = 'input credits-input';
+    creditsInput.style.cssText = 'font-size:0.875rem;text-align:center;';
+    creditsInput.setAttribute('aria-label', 'Credit hours');
+    creditsInput.addEventListener('input', recalculate);
+    creditsWrap.appendChild(creditsInput);
+
+    // Remove button
+    const removeWrap = document.createElement('div');
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn btn-secondary btn-sm';
+    removeBtn.style.cssText = 'padding:0.35rem 0.5rem;color:var(--color-mute);';
+    removeBtn.setAttribute('aria-label', 'Remove course');
+    removeBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    removeBtn.addEventListener('click', () => {
+      const semBlock = document.querySelector(`[data-semester-id="${semId}"]`);
+      const rowsContainer = semBlock ? semBlock.querySelector('.sem-courses') : null;
+      row.remove();
+      recalculate();
+      // If this semester has no more course rows, add one back
+      if (rowsContainer && rowsContainer.querySelectorAll('.course-row').length === 0) {
+        addCourseToSemester(semId);
+      }
+    });
+    removeWrap.appendChild(removeBtn);
+
+    row.appendChild(nameWrap);
+    row.appendChild(gradeWrap);
+    if (!noCreditsMode) row.appendChild(creditsWrap);
+    row.appendChild(removeWrap);
+
+    return row;
+  }
+
+  function addCourseToSemester(semId) {
+    const semBlock = document.querySelector(`[data-semester-id="${semId}"]`);
+    if (!semBlock) return;
+    const rowsContainer = semBlock.querySelector('.sem-courses');
+    courseCounter++;
+    const row = createCourseRowEl(courseCounter, pctMode1, noCredits1, semId);
+    rowsContainer.appendChild(row);
+    recalculate();
+  }
+
+  function createSemesterBlock(semId) {
+    const label = SEMESTER_LABELS[semId] || `Semester ${semId + 1}`;
+
+    const block = document.createElement('div');
+    block.className = 'card p-0 overflow-hidden';
+    block.dataset.semesterId = semId;
+
+    // Semester header
+    const header = document.createElement('div');
+    header.className = 'flex items-center justify-between px-4 py-3';
+    header.style.cssText = 'background:var(--color-canvas-soft);border-bottom:1px solid var(--color-hairline);';
+
+    const leftSide = document.createElement('div');
+    leftSide.className = 'flex items-center gap-3';
+
+    // Collapse toggle
+    const collapseBtn = document.createElement('button');
+    collapseBtn.type = 'button';
+    collapseBtn.className = 'btn btn-ghost btn-sm p-1';
+    collapseBtn.setAttribute('aria-expanded', 'true');
+    collapseBtn.setAttribute('aria-label', 'Collapse semester');
+    collapseBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>';
+
+    const semLabel = document.createElement('input');
+    semLabel.type = 'text';
+    semLabel.value = label;
+    semLabel.className = 'input';
+    semLabel.style.cssText = 'font-size:0.875rem;font-weight:600;color:var(--color-ink);max-width:180px;border:none;background:transparent;padding:0.2rem 0.4rem;';
+    semLabel.setAttribute('aria-label', 'Semester name');
+
+    const semGPABadge = document.createElement('span');
+    semGPABadge.className = 'badge tabular';
+    semGPABadge.dataset.semGpaBadge = semId;
+    semGPABadge.style.cssText = 'font-size:0.75rem;background:var(--color-canvas-soft-2);color:var(--color-mute);';
+    semGPABadge.textContent = '— GPA';
+
+    leftSide.appendChild(collapseBtn);
+    leftSide.appendChild(semLabel);
+    leftSide.appendChild(semGPABadge);
+
+    const rightSide = document.createElement('div');
+    rightSide.className = 'flex items-center gap-2';
+
+    const removeSemBtn = document.createElement('button');
+    removeSemBtn.type = 'button';
+    removeSemBtn.className = 'btn btn-secondary btn-sm';
+    removeSemBtn.style.cssText = 'color:var(--color-mute);font-size:0.75rem;';
+    removeSemBtn.setAttribute('aria-label', 'Remove semester');
+    removeSemBtn.textContent = 'Remove';
+    removeSemBtn.addEventListener('click', () => {
+      block.remove();
+      recalculate();
+    });
+
+    rightSide.appendChild(removeSemBtn);
+    header.appendChild(leftSide);
+    header.appendChild(rightSide);
+
+    // Collapsible body
+    const body = document.createElement('div');
+    body.className = 'sem-body px-4 pt-3 pb-4';
+
+    // Column headers
+    const colHeaders = document.createElement('div');
+    colHeaders.className = 'hidden sm:grid gap-2 mb-2 px-1 sem-col-headers';
+    colHeaders.style.gridTemplateColumns = noCredits1
+      ? '1fr 120px 36px'
+      : '1fr 120px 80px 36px';
+    colHeaders.innerHTML = `
+      <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Course (optional)</span>
+      <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">${pctMode1 ? 'Score %' : 'Grade'}</span>
+      ${noCredits1 ? '' : '<span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Credits</span>'}
+      <span></span>
+    `;
+
+    // Courses container
+    const coursesDiv = document.createElement('div');
+    coursesDiv.className = 'sem-courses flex flex-col gap-2';
+
+    // Add course button
+    const addCourseBtn = document.createElement('button');
+    addCourseBtn.type = 'button';
+    addCourseBtn.className = 'btn btn-ghost btn-sm mt-3 w-full';
+    addCourseBtn.style.cssText = 'border:1px dashed var(--color-hairline);color:var(--color-brand);font-size:0.8rem;';
+    addCourseBtn.setAttribute('aria-label', 'Add course to this semester');
+    addCourseBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Add Course';
+    addCourseBtn.addEventListener('click', () => addCourseToSemester(semId));
+
+    body.appendChild(colHeaders);
+    body.appendChild(coursesDiv);
+    body.appendChild(addCourseBtn);
+
+    block.appendChild(header);
+    block.appendChild(body);
+
+    // Collapse functionality
+    let expanded = true;
+    collapseBtn.addEventListener('click', () => {
+      expanded = !expanded;
+      body.style.display = expanded ? '' : 'none';
+      collapseBtn.setAttribute('aria-expanded', String(expanded));
+      collapseBtn.innerHTML = expanded
+        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>'
+        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+    });
+
+    return block;
+  }
+
+  function addSemester() {
+    const semId = semesterCounter;
+    semesterCounter++;
+
+    const block = createSemesterBlock(semId);
+    semestersContainer.appendChild(block);
+
+    // Add default course rows
+    for (let i = 0; i < 4; i++) {
+      addCourseToSemester(semId);
+    }
+    recalculate();
+  }
+
+  addSemesterBtn.addEventListener('click', addSemester);
+
+  // ── Tab 2 course rows ────────────────────────────────────────────────────────
+
+  function createPrevCourseRow(rowId) {
+    const row = document.createElement('div');
+    row.className = 'course-row';
+    row.dataset.prevRowId = rowId;
+    row.style.gridTemplateColumns = noCredits2
+      ? '1fr 120px 36px'
+      : '1fr 120px 80px 36px';
+
+    // Course name
+    const nameWrap = document.createElement('div');
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = `Course ${rowId}`;
+    nameInput.className = 'input';
+    nameInput.style.fontSize = '0.875rem';
+    nameInput.setAttribute('aria-label', 'Course name');
+    nameInput.addEventListener('input', recalculate);
+    nameWrap.appendChild(nameInput);
+
+    // Grade
+    const gradeWrap = document.createElement('div');
+    let gradeEl;
+    if (pctMode2) {
+      gradeEl = buildPctInput();
+    } else {
+      gradeEl = buildGradeSelect('A');
+    }
+    gradeEl.addEventListener('input', recalculate);
+    gradeEl.addEventListener('change', recalculate);
+    gradeWrap.appendChild(gradeEl);
+
+    // Credits
+    const creditsWrap = document.createElement('div');
+    const creditsInput = document.createElement('input');
+    creditsInput.type = 'number';
+    creditsInput.min = '0.5';
+    creditsInput.max = '12';
+    creditsInput.step = '0.5';
+    creditsInput.value = '3';
+    creditsInput.className = 'input credits-input';
+    creditsInput.style.cssText = 'font-size:0.875rem;text-align:center;';
+    creditsInput.setAttribute('aria-label', 'Credit hours');
+    creditsInput.addEventListener('input', recalculate);
+    creditsWrap.appendChild(creditsInput);
+
+    // Remove
+    const removeWrap = document.createElement('div');
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn btn-secondary btn-sm';
+    removeBtn.style.cssText = 'padding:0.35rem 0.5rem;color:var(--color-mute);';
+    removeBtn.setAttribute('aria-label', 'Remove course');
+    removeBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    removeBtn.addEventListener('click', () => {
+      row.remove();
+      recalculate();
+      if (prevCoursesContainer.querySelectorAll('.course-row').length === 0) {
+        addPrevCourse();
+      }
+    });
+    removeWrap.appendChild(removeBtn);
+
+    row.appendChild(nameWrap);
+    row.appendChild(gradeWrap);
+    if (!noCredits2) row.appendChild(creditsWrap);
+    row.appendChild(removeWrap);
+
+    return row;
+  }
+
+  function addPrevCourse() {
+    prevCourseCounter++;
+    const row = createPrevCourseRow(prevCourseCounter);
+    prevCoursesContainer.appendChild(row);
+    recalculate();
+  }
+
+  addPrevCourseBtn.addEventListener('click', addPrevCourse);
+  prevGPAInput.addEventListener('input', recalculate);
+  prevCreditsInput.addEventListener('input', recalculate);
+
+  // ── Toggle handlers ──────────────────────────────────────────────────────────
+
+  pctToggle1.addEventListener('change', () => {
+    pctMode1 = pctToggle1.checked;
+    if (gradeModeLabel1) gradeModeLabel1.textContent = pctMode1 ? 'Percentage' : 'Letter Grade';
+    rebuildAllSemesters();
+  });
+
+  equalCreditsToggle.addEventListener('change', () => {
+    noCredits1 = equalCreditsToggle.checked;
+    rebuildAllSemesters();
+  });
+
+  pctToggle2.addEventListener('change', () => {
+    pctMode2 = pctToggle2.checked;
+    if (gradeModeLabel2) gradeModeLabel2.textContent = pctMode2 ? 'Percentage' : 'Letter Grade';
+    rebuildPrevCourses();
+  });
+
+  equalCreditsToggle2.addEventListener('change', () => {
+    noCredits2 = equalCreditsToggle2.checked;
+    rebuildPrevCourses();
+  });
+
+  function rebuildAllSemesters() {
+    // Rebuild course rows within each semester while preserving semester count
+    const semBlocks = semestersContainer.querySelectorAll('[data-semester-id]');
+    semBlocks.forEach(block => {
+      const semId = block.dataset.semesterId;
+      const coursesDiv = block.querySelector('.sem-courses');
+      const colHeaders = block.querySelector('.sem-col-headers');
+      const existingCount = Math.max(coursesDiv.children.length, 1);
+
+      // Update column headers
+      if (colHeaders) {
+        colHeaders.style.gridTemplateColumns = noCredits1
+          ? '1fr 120px 36px'
+          : '1fr 120px 80px 36px';
+        colHeaders.innerHTML = `
+          <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Course (optional)</span>
+          <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">${pctMode1 ? 'Score %' : 'Grade'}</span>
+          ${noCredits1 ? '' : '<span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Credits</span>'}
+          <span></span>
+        `;
+      }
+
+      // Rebuild course rows
+      coursesDiv.innerHTML = '';
+      for (let i = 0; i < existingCount; i++) {
+        courseCounter++;
+        const row = createCourseRowEl(courseCounter, pctMode1, noCredits1, semId);
+        coursesDiv.appendChild(row);
+      }
+    });
+    recalculate();
+  }
+
+  function rebuildPrevCourses() {
+    const existingCount = Math.max(prevCoursesContainer.children.length, 1);
+    prevCoursesContainer.innerHTML = '';
+    for (let i = 0; i < existingCount; i++) {
+      prevCourseCounter++;
+      const row = createPrevCourseRow(prevCourseCounter);
+      prevCoursesContainer.appendChild(row);
+    }
+
+    // Update column headers
+    const prevHeader = document.getElementById('prev-credits-header');
+    if (prevHeader) prevHeader.style.display = noCredits2 ? 'none' : '';
+    recalculate();
+  }
+
+  // ── Calculation logic ────────────────────────────────────────────────────────
+
+  function getGradePoints(row, pctMode) {
+    if (pctMode) {
+      const pctEl = row.querySelector('.pct-input');
+      if (!pctEl || pctEl.value === '') return null;
+      const letter = percentToLetter(pctEl.value);
+      return GRADE_POINTS[letter] !== undefined ? GRADE_POINTS[letter] : null;
+    } else {
+      const sel = row.querySelector('.grade-select');
+      if (!sel) return null;
+      const val = GRADE_POINTS[sel.value];
+      return val !== undefined ? val : null;
+    }
+  }
+
+  function calcRowsGPA(rows, pctMode, noCredits) {
+    let totalQP = 0;
+    let totalCr = 0;
+    rows.forEach(row => {
+      const pts = getGradePoints(row, pctMode);
+      if (pts === null) return; // skip P/W/I
+      const credits = noCredits
+        ? 1
+        : parseFloat(row.querySelector('.credits-input')?.value || '0');
+      if (!credits || credits <= 0) return;
+      totalQP += pts * credits;
+      totalCr += credits;
+    });
+    return { totalQP, totalCr, gpa: totalCr > 0 ? totalQP / totalCr : null };
+  }
+
+  function recalculate() {
+    if (activeTab === 'semester') {
+      recalcSemesterTab();
+    } else {
+      recalcPreviousTab();
+    }
+  }
+
+  function recalcSemesterTab() {
+    const semBlocks = semestersContainer.querySelectorAll('[data-semester-id]');
+    let allQP = 0;
+    let allCr = 0;
+
+    let firstSemGPA = null;
+
+    semBlocks.forEach((block, idx) => {
+      const semId = block.dataset.semesterId;
+      const rows = block.querySelectorAll('.course-row');
+      const { totalQP, totalCr, gpa } = calcRowsGPA(rows, pctMode1, noCredits1);
+
+      // Update per-semester badge
+      const badge = block.querySelector(`[data-sem-gpa-badge="${semId}"]`);
+      if (badge) {
+        if (gpa !== null) {
+          badge.textContent = `${gpa.toFixed(2)} GPA`;
+          badge.style.color = gpaColorHex(gpa);
+          badge.style.background = 'var(--color-canvas-soft-2)';
+        } else {
+          badge.textContent = '— GPA';
+          badge.style.color = 'var(--color-mute)';
+        }
+      }
+
+      allQP += totalQP;
+      allCr += totalCr;
+
+      if (idx === 0) firstSemGPA = gpa;
+    });
+
+    const semCount = semBlocks.length;
+    const cumGPA = allCr > 0 ? allQP / allCr : null;
+
+    // Display: if 1 semester, show semester GPA only
+    // If multiple, show last semester GPA as "Semester GPA" and cumulative below
+    if (semCount <= 1) {
+      updateResultPanel({
+        primaryGPA: firstSemGPA,
+        primaryLabel: 'Semester GPA',
+        showCum: false,
+        cumGPA: null,
+        totalCr: allCr,
+        totalQP: allQP,
+      });
+    } else {
+      // Get last semester GPA
+      const lastBlock = semBlocks[semBlocks.length - 1];
+      const lastRows = lastBlock.querySelectorAll('.course-row');
+      const { gpa: lastGPA } = calcRowsGPA(lastRows, pctMode1, noCredits1);
+
+      updateResultPanel({
+        primaryGPA: lastGPA,
+        primaryLabel: 'Latest Semester',
+        showCum: true,
+        cumGPA: cumGPA,
+        totalCr: allCr,
+        totalQP: allQP,
+      });
+    }
+  }
+
+  function recalcPreviousTab() {
+    const prevGPA = parseFloat(prevGPAInput.value);
+    const prevCr = parseFloat(prevCreditsInput.value);
+    const rows = prevCoursesContainer.querySelectorAll('.course-row');
+    const { totalQP: newQP, totalCr: newCr, gpa: semGPA } = calcRowsGPA(rows, pctMode2, noCredits2);
+
+    const validPrev = !isNaN(prevGPA) && !isNaN(prevCr) && prevCr >= 0 && prevGPA >= 0 && prevGPA <= 4.0;
+    const validNew  = newCr > 0;
+
+    let cumGPA = null;
+    let totalCr = newCr;
+    let totalQP = newQP;
+
+    if (validPrev && validNew) {
+      totalQP = prevGPA * prevCr + newQP;
+      totalCr = prevCr + newCr;
+      cumGPA = totalQP / totalCr;
+    } else if (!validPrev && validNew) {
+      cumGPA = semGPA;
+      totalCr = newCr;
+      totalQP = newQP;
+    }
+
+    updateResultPanel({
+      primaryGPA: semGPA,
+      primaryLabel: 'Semester GPA',
+      showCum: validPrev && validNew,
+      cumGPA: validPrev && validNew ? cumGPA : null,
+      totalCr: totalCr,
+      totalQP: totalQP,
+    });
+  }
+
+  function updateResultPanel({ primaryGPA, primaryLabel, showCum, cumGPA, totalCr, totalQP }) {
+    const displayGPA = primaryGPA;
+    const color = gpaColorHex(displayGPA);
+
+    // Primary GPA number
+    semGPAResult.textContent = formatGPA(displayGPA);
+    semGPAResult.style.color = displayGPA !== null ? color : 'var(--color-brand)';
+
+    // Pulse animation
+    semGPAResult.classList.remove('pulse-once');
+    void semGPAResult.offsetWidth;
+    if (displayGPA !== null) semGPAResult.classList.add('pulse-once');
+
+    // Cumulative GPA row
+    if (showCum && cumGPA !== null) {
+      cumGPARow.style.display = 'flex';
+      cumGPALabel.style.display = '';
+      cumGPAResult.textContent = formatGPA(cumGPA);
+      cumGPAResult.style.color = gpaColorHex(cumGPA);
+    } else {
+      cumGPARow.style.display = 'none';
+      cumGPALabel.style.display = 'none';
+    }
+
+    // Meter — use cum GPA if available, else primary
+    const meterGPA = (showCum && cumGPA !== null) ? cumGPA : displayGPA;
+    const pct = meterGPA !== null ? Math.min(Math.max((meterGPA / 4.0) * 100, 0), 100) : 0;
+    gpaMeterFill.style.width = pct + '%';
+    gpaMeterFill.style.background = gpaColorHex(meterGPA);
+    gpaMeterWrap.setAttribute('aria-valuenow', Math.round(pct).toString());
+
+    // Standing label and proximity
+    const refGPA = meterGPA;
+    gpaStandingEl.textContent = refGPA !== null ? gpaStandingLabel(refGPA) : '';
+    gpaStandingEl.style.color = gpaColorHex(refGPA);
+
+    const proxMsg = refGPA !== null ? gpaProximityMsg(refGPA) : '';
+    gpaProximEl.textContent = proxMsg;
+
+    // Stats
+    statCredits.textContent = totalCr > 0 ? (totalCr % 1 === 0 ? String(totalCr) : totalCr.toFixed(1)) : '—';
+    statQP.textContent = totalQP > 0 ? totalQP.toFixed(2) : '—';
+
+    // Proximity callout
+    if (proxMsg) {
+      proximityCallout.classList.remove('hidden');
+      proximityCallText.textContent = proxMsg;
+    } else {
+      proximityCallout.classList.add('hidden');
+    }
+  }
+
+  // ── GPA Planning Tool ────────────────────────────────────────────────────────
+
+  const planCurrentGPA     = document.getElementById('plan-current-gpa');
+  const planCurrentCredits = document.getElementById('plan-current-credits');
+  const planTargetGPA      = document.getElementById('plan-target-gpa');
+  const planFutureCredits  = document.getElementById('plan-future-credits');
+  const planResult         = document.getElementById('plan-result');
+  const planResultText     = document.getElementById('plan-result-text');
+
+  function recalcPlan() {
+    const curGPA = parseFloat(planCurrentGPA.value);
+    const curCr  = parseFloat(planCurrentCredits.value);
+    const tgtGPA = parseFloat(planTargetGPA.value);
+    const futCr  = parseFloat(planFutureCredits.value);
+
+    if (isNaN(curGPA) || isNaN(curCr) || isNaN(tgtGPA) || isNaN(futCr)) {
+      planResult.classList.add('hidden');
+      return;
+    }
+    if (curGPA < 0 || curGPA > 4 || tgtGPA < 0 || tgtGPA > 4 || curCr < 0 || futCr <= 0) {
+      planResult.classList.add('hidden');
+      return;
+    }
+
+    // Needed avg GPA = (target * (curCr + futCr) - curGPA * curCr) / futCr
+    const neededQP = tgtGPA * (curCr + futCr) - curGPA * curCr;
+    const neededGPA = neededQP / futCr;
+
+    planResult.classList.remove('hidden');
+
+    if (neededGPA > 4.0) {
+      planResultText.innerHTML = `To reach a <strong>${tgtGPA.toFixed(2)} GPA</strong>, you would need a <strong>${neededGPA.toFixed(2)} GPA</strong> over your next ${futCr} credits — which exceeds 4.0. Consider extending your timeline or adjusting your target.`;
+    } else if (neededGPA < 0) {
+      planResultText.innerHTML = `You have already surpassed a <strong>${tgtGPA.toFixed(2)} GPA</strong>! Even a 0.0 semester GPA over the next ${futCr} credits would keep you above your target.`;
+    } else {
+      const letter = pointsToLetter(neededGPA);
+      planResultText.innerHTML = `To reach a <strong>${tgtGPA.toFixed(2)} cumulative GPA</strong>, you need an average of <strong>${neededGPA.toFixed(2)} GPA</strong> (roughly a <strong>${letter}</strong> average) over your next <strong>${futCr} credits</strong>.`;
+    }
+  }
+
+  [planCurrentGPA, planCurrentCredits, planTargetGPA, planFutureCredits].forEach(el => {
+    el.addEventListener('input', recalcPlan);
+  });
+
+  // ── Reset ────────────────────────────────────────────────────────────────────
+
+  function fullReset() {
+    // Clear all semesters
+    semestersContainer.innerHTML = '';
+    semesterCounter = 0;
+    courseCounter = 0;
+
+    // Clear prev tab
+    prevCoursesContainer.innerHTML = '';
+    prevCourseCounter = 0;
+    prevGPAInput.value = '';
+    prevCreditsInput.value = '';
+
+    // Reset toggles
+    pctMode1 = false;
+    noCredits1 = false;
+    pctMode2 = false;
+    noCredits2 = false;
+    pctToggle1.checked = false;
+    equalCreditsToggle.checked = false;
+    pctToggle2.checked = false;
+    equalCreditsToggle2.checked = false;
+    if (gradeModeLabel1) gradeModeLabel1.textContent = 'Letter Grade';
+    if (gradeModeLabel2) gradeModeLabel2.textContent = 'Letter Grade';
+
+    // Reset result panel
+    updateResultPanel({ primaryGPA: null, primaryLabel: 'Semester GPA', showCum: false, cumGPA: null, totalCr: 0, totalQP: 0 });
+
+    // Re-add defaults
+    addSemester();
+
+    for (let i = 0; i < 4; i++) addPrevCourse();
+
+    recalculate();
+  }
+
+  resetBtn.addEventListener('click', fullReset);
+
+  // ── Share ────────────────────────────────────────────────────────────────────
+
+  shareBtn.addEventListener('click', async () => {
+    const gpaText = semGPAResult.textContent || '—';
+    const url = window.location.href.split('?')[0];
+    const shareURL = `${url}?gpa=${encodeURIComponent(gpaText)}`;
+
+    const copy = async (text) => {
+      if (navigator.clipboard?.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    };
+
+    try {
+      await copy(shareURL);
+      if (shareBtnText) shareBtnText.textContent = 'Copied!';
+      shareToast.classList.remove('hidden');
+      setTimeout(() => {
+        if (shareBtnText) shareBtnText.textContent = 'Share Result';
+        shareToast.classList.add('hidden');
+      }, 2500);
+    } catch {
+      if (shareBtnText) shareBtnText.textContent = 'Copy failed';
+      setTimeout(() => { if (shareBtnText) shareBtnText.textContent = 'Share Result'; }, 2000);
+    }
+  });
+
+  printBtn.addEventListener('click', () => window.print());
+
+  // ── FAQ accordion ────────────────────────────────────────────────────────────
+
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // ── Restore shared result ─────────────────────────────────────────────────────
+
+  function restoreFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const sharedGPA = params.get('gpa');
+    if (!sharedGPA || sharedGPA === '—') return;
+
+    const banner = document.createElement('div');
+    banner.className = 'callout callout-blue';
+    banner.style.cssText = 'margin-bottom:1rem;font-size:0.875rem;';
+    banner.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0" style="color:var(--color-brand)" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Shared result: <strong>${sharedGPA}</strong> GPA — enter your courses to recalculate.</span>`;
+    const calcSection = document.getElementById('calculator');
+    if (calcSection) calcSection.insertBefore(banner, calcSection.firstChild);
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+
+  // Add one default semester with 4 courses
+  addSemester();
+
+  // Add 4 default courses for tab 2
+  for (let i = 0; i < 4; i++) addPrevCourse();
+
+  // Restore URL state if any
+  restoreFromURL();
+
+  // Initial calculation
+  recalculate();
+
+})();
+</script>

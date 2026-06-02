@@ -1,0 +1,1180 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "What If GPA Calculator",
+  "url": "https://gpacalculatorfree.com/what-if-gpa-calculator",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "See exactly how your GPA will change based on future grades. Enter your current GPA and planned grades to simulate your new GPA instantly.",
+  "featureList": [
+    "Live before/after GPA comparison",
+    "Unlimited future course rows",
+    "Target GPA finder with required grade calculator",
+    "All A's / All B's / All C's scenario comparison cards",
+    "GPA change indicator with color-coded delta",
+    "Dean's List and honor threshold proximity alerts"
+  ]
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does the What If GPA Calculator do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The What If GPA Calculator lets you simulate how your planned future grades will change your cumulative GPA. Enter your current GPA and credits completed, then add upcoming courses with expected grades. The calculator instantly shows your projected new GPA, the change amount, and whether you're moving toward or away from key thresholds like Dean's List."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much will my GPA go up if I get all A's?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The GPA boost from all A's depends on how many credits you've already completed. If you have 30 credits at a 2.8 GPA and take 15 credits of all A's (4.0), your new GPA would be (2.8×30 + 4.0×15) / 45 = 3.20 — an increase of 0.40 points. With 90 existing credits, the same semester of all A's would only raise your GPA by about 0.13 points. Use the simulator above to see your exact scenario."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What grades do I need to reach a 3.5 GPA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter your current GPA and total credits completed, then set the Target GPA to 3.5 and input the number of credits you plan to take. The calculator will instantly show the average grade points per credit you need to reach 3.5, and map that to the nearest letter grade. Generally, students with more existing credits need higher future grades to reach 3.5."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many credits does it take to raise GPA significantly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A useful rule of thumb is that one full semester of 15 credits typically moves your cumulative GPA by 0.1 to 0.3 points, depending on how many total credits you've already completed and the grade differential. Students earlier in their academic career (30–45 credits) see larger per-semester swings. Those approaching graduation with 100+ credits see smaller movements because each new semester represents a smaller fraction of total credits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I recover from a bad GPA semester?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — recovery is absolutely possible, though it requires sustained strong performance. A single poor semester early in college (when you have fewer total credits) has a larger negative impact, but it also means you have more semesters ahead to correct it. The key insight is that your GPA is a weighted average: each future semester with grades above your current GPA will pull the average up. Use the What If simulator to model how many semesters of strong grades you'd need."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What will my GPA be if I get all A's next semester?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the simulator above. Enter your current GPA and the total credits you've completed so far, then add your upcoming courses using grade A for each. The result panel will immediately show your projected GPA along with the exact change amount. You can also use the scenario cards at the bottom which automatically compute all-A, all-B, and all-C outcomes side by side."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is the projected GPA calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Projected GPA = (existing quality points + planned quality points) ÷ (current credits + planned credits). Existing quality points = current GPA × current credits. Planned quality points = sum of (grade points × course credits) for each future course. Grade points are A/A+=4.0, A−=3.7, B+=3.3, B=3.0, B−=2.7, C+=2.3, C=2.0, C−=1.7, D+=1.3, D=1.0, D−=0.7, F=0.0."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I drop a class — does that affect my GPA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A Withdrawal (W) grade typically does not affect your GPA at most US colleges and universities, since it carries no grade points. However, policies vary by institution — some schools require drops before a specific deadline to avoid the W entirely, and excessive withdrawals may trigger academic review. Always confirm your school's specific withdrawal and repeat-course policies. In the What If Calculator, simply do not add dropped courses to your planned course list."
+      }
+    }
+  ]
+};
+---
+
+<Layout
+  title="What If GPA Calculator — See How Future Grades Will Change Your GPA"
+  description="See exactly how your GPA will change based on future grades. Enter your current GPA and planned grades to simulate your new GPA instantly."
+  canonical="/what-if-gpa-calculator"
+  schema={[webAppSchema, faqSchema]}
+>
+
+  <!-- ══════════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════════ -->
+  <section class="page-hero">
+    <div class="max-w-6xl mx-auto px-4">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb mb-4" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        <span aria-current="page">What If GPA Calculator</span>
+      </nav>
+
+      <div class="max-w-3xl">
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <span class="badge badge-blue">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Unique Feature
+          </span>
+          <span class="badge badge-green">No Other Calculator Does This</span>
+        </div>
+        <h1 class="mb-3">What If GPA Calculator</h1>
+        <p class="text-lg" style="color:var(--color-body)">
+          The only GPA simulator that shows you <em>exactly</em> how your planned future grades will change your cumulative GPA — live, as you type. Enter your current GPA, add upcoming courses, and watch your projected GPA update in real time.
+        </p>
+        <!-- Use-case pills -->
+        <div class="flex flex-wrap gap-2 mt-4">
+          <span class="badge badge-blue">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Plan next semester
+          </span>
+          <span class="badge badge-blue">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Model GPA recovery
+          </span>
+          <span class="badge badge-blue">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Target Dean's List
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       MAIN WHAT-IF SIMULATOR
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-8" aria-labelledby="simulator-heading">
+    <h2 id="simulator-heading" class="sr-only">What If GPA Simulator</h2>
+
+    <div class="grid lg:grid-cols-[1fr_360px] gap-6 items-start">
+
+      <!-- ── LEFT: Input panel ── -->
+      <div class="card p-6">
+
+        <!-- Section 1: Current Standing -->
+        <div class="mb-6">
+          <h3 class="text-base font-semibold mb-1" style="color:var(--color-ink)">Step 1: Your Current Standing</h3>
+          <p class="text-sm mb-4" style="color:var(--color-mute)">Enter your existing GPA and total credits completed before the upcoming semester.</p>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="current-gpa">Current GPA</label>
+              <input
+                type="number"
+                id="current-gpa"
+                class="input"
+                placeholder="e.g. 3.20"
+                min="0"
+                max="4"
+                step="0.01"
+                aria-describedby="current-gpa-hint"
+              />
+              <p id="current-gpa-hint" class="text-xs mt-1" style="color:var(--color-mute)">Your GPA before planned courses</p>
+            </div>
+            <div>
+              <label for="current-credits">Credits Completed</label>
+              <input
+                type="number"
+                id="current-credits"
+                class="input"
+                placeholder="e.g. 45"
+                min="0"
+                max="999"
+                step="1"
+                aria-describedby="current-credits-hint"
+              />
+              <p id="current-credits-hint" class="text-xs mt-1" style="color:var(--color-mute)">Total graded credits earned so far</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Section 2: Planned Courses -->
+        <div>
+          <h3 class="text-base font-semibold mb-1" style="color:var(--color-ink)">Step 2: Planned / Future Courses</h3>
+          <p class="text-sm mb-4" style="color:var(--color-mute)">Add every course you plan to take. Select the grade you expect (or aim for) and the credit hours.</p>
+
+          <!-- Column headers (desktop) -->
+          <div class="hidden sm:grid gap-3 mb-2 px-1" style="grid-template-columns: 2fr 1.4fr 1fr auto;">
+            <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Course (optional)</span>
+            <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Expected Grade</span>
+            <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Credits</span>
+            <span></span>
+          </div>
+
+          <!-- Course rows injected by JS -->
+          <div id="whatif-course-rows" class="flex flex-col gap-3"></div>
+
+          <button id="add-whatif-course" class="btn btn-ghost btn-sm mt-4 w-full sm:w-auto" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Add Course
+          </button>
+        </div>
+
+        <!-- Action row -->
+        <div class="flex flex-wrap gap-2 mt-6 pt-5" style="border-top:1px solid var(--color-hairline)">
+          <button id="whatif-reset" class="btn btn-secondary btn-sm" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Reset
+          </button>
+          <button id="whatif-share" class="btn btn-secondary btn-sm" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share Results
+          </button>
+        </div>
+        <div id="whatif-share-toast" class="hidden mt-2 text-sm font-medium" style="color:var(--color-success)" role="status" aria-live="polite">
+          Link copied to clipboard!
+        </div>
+
+      </div>
+
+      <!-- ── RIGHT: Live result panel ── -->
+      <div class="flex flex-col gap-4 lg:sticky lg:top-20">
+
+        <!-- Star result panel -->
+        <div class="result-panel" id="whatif-result-panel" style="background:var(--color-brand-bg);border:1px solid var(--color-brand-soft);border-radius:var(--radius-lg);padding:1.5rem;">
+          <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color:var(--color-brand)">Projected GPA</p>
+
+          <!-- Big before → after display -->
+          <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <div class="text-center">
+              <p class="text-xs font-medium mb-1" style="color:var(--color-mute)">Before</p>
+              <span id="wi-gpa-before" class="tabular text-3xl font-bold" style="color:var(--color-mute)">—</span>
+            </div>
+
+            <!-- Arrow -->
+            <div class="flex flex-col items-center gap-1 px-1">
+              <svg width="28" height="16" viewBox="0 0 28 16" fill="none" aria-hidden="true" style="color:var(--color-mute)">
+                <path d="M0 8h24M20 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <!-- Delta badge -->
+              <span id="wi-delta" class="tabular text-xs font-bold px-2 py-0.5 rounded-full" style="background:var(--color-canvas-soft-2);color:var(--color-mute)">+0.00</span>
+            </div>
+
+            <div class="text-center">
+              <p class="text-xs font-medium mb-1" style="color:var(--color-mute)">After</p>
+              <span id="wi-gpa-after" class="tabular text-3xl font-bold" style="color:var(--color-brand)">—</span>
+            </div>
+          </div>
+
+          <!-- Label row -->
+          <div class="flex items-center justify-between mb-4 text-sm">
+            <span id="wi-label-before" class="font-medium" style="color:var(--color-mute)"></span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-mute)" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+            <span id="wi-label-after" class="font-medium" style="color:var(--color-ink)"></span>
+          </div>
+
+          <!-- Before / After progress bars -->
+          <div class="flex flex-col gap-2 mb-4">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs" style="color:var(--color-mute)">Before</span>
+                <span id="wi-pct-before-label" class="text-xs tabular" style="color:var(--color-mute)">0%</span>
+              </div>
+              <div class="gpa-meter-container" role="presentation">
+                <div id="wi-bar-before" class="gpa-meter-fill" style="width:0%;opacity:0.45;"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs" style="color:var(--color-mute)">After</span>
+                <span id="wi-pct-after-label" class="text-xs tabular" style="color:var(--color-mute)">0%</span>
+              </div>
+              <div class="gpa-meter-container" role="presentation">
+                <div id="wi-bar-after" class="gpa-meter-fill" style="width:0%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Credits breakdown -->
+          <div class="grid grid-cols-3 gap-2 text-center pt-3" style="border-top:1px solid var(--color-brand-soft)">
+            <div>
+              <p class="text-xs mb-1" style="color:var(--color-mute)">Current</p>
+              <p id="wi-credits-current" class="tabular text-sm font-bold" style="color:var(--color-ink)">—</p>
+              <p class="text-xs" style="color:var(--color-mute)">credits</p>
+            </div>
+            <div>
+              <p class="text-xs mb-1" style="color:var(--color-mute)">Planned</p>
+              <p id="wi-credits-planned" class="tabular text-sm font-bold" style="color:var(--color-ink)">—</p>
+              <p class="text-xs" style="color:var(--color-mute)">credits</p>
+            </div>
+            <div>
+              <p class="text-xs mb-1" style="color:var(--color-mute)">New Total</p>
+              <p id="wi-credits-total" class="tabular text-sm font-bold" style="color:var(--color-brand)">—</p>
+              <p class="text-xs" style="color:var(--color-mute)">credits</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proximity callout -->
+        <div id="wi-proximity-callout" class="callout callout-blue hidden">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5" style="color:var(--color-brand)" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="wi-proximity-text"></span>
+        </div>
+
+        <!-- GPA scale reference -->
+        <div class="card-soft p-4">
+          <p class="text-xs font-semibold uppercase tracking-wide mb-3" style="color:var(--color-mute)">GPA Thresholds</p>
+          <div class="flex flex-col gap-1.5 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#0070f3"></span>3.50 – 4.00</span>
+              <span class="font-medium" style="color:#0070f3">Dean's List</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#16a34a"></span>3.00 – 3.49</span>
+              <span class="font-medium" style="color:#16a34a">Good Standing</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#f5a623"></span>2.00 – 2.99</span>
+              <span class="font-medium" style="color:#f5a623">Satisfactory</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#ee0000"></span>0.00 – 1.99</span>
+              <span class="font-medium" style="color:#ee0000">Below Average</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       SCENARIO COMPARISON CARDS
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 pb-4" id="scenario-section" aria-labelledby="scenario-heading">
+    <h3 id="scenario-heading" class="text-base font-semibold mb-3" style="color:var(--color-ink)">
+      Grade Scenario Comparison
+      <span class="ml-2 text-xs font-normal" style="color:var(--color-mute)">(based on your planned credit hours)</span>
+    </h3>
+    <div class="grid sm:grid-cols-3 gap-4">
+
+      <!-- All A's card -->
+      <div class="card p-4 text-center" id="scenario-a">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#eff6ff">
+          <span class="text-lg font-bold" style="color:#0070f3">A</span>
+        </div>
+        <p class="text-xs font-semibold uppercase tracking-wide mb-1" style="color:var(--color-mute)">All A's (4.0)</p>
+        <p id="scenario-a-gpa" class="tabular text-2xl font-bold mb-1" style="color:var(--color-mute)">—</p>
+        <p id="scenario-a-delta" class="text-xs font-medium" style="color:var(--color-mute)">—</p>
+        <p id="scenario-a-label" class="text-xs mt-1" style="color:var(--color-mute)">Enter your GPA + credits first</p>
+      </div>
+
+      <!-- All B's card -->
+      <div class="card p-4 text-center" id="scenario-b">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#f0fdf4">
+          <span class="text-lg font-bold" style="color:#16a34a">B</span>
+        </div>
+        <p class="text-xs font-semibold uppercase tracking-wide mb-1" style="color:var(--color-mute)">All B's (3.0)</p>
+        <p id="scenario-b-gpa" class="tabular text-2xl font-bold mb-1" style="color:var(--color-mute)">—</p>
+        <p id="scenario-b-delta" class="text-xs font-medium" style="color:var(--color-mute)">—</p>
+        <p id="scenario-b-label" class="text-xs mt-1" style="color:var(--color-mute)">Enter your GPA + credits first</p>
+      </div>
+
+      <!-- All C's card -->
+      <div class="card p-4 text-center" id="scenario-c">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#fffbeb">
+          <span class="text-lg font-bold" style="color:#f5a623">C</span>
+        </div>
+        <p class="text-xs font-semibold uppercase tracking-wide mb-1" style="color:var(--color-mute)">All C's (2.0)</p>
+        <p id="scenario-c-gpa" class="tabular text-2xl font-bold mb-1" style="color:var(--color-mute)">—</p>
+        <p id="scenario-c-delta" class="text-xs font-medium" style="color:var(--color-mute)">—</p>
+        <p id="scenario-c-label" class="text-xs mt-1" style="color:var(--color-mute)">Enter your GPA + credits first</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       TARGET GPA FINDER
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-8" aria-labelledby="target-heading">
+    <div class="card p-6">
+      <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
+        <div>
+          <span class="badge badge-yellow mb-2">Target GPA Finder</span>
+          <h2 id="target-heading" class="text-xl font-bold" style="color:var(--color-ink)">What Average Grade Do I Need?</h2>
+          <p class="text-sm mt-1" style="color:var(--color-mute)">Enter a target GPA and planned credits. The calculator will tell you what average grade you need to hit it.</p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label for="target-gpa">My Target GPA is:</label>
+          <input
+            type="number"
+            id="target-gpa"
+            class="input"
+            value="3.50"
+            min="0"
+            max="4"
+            step="0.01"
+            aria-describedby="target-gpa-hint"
+          />
+          <p id="target-gpa-hint" class="text-xs mt-1" style="color:var(--color-mute)">Goal GPA on a 4.0 scale</p>
+        </div>
+        <div>
+          <label for="target-planned-credits">Credits I Plan to Take:</label>
+          <input
+            type="number"
+            id="target-planned-credits"
+            class="input"
+            placeholder="e.g. 15"
+            min="1"
+            step="1"
+            aria-describedby="target-credits-hint"
+          />
+          <p id="target-credits-hint" class="text-xs mt-1" style="color:var(--color-mute)">Future credits for this target</p>
+        </div>
+        <div class="sm:col-span-1 flex flex-col justify-end">
+          <div id="target-result-box" class="card-soft p-4 h-full flex flex-col justify-center" aria-live="polite">
+            <p class="text-xs font-semibold uppercase tracking-wide mb-1" style="color:var(--color-mute)">Required Average</p>
+            <p id="target-needed-grade" class="text-xl font-bold" style="color:var(--color-ink)">—</p>
+            <p id="target-needed-detail" class="text-xs mt-1" style="color:var(--color-mute)">Fill in your current GPA + credits above</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison mini-cards: all A's / all B's -->
+      <div class="grid sm:grid-cols-2 gap-4" id="target-compare-cards">
+        <div class="callout callout-blue flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold" style="color:var(--color-brand)">If you get all A's (4.0)</p>
+            <p id="target-all-a" class="text-base font-bold mt-0.5" style="color:var(--color-ink)">GPA → —</p>
+          </div>
+          <span class="badge badge-blue text-base px-3 py-1">A</span>
+        </div>
+        <div class="callout" style="background:#f0fdf4;border-left:3px solid #16a34a">
+          <div>
+            <p class="text-xs font-semibold" style="color:#16a34a">If you get all B's (3.0)</p>
+            <p id="target-all-b" class="text-base font-bold mt-0.5" style="color:var(--color-ink)">GPA → —</p>
+          </div>
+          <span class="badge badge-green text-base px-3 py-1">B</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       HOW IT WORKS
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-6">
+    <div class="grid md:grid-cols-2 gap-8">
+
+      <div class="prose">
+        <h2>How the What If Calculator Works</h2>
+        <p>
+          The What If GPA Calculator uses the standard quality-points formula to project your GPA after you complete planned future courses. Unlike a regular GPA calculator that only computes a single semester, this tool combines your existing academic record with future grades to give you a true cumulative projection.
+        </p>
+        <p>
+          Here's the exact math behind every projection: your <strong>existing quality points</strong> equal your current GPA multiplied by the total credits you've already completed. Your <strong>planned quality points</strong> are calculated by summing (grade points × credit hours) for each planned course. The projected GPA is then:
+        </p>
+        <div class="callout callout-blue my-4">
+          <div>
+            <strong>Projected GPA</strong> = (Existing QP + Planned QP) ÷ (Current Credits + Planned Credits)<br/>
+            <span class="text-xs mt-1 block" style="color:var(--color-mute)">Where QP = quality points (GPA × credits)</span>
+          </div>
+        </div>
+        <p>
+          This is the same formula your university registrar uses. The result is a precise, academically accurate projection — not an approximation.
+        </p>
+      </div>
+
+      <div class="prose">
+        <h2>Why This Feature Is Unique</h2>
+        <p>
+          Most GPA calculators only tell you your current GPA based on grades you've already received. The What If Calculator flips that around: it lets you model the future before it happens.
+        </p>
+        <p>
+          You can ask questions like: <em>"If I take 18 credits next semester and get mostly B's, will I still qualify for Dean's List?"</em> or <em>"How many semesters of all A's do I need to recover from my 2.4 freshman year GPA?"</em> The simulator answers these questions instantly with real numbers.
+        </p>
+        <p>
+          The <strong>Target GPA Finder</strong> section works in reverse — you tell it your goal GPA and planned credits, and it calculates the exact average grade points per credit you need to achieve that target. It even maps the number to the closest letter grade so you know what to aim for.
+        </p>
+        <p>
+          The <strong>Scenario Cards</strong> show you three futures side by side: all A's, all B's, and all C's — so you can instantly see the range of outcomes and how much your effort level matters.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       GRADE POINTS REFERENCE TABLE
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-4">
+    <div class="callout callout-yellow mb-6">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div>
+        <strong>Grade Point Scale Used:</strong> This calculator uses the standard US 4.0 scale: A/A+ = 4.0, A− = 3.7, B+ = 3.3, B = 3.0, B− = 2.7, C+ = 2.3, C = 2.0, C− = 1.7, D+ = 1.3, D = 1.0, D− = 0.7, F = 0.0. Some institutions use slightly different scales — check your school's official grading policy if results differ.
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       FAQ
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-6" aria-labelledby="faq-heading">
+    <div class="max-w-2xl">
+      <h2 id="faq-heading" class="mb-6">Frequently Asked Questions</h2>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            What does the What If GPA Calculator do?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            The What If GPA Calculator lets you simulate how your planned future grades will change your cumulative GPA. Enter your current GPA and credits completed, then add upcoming courses with expected grades. The calculator instantly shows your projected new GPA, the exact change amount (positive or negative), and whether you're moving toward or away from key thresholds like Dean's List. No other free GPA tool offers this live before/after projection.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            How much will my GPA go up if I get all A's?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            The GPA boost from all A's depends entirely on how many credits you've already completed. The more credits you have, the smaller the impact of each new semester. For example: a student with 30 credits at a 2.8 GPA who earns 15 credits of straight A's will reach a 3.20 GPA — a jump of +0.40. But a student with 90 credits at 2.8 who earns the same 15 credits of A's will only reach 2.93 — a gain of just +0.13. Use the simulator above to get your exact numbers.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            What grades do I need to reach a 3.5 GPA?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            Use the Target GPA Finder section above. Enter your current GPA and total credits in the main simulator (Steps 1 and 2), then scroll to the Target GPA Finder, set your target to 3.5, and enter how many credits you plan to take. The tool calculates the exact average grade points per credit needed and maps it to a letter grade. Students with lower starting GPAs or fewer remaining semesters will typically need higher grades to hit 3.5.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            How many credits does it take to raise GPA significantly?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            A useful rule of thumb: one typical semester of 15 credits moves your cumulative GPA by roughly 0.1 to 0.3 points, depending on your grade differential and how many total credits you've completed. Students earlier in their academic career (30–45 total credits) see larger per-semester swings because each semester represents a larger fraction of the total. Students approaching graduation with 100+ credits see much smaller movements. The scenario cards in the simulator show this effect clearly.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            Can I recover from a bad GPA semester?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            Absolutely yes — GPA recovery is possible, and it is more achievable the earlier you start. Because cumulative GPA is a weighted average, sustained strong performance over multiple semesters will progressively pull your average up. A student with 30 credits at a 2.0 who earns all A's for two full semesters (30 more credits) can reach a 3.0. The same student with 90 credits at a 2.0 would need much longer. Use the What If simulator with multiple future semesters to model your personal recovery timeline.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            What will my GPA be if I get all A's next semester?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            Use the main simulator: enter your current GPA and credits completed in Step 1, then in Step 2 add each of your planned courses and select grade A for all of them. The result panel will instantly update to show your projected GPA and the exact change. Alternatively, look at the "All A's" scenario comparison card below the main simulator — it calculates this automatically using your planned credit total.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            How is the projected GPA calculated?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            Projected GPA = (existing quality points + planned quality points) ÷ (current credits + planned credits). Existing quality points = current GPA × credits completed. Planned quality points = sum of (grade points × credit hours) for each planned course. Grade points: A/A+ = 4.0, A− = 3.7, B+ = 3.3, B = 3.0, B− = 2.7, C+ = 2.3, C = 2.0, C− = 1.7, D+ = 1.3, D = 1.0, D− = 0.7, F = 0.0. This is the identical formula used by university registrars.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            What if I drop a class — does that affect my GPA?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            A Withdrawal (W) grade typically does not affect your GPA at most US colleges and universities because it carries no grade points and is excluded from the GPA calculation. However, policies vary by institution — some require withdrawal before a specific deadline to avoid the W appearing on your transcript, and excessive withdrawals may trigger an academic review. In this What If Calculator, simply do not add dropped courses to your planned course list. Always confirm your school's specific withdrawal policies with your registrar.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       RELATED CALCULATORS
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-8" aria-labelledby="related-heading">
+    <h2 id="related-heading" class="mb-5">Related Calculators</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <a href="/cumulative-gpa-calculator" class="card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors group" style="text-decoration:none">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style="background:var(--color-brand-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-brand)" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <p class="font-semibold text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" style="color:var(--color-ink)">Cumulative GPA Calculator</p>
+        <p class="text-xs" style="color:var(--color-mute)">Calculate your overall GPA across all semesters you've completed.</p>
+      </a>
+
+      <a href="/college-gpa-calculator" class="card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors group" style="text-decoration:none">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style="background:var(--color-brand-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-brand)" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <p class="font-semibold text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" style="color:var(--color-ink)">College GPA Calculator</p>
+        <p class="text-xs" style="color:var(--color-mute)">Calculate your semester GPA by entering each course and grade.</p>
+      </a>
+
+      <a href="/weighted-gpa-calculator" class="card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors group" style="text-decoration:none">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style="background:var(--color-brand-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-brand)" aria-hidden="true"><rect x="2" y="3" width="6" height="18"/><rect x="9" y="8" width="6" height="13"/><rect x="16" y="5" width="6" height="16"/></svg>
+        </div>
+        <p class="font-semibold text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" style="color:var(--color-ink)">Weighted GPA Calculator</p>
+        <p class="text-xs" style="color:var(--color-mute)">Include AP, IB, and Honors course weight bonuses in your GPA.</p>
+      </a>
+
+      <a href="/grade-calculator" class="card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors group" style="text-decoration:none">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style="background:var(--color-brand-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-brand)" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <p class="font-semibold text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" style="color:var(--color-ink)">Grade Calculator</p>
+        <p class="text-xs" style="color:var(--color-mute)">Calculate what you need on a final exam to reach your target grade.</p>
+      </a>
+
+    </div>
+  </section>
+
+</Layout>
+
+<!-- ══════════════════════════════════════════════
+     VANILLA JS — WHAT IF CALCULATOR LOGIC
+══════════════════════════════════════════════ -->
+<script>
+  // ── Grade point map ───────────────────────────────────────────────────────────
+  const GRADE_POINTS: Record<string, number> = {
+    'A+': 4.0, 'A': 4.0, 'A-': 3.7,
+    'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+    'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+    'D+': 1.3, 'D': 1.0, 'D-': 0.7,
+    'F':  0.0,
+  };
+
+  const GRADE_OPTIONS = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F'];
+
+  function gradeOptionsHTML(selected = 'A'): string {
+    return GRADE_OPTIONS.map(g =>
+      `<option value="${g}"${g === selected ? ' selected' : ''}>${g}</option>`
+    ).join('');
+  }
+
+  function fmt(v: number | null): string {
+    if (v === null || isNaN(v)) return '—';
+    return v.toFixed(2);
+  }
+
+  function gpaColor(gpa: number | null): string {
+    if (gpa === null || isNaN(gpa)) return 'var(--color-mute)';
+    if (gpa < 2.0) return '#ee0000';
+    if (gpa < 3.0) return '#f5a623';
+    if (gpa < 3.5) return '#16a34a';
+    return '#0070f3';
+  }
+
+  function gpaLabel(gpa: number | null): string {
+    if (gpa === null || isNaN(gpa)) return '';
+    if (gpa >= 3.9) return 'Summa Cum Laude';
+    if (gpa >= 3.7) return 'Magna Cum Laude';
+    if (gpa >= 3.5) return "Dean's List";
+    if (gpa >= 3.0) return 'Good Standing';
+    if (gpa >= 2.0) return 'Satisfactory';
+    if (gpa >= 1.0) return 'Below Average';
+    return 'Failing';
+  }
+
+  function proximityMsg(gpa: number | null): string {
+    if (gpa === null || isNaN(gpa)) return '';
+    const thresholds = [
+      { val: 4.0,  label: 'Perfect GPA (4.0)' },
+      { val: 3.9,  label: 'Summa Cum Laude (3.9)' },
+      { val: 3.7,  label: 'Magna Cum Laude (3.7)' },
+      { val: 3.5,  label: "Dean's List (3.5)" },
+      { val: 3.0,  label: 'Good Standing (3.0)' },
+      { val: 2.0,  label: 'Passing (2.0)' },
+    ];
+    for (const t of thresholds) {
+      if (gpa < t.val) {
+        const diff = t.val - gpa;
+        if (diff <= 0.30) {
+          return `You are only ${diff.toFixed(2)} GPA points away from ${t.label} — you can make it!`;
+        }
+        break;
+      }
+    }
+    return '';
+  }
+
+  function neededGradeLabel(needed: number): string {
+    // Map needed grade points to nearest letter
+    const table: [number, string][] = [
+      [4.0, 'A / A+'], [3.85, 'A-'], [3.5, 'B+'], [3.15, 'B'],
+      [2.85, 'B-'], [2.5, 'C+'], [2.15, 'C'], [1.85, 'C-'],
+      [1.5, 'D+'], [1.15, 'D'], [0.85, 'D-'], [0, 'F'],
+    ];
+    for (const [threshold, label] of table) {
+      if (needed >= threshold) return label;
+    }
+    return 'F';
+  }
+
+  // ── DOM refs ─────────────────────────────────────────────────────────────────
+  const currentGPAInput     = document.getElementById('current-gpa') as HTMLInputElement;
+  const currentCreditsInput = document.getElementById('current-credits') as HTMLInputElement;
+  const courseRowsEl        = document.getElementById('whatif-course-rows')!;
+  const addCourseBtn        = document.getElementById('add-whatif-course')!;
+  const resetBtn            = document.getElementById('whatif-reset')!;
+  const shareBtn            = document.getElementById('whatif-share')!;
+  const shareToast          = document.getElementById('whatif-share-toast')!;
+
+  const wiGpaBefore         = document.getElementById('wi-gpa-before')!;
+  const wiGpaAfter          = document.getElementById('wi-gpa-after')!;
+  const wiDelta             = document.getElementById('wi-delta')!;
+  const wiLabelBefore       = document.getElementById('wi-label-before')!;
+  const wiLabelAfter        = document.getElementById('wi-label-after')!;
+  const wiBarBefore         = document.getElementById('wi-bar-before')!;
+  const wiBarAfter          = document.getElementById('wi-bar-after')!;
+  const wiPctBeforeLabel    = document.getElementById('wi-pct-before-label')!;
+  const wiPctAfterLabel     = document.getElementById('wi-pct-after-label')!;
+  const wiCreditsCurrent    = document.getElementById('wi-credits-current')!;
+  const wiCreditsPlanned    = document.getElementById('wi-credits-planned')!;
+  const wiCreditsTotal      = document.getElementById('wi-credits-total')!;
+  const wiProximCallout     = document.getElementById('wi-proximity-callout')!;
+  const wiProximText        = document.getElementById('wi-proximity-text')!;
+
+  // Scenario cards
+  const scnAGpa    = document.getElementById('scenario-a-gpa')!;
+  const scnADelta  = document.getElementById('scenario-a-delta')!;
+  const scnALabel  = document.getElementById('scenario-a-label')!;
+  const scnBGpa    = document.getElementById('scenario-b-gpa')!;
+  const scnBDelta  = document.getElementById('scenario-b-delta')!;
+  const scnBLabel  = document.getElementById('scenario-b-label')!;
+  const scnCGpa    = document.getElementById('scenario-c-gpa')!;
+  const scnCDelta  = document.getElementById('scenario-c-delta')!;
+  const scnCLabel  = document.getElementById('scenario-c-label')!;
+  const scnACard   = document.getElementById('scenario-a')!;
+  const scnBCard   = document.getElementById('scenario-b')!;
+  const scnCCard   = document.getElementById('scenario-c')!;
+
+  // Target GPA finder
+  const targetGPAInput     = document.getElementById('target-gpa') as HTMLInputElement;
+  const targetCreditsInput = document.getElementById('target-planned-credits') as HTMLInputElement;
+  const targetNeededGrade  = document.getElementById('target-needed-grade')!;
+  const targetNeededDetail = document.getElementById('target-needed-detail')!;
+  const targetAllA         = document.getElementById('target-all-a')!;
+  const targetAllB         = document.getElementById('target-all-b')!;
+
+  // ── State ────────────────────────────────────────────────────────────────────
+  let courseCounter = 0;
+
+  // ── Course rows ───────────────────────────────────────────────────────────────
+  function createCourseRow(id: number): HTMLElement {
+    const div = document.createElement('div');
+    div.className = 'course-row fade-in';
+    div.id = `wi-row-${id}`;
+    div.style.cssText = 'grid-template-columns: 2fr 1.4fr 1fr auto;';
+    div.innerHTML = `
+      <div>
+        <label class="sm:hidden text-xs" for="wi-name-${id}">Course</label>
+        <input
+          type="text"
+          id="wi-name-${id}"
+          class="input"
+          placeholder="e.g. MATH 301 (optional)"
+          aria-label="Course name (optional)"
+        />
+      </div>
+      <div>
+        <label class="sm:hidden text-xs" for="wi-grade-${id}">Expected Grade</label>
+        <select
+          id="wi-grade-${id}"
+          class="input"
+          aria-label="Expected grade"
+          data-wi-id="${id}"
+        >${gradeOptionsHTML('A')}</select>
+      </div>
+      <div>
+        <label class="sm:hidden text-xs" for="wi-credits-${id}">Credits</label>
+        <input
+          type="number"
+          id="wi-credits-${id}"
+          class="input"
+          placeholder="3"
+          min="0"
+          step="0.5"
+          aria-label="Credit hours"
+          data-wi-id="${id}"
+        />
+      </div>
+      <div class="flex items-end">
+        <button
+          type="button"
+          class="btn btn-danger btn-sm"
+          aria-label="Remove course"
+          data-wi-remove="${id}"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    `;
+    return div;
+  }
+
+  function addCourseRow() {
+    const row = createCourseRow(courseCounter);
+    courseRowsEl.appendChild(row);
+
+    row.querySelectorAll('input[data-wi-id], select[data-wi-id]').forEach(el => {
+      el.addEventListener('input', recalculate);
+      el.addEventListener('change', recalculate);
+    });
+
+    const removeBtn = row.querySelector(`[data-wi-remove="${courseCounter}"]`);
+    removeBtn?.addEventListener('click', () => {
+      row.remove();
+      recalculate();
+    });
+
+    courseCounter++;
+    recalculate();
+  }
+
+  addCourseBtn.addEventListener('click', addCourseRow);
+
+  // ── Collect planned courses ───────────────────────────────────────────────────
+  function getPlannedData(): { totalQP: number; totalCredits: number } {
+    let totalQP = 0;
+    let totalCredits = 0;
+
+    courseRowsEl.querySelectorAll('.course-row').forEach(row => {
+      const id      = row.id.replace('wi-row-', '');
+      const gradeEl = row.querySelector(`#wi-grade-${id}`) as HTMLSelectElement;
+      const crEl    = row.querySelector(`#wi-credits-${id}`) as HTMLInputElement;
+      const grade   = gradeEl?.value;
+      const cr      = parseFloat(crEl?.value);
+
+      if (grade && !isNaN(cr) && cr > 0 && GRADE_POINTS[grade] !== undefined) {
+        totalQP      += GRADE_POINTS[grade] * cr;
+        totalCredits += cr;
+      }
+    });
+
+    return { totalQP, totalCredits };
+  }
+
+  // ── Main recalculation ────────────────────────────────────────────────────────
+  function recalculate() {
+    const currentGPA     = parseFloat(currentGPAInput.value);
+    const currentCredits = parseFloat(currentCreditsInput.value);
+    const { totalQP: plannedQP, totalCredits: plannedCredits } = getPlannedData();
+
+    const hasCurrentGPA     = !isNaN(currentGPA) && currentGPA >= 0 && currentGPA <= 4;
+    const hasCurrentCredits = !isNaN(currentCredits) && currentCredits >= 0;
+    const hasPlanned        = plannedCredits > 0;
+
+    let projectedGPA: number | null = null;
+    let beforeGPA: number | null    = hasCurrentGPA ? currentGPA : null;
+
+    if (hasCurrentGPA && hasCurrentCredits && hasPlanned) {
+      const existingQP = currentGPA * currentCredits;
+      const totalQP    = existingQP + plannedQP;
+      const totalCr    = currentCredits + plannedCredits;
+      projectedGPA     = Math.round((totalQP / totalCr) * 10000) / 10000;
+    } else if (!hasCurrentGPA && !hasCurrentCredits && hasPlanned) {
+      // Only planned data — show planned-only semester GPA
+      projectedGPA = Math.round((plannedQP / plannedCredits) * 10000) / 10000;
+    }
+
+    updateResultPanel(beforeGPA, projectedGPA, hasCurrentCredits ? currentCredits : 0, plannedCredits);
+    updateScenarioCards(beforeGPA, hasCurrentCredits ? currentCredits : 0, plannedCredits);
+    updateTargetFinder();
+  }
+
+  // ── Update main result panel ──────────────────────────────────────────────────
+  function updateResultPanel(
+    before: number | null,
+    after: number | null,
+    currentCr: number,
+    plannedCr: number
+  ) {
+    // Before GPA
+    wiGpaBefore.textContent = fmt(before);
+    wiGpaBefore.style.color = before !== null ? gpaColor(before) : 'var(--color-mute)';
+
+    // After GPA
+    wiGpaAfter.textContent = fmt(after);
+    wiGpaAfter.style.color = after !== null ? gpaColor(after) : 'var(--color-brand)';
+
+    // Delta badge
+    if (before !== null && after !== null) {
+      const delta = after - before;
+      const sign  = delta > 0 ? '+' : '';
+      wiDelta.textContent = `${sign}${delta.toFixed(2)}`;
+      if (Math.abs(delta) < 0.005) {
+        wiDelta.style.background = 'var(--color-canvas-soft-2)';
+        wiDelta.style.color      = 'var(--color-mute)';
+      } else if (delta > 0) {
+        wiDelta.style.background = '#dcfce7';
+        wiDelta.style.color      = '#16a34a';
+      } else {
+        wiDelta.style.background = '#fee2e2';
+        wiDelta.style.color      = '#ee0000';
+      }
+    } else if (after !== null && before === null) {
+      wiDelta.textContent      = fmt(after);
+      wiDelta.style.background = 'var(--color-brand-bg)';
+      wiDelta.style.color      = 'var(--color-brand)';
+    } else {
+      wiDelta.textContent      = '+0.00';
+      wiDelta.style.background = 'var(--color-canvas-soft-2)';
+      wiDelta.style.color      = 'var(--color-mute)';
+    }
+
+    // Labels
+    wiLabelBefore.textContent = before !== null ? gpaLabel(before) : '';
+    wiLabelAfter.textContent  = after  !== null ? gpaLabel(after)  : '';
+
+    // Progress bars
+    const beforePct = before !== null ? Math.min((before / 4) * 100, 100) : 0;
+    const afterPct  = after  !== null ? Math.min((after  / 4) * 100, 100) : 0;
+
+    wiBarBefore.style.width      = `${beforePct}%`;
+    wiBarBefore.style.background = before !== null ? gpaColor(before) : 'var(--color-mute)';
+    wiPctBeforeLabel.textContent = before !== null ? `${before.toFixed(2)} / 4.00` : '—';
+
+    wiBarAfter.style.width      = `${afterPct}%`;
+    wiBarAfter.style.background = after !== null ? gpaColor(after) : 'var(--color-brand)';
+    wiPctAfterLabel.textContent = after !== null ? `${after.toFixed(2)} / 4.00` : '—';
+
+    // Credits breakdown
+    wiCreditsCurrent.textContent = currentCr > 0 ? currentCr.toString() : '—';
+    wiCreditsPlanned.textContent = plannedCr > 0 ? plannedCr.toString() : '—';
+    wiCreditsTotal.textContent   = (currentCr + plannedCr) > 0 ? (currentCr + plannedCr).toString() : '—';
+
+    // Proximity callout
+    const msg = after !== null ? proximityMsg(after) : '';
+    if (msg) {
+      wiProximCallout.classList.remove('hidden');
+      wiProximText.textContent = msg;
+    } else {
+      wiProximCallout.classList.add('hidden');
+    }
+  }
+
+  // ── Scenario cards ────────────────────────────────────────────────────────────
+  function calcScenarioGPA(before: number | null, beforeCr: number, plannedCr: number, gradePoints: number): number | null {
+    if (plannedCr <= 0) return null;
+    if (before !== null && beforeCr > 0) {
+      const existingQP = before * beforeCr;
+      const newQP      = gradePoints * plannedCr;
+      return Math.round(((existingQP + newQP) / (beforeCr + plannedCr)) * 10000) / 10000;
+    }
+    if (before === null || beforeCr === 0) {
+      // Only planned scenario
+      return gradePoints;
+    }
+    return null;
+  }
+
+  function styleScenarioCard(
+    card: HTMLElement,
+    gpaEl: HTMLElement,
+    deltaEl: HTMLElement,
+    labelEl: HTMLElement,
+    gpa: number | null,
+    before: number | null
+  ) {
+    if (gpa === null) {
+      gpaEl.textContent   = '—';
+      gpaEl.style.color   = 'var(--color-mute)';
+      deltaEl.textContent = '—';
+      deltaEl.style.color = 'var(--color-mute)';
+      labelEl.textContent = 'Enter your GPA + credits first';
+      card.style.borderColor = '';
+      return;
+    }
+
+    gpaEl.textContent  = fmt(gpa);
+    gpaEl.style.color  = gpaColor(gpa);
+    labelEl.textContent = gpaLabel(gpa);
+
+    if (before !== null) {
+      const delta = gpa - before;
+      const sign  = delta > 0 ? '+' : '';
+      deltaEl.textContent = `${sign}${delta.toFixed(2)}`;
+      deltaEl.style.color = delta > 0 ? '#16a34a' : (delta < 0 ? '#ee0000' : 'var(--color-mute)');
+    } else {
+      deltaEl.textContent = '';
+      deltaEl.style.color = 'var(--color-mute)';
+    }
+
+    // Border color
+    const c = gpaColor(gpa);
+    card.style.borderColor = c;
+    card.style.borderWidth = '2px';
+  }
+
+  function updateScenarioCards(before: number | null, beforeCr: number, plannedCr: number) {
+    const aGpa = calcScenarioGPA(before, beforeCr, plannedCr, 4.0);
+    const bGpa = calcScenarioGPA(before, beforeCr, plannedCr, 3.0);
+    const cGpa = calcScenarioGPA(before, beforeCr, plannedCr, 2.0);
+
+    styleScenarioCard(scnACard, scnAGpa, scnADelta, scnALabel, aGpa, before);
+    styleScenarioCard(scnBCard, scnBGpa, scnBDelta, scnBLabel, bGpa, before);
+    styleScenarioCard(scnCCard, scnCGpa, scnCDelta, scnCLabel, cGpa, before);
+  }
+
+  // ── Target GPA Finder ─────────────────────────────────────────────────────────
+  function updateTargetFinder() {
+    const targetGPA      = parseFloat(targetGPAInput.value);
+    const targetCr       = parseFloat(targetCreditsInput.value);
+    const currentGPA     = parseFloat(currentGPAInput.value);
+    const currentCredits = parseFloat(currentCreditsInput.value);
+
+    const hasTarget    = !isNaN(targetGPA) && targetGPA >= 0 && targetGPA <= 4;
+    const hasTargetCr  = !isNaN(targetCr) && targetCr > 0;
+    const hasCurrent   = !isNaN(currentGPA) && currentGPA >= 0 && currentGPA <= 4;
+    const hasCurrentCr = !isNaN(currentCredits) && currentCredits >= 0;
+
+    // Target-finder all-A / all-B projections
+    if (hasCurrent && hasCurrentCr && hasTargetCr) {
+      const aGpa = calcScenarioGPA(currentGPA, currentCredits, targetCr, 4.0);
+      const bGpa = calcScenarioGPA(currentGPA, currentCredits, targetCr, 3.0);
+      targetAllA.textContent = aGpa !== null ? `GPA → ${fmt(aGpa)} (${gpaLabel(aGpa)})` : 'GPA → —';
+      targetAllB.textContent = bGpa !== null ? `GPA → ${fmt(bGpa)} (${gpaLabel(bGpa)})` : 'GPA → —';
+    } else {
+      targetAllA.textContent = 'GPA → —';
+      targetAllB.textContent = 'GPA → —';
+    }
+
+    if (!hasTarget || !hasTargetCr || !hasCurrent || !hasCurrentCr) {
+      targetNeededGrade.textContent  = '—';
+      targetNeededDetail.textContent = 'Fill in your current GPA + credits above';
+      return;
+    }
+
+    // needed_avg = (target_gpa × (current + planned) - current_gpa × current) / planned
+    const totalCrNeeded = currentCredits + targetCr;
+    const needed        = (targetGPA * totalCrNeeded - currentGPA * currentCredits) / targetCr;
+
+    if (needed > 4.0) {
+      targetNeededGrade.textContent  = 'Not possible';
+      targetNeededDetail.textContent = `You would need a ${needed.toFixed(2)} average — above the 4.0 maximum. Consider more credit hours or a lower target.`;
+      targetNeededGrade.style.color  = 'var(--color-error)';
+    } else if (needed < 0) {
+      targetNeededGrade.textContent  = 'Any grade works';
+      targetNeededDetail.textContent = `Even if you get F's, you would still exceed your ${targetGPA.toFixed(2)} target. Consider aiming higher.`;
+      targetNeededGrade.style.color  = 'var(--color-success)';
+    } else {
+      const letter = neededGradeLabel(needed);
+      targetNeededGrade.textContent  = `${letter} avg (${needed.toFixed(2)} GPA pts)`;
+      targetNeededDetail.textContent = `You need an average of ${letter} across ${targetCr} planned credits to reach your ${targetGPA.toFixed(2)} target GPA.`;
+      targetNeededGrade.style.color  = 'var(--color-ink)';
+    }
+  }
+
+  // ── Event listeners ───────────────────────────────────────────────────────────
+  currentGPAInput.addEventListener('input', recalculate);
+  currentCreditsInput.addEventListener('input', recalculate);
+  targetGPAInput.addEventListener('input', updateTargetFinder);
+  targetCreditsInput.addEventListener('input', updateTargetFinder);
+
+  // ── Reset ────────────────────────────────────────────────────────────────────
+  resetBtn.addEventListener('click', () => {
+    currentGPAInput.value     = '';
+    currentCreditsInput.value = '';
+    courseRowsEl.innerHTML    = '';
+    courseCounter             = 0;
+
+    // Reset result panel
+    updateResultPanel(null, null, 0, 0);
+    updateScenarioCards(null, 0, 0);
+    updateTargetFinder();
+
+    // Add 3 fresh rows
+    addCourseRow();
+    addCourseRow();
+    addCourseRow();
+  });
+
+  // ── Share ─────────────────────────────────────────────────────────────────────
+  shareBtn.addEventListener('click', async () => {
+    const gpa  = wiGpaAfter.textContent || '—';
+    const delta = wiDelta.textContent || '—';
+    const url  = window.location.href.split('?')[0];
+    const encoded = btoa(JSON.stringify({ gpa, delta }));
+    const shareURL = `${url}?r=${encoded}`;
+
+    try {
+      await navigator.clipboard.writeText(shareURL);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = shareURL;
+      ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+
+    shareToast.classList.remove('hidden');
+    setTimeout(() => shareToast.classList.add('hidden'), 3000);
+  });
+
+  // ── FAQ accordion ─────────────────────────────────────────────────────────────
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item   = btn.closest('.faq-item')!;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // ── Init ──────────────────────────────────────────────────────────────────────
+  addCourseRow();
+  addCourseRow();
+  addCourseRow();
+
+  // Pre-populate from URL params if present
+  function restoreFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const r = params.get('r');
+    if (!r) return;
+    try {
+      const data = JSON.parse(atob(r));
+      if (data?.gpa && data.gpa !== '—') {
+        wiGpaAfter.textContent = data.gpa;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  restoreFromURL();
+</script>

@@ -1,0 +1,211 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is the 4.0 GPA scale?", "acceptedAnswer": { "@type": "Answer", "text": "The 4.0 GPA scale is the standard grade point system used by most US colleges and high schools. It assigns A=4.0, B=3.0, C=2.0, D=1.0, and F=0. Plus and minus grades have fractional values: A-=3.7, B+=3.3, etc." } },
+    { "@type": "Question", "name": "What GPA is an A-?", "acceptedAnswer": { "@type": "Answer", "text": "An A- equals 3.7 on the 4.0 GPA scale. The percentage range for an A- is typically 90–92%." } },
+    { "@type": "Question", "name": "What GPA is a B+?", "acceptedAnswer": { "@type": "Answer", "text": "A B+ equals 3.3 on the 4.0 GPA scale. The percentage range for a B+ is typically 87–89%." } },
+    { "@type": "Question", "name": "What is the 5.0 weighted GPA scale?", "acceptedAnswer": { "@type": "Answer", "text": "The 5.0 weighted scale is used in high schools to reward AP and Honors courses. AP and IB courses add +1.0 points, Honors add +0.5 points. An A in an AP course equals 5.0 on the weighted scale." } },
+    { "@type": "Question", "name": "Do all colleges use the same GPA scale?", "acceptedAnswer": { "@type": "Answer", "text": "Most US colleges and universities use the 4.0 scale, but some variations exist. Colleges often recalculate applicants' GPAs on their own scale for fair comparison." } },
+    { "@type": "Question", "name": "What percentage is a 3.0 GPA?", "acceptedAnswer": { "@type": "Answer", "text": "A 3.0 GPA corresponds to a B grade, which is approximately 83–86% on the standard percentage scale." } },
+  ]
+};
+---
+
+<Layout
+  title="GPA Scale — Complete 4.0 GPA Scale Chart with Letter Grades"
+  description="Complete GPA scale chart showing letter grades, percentage ranges, and GPA points on the 4.0 scale. Plus weighted 5.0 scale for AP/Honors courses."
+  canonical="/gpa-scale"
+  schema={[faqSchema]}
+>
+
+  <section class="page-hero">
+    <div class="max-w-6xl mx-auto px-4">
+      <nav class="breadcrumb mb-4"><a href="/">Home</a><span class="sep">/</span><span>GPA Scale</span></nav>
+      <h1 class="mb-3">GPA Scale Chart</h1>
+      <p class="text-lg mb-4" style="color:var(--color-body);max-width:600px">Complete reference charts for the standard 4.0 GPA scale and the weighted 5.0 scale used for AP, Honors, and IB courses.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="badge badge-blue">4.0 Standard Scale</span>
+        <span class="badge badge-green">5.0 Weighted Scale</span>
+        <span class="badge badge-blue">All Letter Grades</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-10">
+    <div class="grid md:grid-cols-2 gap-8">
+
+      <!-- 4.0 Scale Table -->
+      <div>
+        <h2 class="text-xl font-bold mb-4" style="color:var(--color-ink)">Standard 4.0 GPA Scale</h2>
+        <div class="card overflow-hidden">
+          <table class="w-full text-sm" style="border-collapse:collapse">
+            <thead style="background:var(--color-canvas-soft-2)">
+              <tr>
+                <th class="text-left px-4 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Grade</th>
+                <th class="text-center px-4 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">GPA</th>
+                <th class="text-center px-4 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Percentage</th>
+                <th class="text-left px-4 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Standing</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["A+", "4.0", "97–100%", "Excellent", "#0070f3"],
+                ["A",  "4.0", "93–96%",  "Excellent", "#0070f3"],
+                ["A-", "3.7", "90–92%",  "Excellent", "#0070f3"],
+                ["B+", "3.3", "87–89%",  "Good",      "#16a34a"],
+                ["B",  "3.0", "83–86%",  "Good",      "#16a34a"],
+                ["B-", "2.7", "80–82%",  "Good",      "#16a34a"],
+                ["C+", "2.3", "77–79%",  "Average",   "#f5a623"],
+                ["C",  "2.0", "73–76%",  "Average",   "#f5a623"],
+                ["C-", "1.7", "70–72%",  "Average",   "#f5a623"],
+                ["D+", "1.3", "67–69%",  "Below Avg", "#ee0000"],
+                ["D",  "1.0", "63–66%",  "Below Avg", "#ee0000"],
+                ["D-", "0.7", "60–62%",  "Below Avg", "#ee0000"],
+                ["F",  "0.0", "< 60%",   "Failing",   "#ee0000"],
+              ].map(([grade, gpa, pct, standing, color], i) => (
+                <tr style={i % 2 === 1 ? "background:var(--color-canvas-soft-2)" : ""}>
+                  <td class="px-4 py-2.5 font-bold tabular" style={`color:${color};border-bottom:1px solid var(--color-hairline)`}>{grade}</td>
+                  <td class="px-4 py-2.5 text-center tabular font-semibold" style={`color:${color};border-bottom:1px solid var(--color-hairline)`}>{gpa}</td>
+                  <td class="px-4 py-2.5 text-center" style="color:var(--color-body);border-bottom:1px solid var(--color-hairline)">{pct}</td>
+                  <td class="px-4 py-2.5" style="color:var(--color-body);border-bottom:1px solid var(--color-hairline)">{standing}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs mt-2" style="color:var(--color-mute)">Note: P (Pass), W (Withdrawal), I (Incomplete) excluded from GPA calculation.</p>
+      </div>
+
+      <!-- 5.0 Weighted Scale -->
+      <div>
+        <h2 class="text-xl font-bold mb-4" style="color:var(--color-ink)">Weighted 5.0 GPA Scale</h2>
+        <div class="card overflow-hidden">
+          <table class="w-full text-sm" style="border-collapse:collapse">
+            <thead style="background:var(--color-canvas-soft-2)">
+              <tr>
+                <th class="text-left px-4 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Grade</th>
+                <th class="text-center px-3 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Regular</th>
+                <th class="text-center px-3 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Honors</th>
+                <th class="text-center px-3 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">AP/IB</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["A+/A", "4.0", "4.5", "5.0"],
+                ["A-",   "3.7", "4.2", "4.7"],
+                ["B+",   "3.3", "3.8", "4.3"],
+                ["B",    "3.0", "3.5", "4.0"],
+                ["B-",   "2.7", "3.2", "3.7"],
+                ["C+",   "2.3", "2.8", "3.3"],
+                ["C",    "2.0", "2.5", "3.0"],
+                ["C-",   "1.7", "2.2", "2.7"],
+                ["D+",   "1.3", "1.8", "2.3"],
+                ["D",    "1.0", "1.5", "2.0"],
+                ["F",    "0.0", "0.0", "0.0"],
+              ].map(([grade, reg, hon, ap], i) => (
+                <tr style={i % 2 === 1 ? "background:var(--color-canvas-soft-2)" : ""}>
+                  <td class="px-4 py-2.5 font-bold" style="color:var(--color-ink);border-bottom:1px solid var(--color-hairline)">{grade}</td>
+                  <td class="px-3 py-2.5 text-center tabular" style="color:var(--color-body);border-bottom:1px solid var(--color-hairline)">{reg}</td>
+                  <td class="px-3 py-2.5 text-center tabular font-medium" style="color:var(--color-brand);border-bottom:1px solid var(--color-hairline)">{hon}</td>
+                  <td class="px-3 py-2.5 text-center tabular font-bold" style="color:var(--color-brand);border-bottom:1px solid var(--color-hairline)">{ap}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs mt-2" style="color:var(--color-mute)">Honors adds +0.5, AP and IB add +1.0 to base grade points.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Explanation -->
+  <section class="max-w-3xl mx-auto px-4 py-6 prose">
+    <h2>Understanding the GPA Scale</h2>
+    <p>The Grade Point Average (GPA) scale converts letter grades into numerical values, allowing academic performance to be summarized as a single number. In the United States, the standard scale runs from 0.0 to 4.0, with 4.0 representing the highest possible GPA.</p>
+    <p>Each letter grade corresponds to a specific point value. An A or A+ equals 4.0 points — the maximum. Minus grades slightly lower the value (A- = 3.7), and plus grades slightly raise it (B+ = 3.3). The F grade equals 0.0 points.</p>
+
+    <h2>Plus and Minus Grades</h2>
+    <p>Most colleges and high schools use a plus/minus system that creates 13 distinct grade levels between A+ and F. Not all institutions use plus/minus grades — some schools only use A, B, C, D, and F (a 5-point scale). Always check your school's grading policy.</p>
+
+    <h2>GPA Thresholds That Matter</h2>
+    <ul>
+      <li><strong>4.0</strong> — Perfect GPA, Summa Cum Laude at many schools</li>
+      <li><strong>3.9+</strong> — Summa Cum Laude at most universities</li>
+      <li><strong>3.7+</strong> — Magna Cum Laude, competitive for top graduate programs</li>
+      <li><strong>3.5+</strong> — Dean's List at most colleges, Cum Laude at many schools</li>
+      <li><strong>3.0+</strong> — Good academic standing, required for most scholarships</li>
+      <li><strong>2.0+</strong> — Minimum for good academic standing at most colleges</li>
+      <li><strong>Below 2.0</strong> — Academic probation risk at most institutions</li>
+    </ul>
+
+    <h2>The Weighted 5.0 Scale</h2>
+    <p>Many high schools use a weighted GPA scale to reward students who take rigorous coursework. On this scale, Honors courses add +0.5 bonus points and AP/IB courses add +1.0 bonus points to grade values. This means an A in an AP course equals 5.0 on the weighted scale (vs. 4.0 unweighted).</p>
+    <p>Weighted GPA allows the scale to exceed 4.0. A student who earns straight A's in all AP courses would have a perfect weighted GPA of 5.0. Colleges often recalculate GPAs on an unweighted basis for fair comparison between students from different school systems.</p>
+  </section>
+
+  <!-- GPA threshold visual -->
+  <section class="max-w-3xl mx-auto px-4 py-6">
+    <h2 class="text-xl font-bold mb-5" style="color:var(--color-ink)">GPA Threshold Reference</h2>
+    <div class="flex flex-col gap-3">
+      {[
+        { range: "3.9 – 4.0", label: "Summa Cum Laude / Perfect", color: "#0070f3", bg: "#eff6ff" },
+        { range: "3.7 – 3.89", label: "Magna Cum Laude / Excellent", color: "#0070f3", bg: "#eff6ff" },
+        { range: "3.5 – 3.69", label: "Dean's List / Cum Laude", color: "#16a34a", bg: "#f0fdf4" },
+        { range: "3.0 – 3.49", label: "Good Academic Standing", color: "#16a34a", bg: "#f0fdf4" },
+        { range: "2.0 – 2.99", label: "Satisfactory / Passing", color: "#f5a623", bg: "#fffbeb" },
+        { range: "1.0 – 1.99", label: "Below Average — At Risk", color: "#ee0000", bg: "#fff5f5" },
+        { range: "0.0 – 0.99", label: "Failing / Academic Probation", color: "#ee0000", bg: "#fff5f5" },
+      ].map(({ range, label, color, bg }) => (
+        <div class="flex items-center gap-4 rounded-lg px-4 py-3" style={`background:${bg};border:1px solid ${color}22`}>
+          <span class="tabular font-bold text-sm w-24 shrink-0" style={`color:${color}`}>{range}</span>
+          <span class="text-sm" style="color:var(--color-body)">{label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="max-w-3xl mx-auto px-4 py-6 pb-12">
+    <h2 class="text-2xl font-bold mb-6" style="color:var(--color-ink)">Frequently Asked Questions</h2>
+    <div>
+      {[
+        { q: "What is the 4.0 GPA scale?", a: "The 4.0 scale is the standard US grade point system: A=4.0, B=3.0, C=2.0, D=1.0, F=0. Plus and minus grades have fractional values (A-=3.7, B+=3.3, etc.). It's used by nearly every US college and high school." },
+        { q: "What GPA is an A-?", a: "An A- equals 3.7 on the 4.0 GPA scale. The percentage range for A- is typically 90–92%." },
+        { q: "What GPA is a B+?", a: "A B+ equals 3.3 on the 4.0 GPA scale. The typical percentage range for B+ is 87–89%." },
+        { q: "What is the 5.0 weighted GPA scale?", a: "The 5.0 weighted scale used in high schools adds bonus points for rigorous courses. AP and IB courses add +1.0 points, Honors add +0.5. An A in an AP class = 5.0 on the weighted scale." },
+        { q: "Do all colleges use the same GPA scale?", a: "Most US colleges use the 4.0 scale, but some variation exists in how they handle plus/minus grades and course weights. Colleges typically recalculate applicants' GPAs on their own scale for fair comparison." },
+        { q: "What percentage is a 3.0 GPA?", a: "A 3.0 GPA corresponds to a B grade, approximately 83–86% on the standard percentage scale." },
+      ].map(({ q, a }) => (
+        <div class="faq-item">
+          <button class="faq-question"><span>{q}</span><svg class="faq-chevron w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="faq-answer">{a}</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-8">
+      <h3 class="text-lg font-semibold mb-3" style="color:var(--color-ink)">Calculate Your GPA</h3>
+      <div class="flex flex-wrap gap-3">
+        {[["GPA Calculator","/"],["College GPA Calculator","/college-gpa-calculator"],["High School GPA Calculator","/high-school-gpa-calculator"],["Weighted GPA Calculator","/weighted-gpa-calculator"]].map(([l,h])=>(
+          <a href={h} class="btn btn-secondary btn-sm">{l}</a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!open) item.classList.add('open');
+  });
+});
+</script>

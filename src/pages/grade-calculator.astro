@@ -1,0 +1,789 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Grade Calculator",
+  "url": "https://gpacalculatorfree.com/grade-calculator",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Calculate your current grade and find out what score you need on your final exam. Free grade calculator for college and high school students."
+};
+
+const faqItems = [
+  {
+    q: "How do I calculate my current grade?",
+    a: "Multiply each assignment score by its weight percentage, then sum the results. For example, if Homework is worth 20% and you scored 85%, it contributes 85 × 0.20 = 17 points toward your final grade. Add up all the weighted scores to get your current grade. The calculator above does this automatically — just enter each category's weight and your score."
+  },
+  {
+    q: "What score do I need on my final exam?",
+    a: "Use the 'Final Exam Needed' tab. Enter your current grade (excluding the final), the weight of your final exam, and your target grade. The calculator uses the formula: needed = (target − current × (1 − final_weight/100)) ÷ (final_weight/100). For instance, if you have an 82% and your final is worth 30%, you'd need about 87% to finish with a 90% (A)."
+  },
+  {
+    q: "How is a weighted grade calculated?",
+    a: "Each assignment category has a weight that represents its share of your total grade. For example, Homework = 20%, Midterm = 30%, Final = 30%, Quizzes = 20%. To find your grade, multiply your score in each category by its weight (as a decimal) and sum them all. If all weights add up to 100%, this gives your exact course grade percentage."
+  },
+  {
+    q: "What if my grade weights don't add up to 100%?",
+    a: "The calculator shows a warning when your weights don't sum to 100%. An incorrect total weight means the calculation is proportionally off — your displayed grade won't reflect your actual course grade. Adjust the weights until they total exactly 100% for an accurate result. Some instructors use partial weights mid-semester; in that case, the displayed grade is based only on completed work."
+  },
+  {
+    q: "What is a passing grade?",
+    a: "In most U.S. colleges, a D (60%) is technically passing and earns credit, but many programs require a C (70%) minimum in major courses. Some graduate programs require a B (80%) or higher. High schools typically set passing at 60% or 65%. Always check your course syllabus — passing requirements vary by institution, program, and whether you need the course for a prerequisite or graduation requirement."
+  },
+  {
+    q: "How do I raise my grade before finals?",
+    a: "Use the 'Final Exam Needed' tab to find out exactly what score you need. Then prioritize studying based on what's worth the most points. If homework or quizzes are still outstanding, completing them can have a significant impact on categories with high weights. Meet with your professor, form study groups, review past exams, and focus your effort on high-weight material — a strong final exam performance can move your grade significantly when it carries 25–40% of your grade."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": { "@type": "Answer", "text": item.a }
+  }))
+};
+---
+
+<Layout
+  title="Grade Calculator — Calculate Your Current Grade & What You Need"
+  description="Calculate your current grade and find out what score you need on your final exam. Free grade calculator for college and high school students."
+  canonical="/grade-calculator"
+  schema={[webAppSchema, faqSchema]}
+>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="page-hero" aria-label="Grade Calculator Hero">
+    <div class="max-w-3xl mx-auto px-4">
+      <nav class="breadcrumb mb-4" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <span>Grade Calculator</span>
+      </nav>
+      <h1 class="mb-3">Grade Calculator</h1>
+      <p class="text-lg mb-4" style="color: var(--color-body); max-width: 600px; line-height: 1.65;">
+        Calculate your current course grade by category weight, or find out exactly what score you need on your final exam to reach your target grade.
+      </p>
+      <div class="flex flex-wrap gap-2">
+        <span class="badge badge-blue">Current Grade</span>
+        <span class="badge badge-green">Final Exam Needed</span>
+        <span class="badge" style="background: var(--color-canvas-soft-2); color: var(--color-body);">Live Results</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CALCULATOR
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="max-w-3xl mx-auto px-4 py-8" aria-labelledby="grade-calc-heading" id="grade-calculator">
+    <div class="card p-0 overflow-hidden" style="box-shadow: var(--shadow-lg);">
+
+      <!-- Tab bar -->
+      <div class="px-5 pt-5 pb-0">
+        <h2 id="grade-calc-heading" class="sr-only">Grade Calculator</h2>
+        <div class="tab-list" role="tablist" aria-label="Calculator tabs">
+          <button
+            class="tab-btn active"
+            id="tab-current"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-current"
+          >Current Grade</button>
+          <button
+            class="tab-btn"
+            id="tab-final"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-final"
+          >Final Exam Needed</button>
+        </div>
+      </div>
+
+      <!-- ── TAB 1: Current Grade ── -->
+      <div id="panel-current" role="tabpanel" aria-labelledby="tab-current" class="px-5 py-5">
+
+        <!-- Column headers -->
+        <div class="grid gap-2 mb-2 px-1 text-xs font-medium uppercase tracking-wide" style="grid-template-columns: 2fr 1fr 1fr 1fr auto; color: var(--color-mute);">
+          <span>Category</span>
+          <span class="text-center">Weight&nbsp;%</span>
+          <span class="text-center">Score</span>
+          <span class="text-center">Out&nbsp;of</span>
+          <span class="w-8"></span>
+        </div>
+
+        <!-- Category rows container -->
+        <div id="categories-container" class="flex flex-col gap-2" role="list" aria-label="Grade categories"></div>
+
+        <!-- Add category -->
+        <button
+          id="add-category-btn"
+          type="button"
+          class="btn btn-ghost btn-sm mt-3 w-full"
+          style="border: 1px dashed var(--color-hairline-strong); color: var(--color-brand);"
+          aria-label="Add another category"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Add Category
+        </button>
+
+        <!-- Weight warning -->
+        <div id="weight-warning" class="callout callout-yellow mt-4" style="display: none;" role="alert" aria-live="polite">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="shrink-0 mt-0.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span id="weight-warning-text">Weights must sum to 100%. Current total: <strong id="weight-total">0</strong>%</span>
+        </div>
+
+        <!-- Result -->
+        <div id="current-result" class="result-panel mt-5" style="display: none;" aria-live="polite">
+          <div class="flex items-start justify-between gap-4 flex-wrap mb-4">
+            <div>
+              <div class="text-xs font-medium uppercase tracking-widest mb-1" style="color: var(--color-mute); font-family: var(--font-mono);">Current Grade</div>
+              <div class="flex items-baseline gap-3">
+                <span id="current-pct" class="tabular" style="font-size: 2.75rem; font-weight: 700; line-height: 1; letter-spacing: -0.04em; color: var(--color-brand);">—</span>
+                <span class="text-lg font-medium" style="color: var(--color-mute);">%</span>
+                <span id="current-letter" class="text-2xl font-bold" style="color: var(--color-ink);">—</span>
+              </div>
+            </div>
+            <div id="current-standing" class="badge badge-blue" style="align-self: center;"></div>
+          </div>
+
+          <!-- Grade meter -->
+          <div class="mb-4">
+            <div class="gpa-meter-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Grade meter">
+              <div id="current-meter-fill" class="gpa-meter-fill" style="width: 0%; background: var(--color-brand);"></div>
+            </div>
+            <div class="flex justify-between mt-1 text-xs" style="color: var(--color-mute);">
+              <span>0%</span><span>60% (D)</span><span>70% (C)</span><span>80% (B)</span><span>90% (A)</span><span>100%</span>
+            </div>
+          </div>
+
+          <!-- Grade breakdown table -->
+          <div id="grade-breakdown" class="overflow-x-auto rounded-lg" style="border: 1px solid var(--color-brand-soft);">
+            <table class="w-full text-sm" style="border-collapse: collapse; margin: 0;">
+              <thead>
+                <tr style="background: var(--color-brand-bg);">
+                  <th class="text-left px-3 py-2 text-xs font-semibold uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-brand-soft);">Category</th>
+                  <th class="text-center px-3 py-2 text-xs font-semibold uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-brand-soft);">Weight</th>
+                  <th class="text-center px-3 py-2 text-xs font-semibold uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-brand-soft);">Score</th>
+                  <th class="text-center px-3 py-2 text-xs font-semibold uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-brand-soft);">Contribution</th>
+                </tr>
+              </thead>
+              <tbody id="breakdown-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Empty hint -->
+        <div id="current-empty" class="text-center py-2 text-sm" style="color: var(--color-mute);">
+          Fill in your category weights and scores above — your grade appears instantly.
+        </div>
+
+      </div>
+
+      <!-- ── TAB 2: Final Exam Needed ── -->
+      <div id="panel-final" role="tabpanel" aria-labelledby="tab-final" class="px-5 py-5" hidden>
+
+        <div class="grid sm:grid-cols-2 gap-4 mb-5">
+          <!-- Current grade without final -->
+          <div>
+            <label for="current-grade-input" class="block text-sm font-medium mb-1" style="color: var(--color-ink);">
+              Current grade <span style="color: var(--color-mute); font-weight: 400;">(without final, %)</span>
+            </label>
+            <input
+              type="number"
+              id="current-grade-input"
+              class="input"
+              placeholder="e.g. 82"
+              min="0"
+              max="100"
+              step="0.1"
+              aria-describedby="current-grade-hint"
+            />
+            <p id="current-grade-hint" class="text-xs mt-1" style="color: var(--color-mute);">Your grade before the final exam</p>
+          </div>
+
+          <!-- Final exam weight -->
+          <div>
+            <label for="final-weight-input" class="block text-sm font-medium mb-1" style="color: var(--color-ink);">
+              Final exam weight <span style="color: var(--color-mute); font-weight: 400;">(%)</span>
+            </label>
+            <input
+              type="number"
+              id="final-weight-input"
+              class="input"
+              placeholder="e.g. 30"
+              min="1"
+              max="100"
+              step="1"
+              aria-describedby="final-weight-hint"
+            />
+            <p id="final-weight-hint" class="text-xs mt-1" style="color: var(--color-mute);">How much the final counts toward your grade</p>
+          </div>
+
+          <!-- Target grade -->
+          <div class="sm:col-span-2">
+            <label for="target-grade-select" class="block text-sm font-medium mb-1" style="color: var(--color-ink);">
+              Target grade
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <select id="target-grade-select" class="input col-span-1" aria-label="Select target letter grade">
+                <option value="90">A (90%)</option>
+                <option value="80">B (80%)</option>
+                <option value="70">C (70%)</option>
+                <option value="60">D (60%)</option>
+                <option value="custom">Custom…</option>
+              </select>
+              <div id="custom-target-wrap" style="display: none;" class="col-span-1">
+                <input
+                  type="number"
+                  id="custom-target-input"
+                  class="input"
+                  placeholder="e.g. 85"
+                  min="0"
+                  max="100"
+                  step="0.1"
+                  aria-label="Enter custom target percentage"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Final result -->
+        <div id="final-result" style="display: none;" aria-live="polite">
+          <div class="result-panel mb-4">
+            <div class="text-xs font-medium uppercase tracking-widest mb-2" style="color: var(--color-mute); font-family: var(--font-mono);">You Need on the Final</div>
+            <div class="flex items-baseline gap-3 mb-3">
+              <span id="needed-score" class="tabular" style="font-size: 3rem; font-weight: 700; line-height: 1; letter-spacing: -0.04em; color: var(--color-brand);">—</span>
+              <span class="text-xl font-medium" style="color: var(--color-mute);">%</span>
+            </div>
+            <p id="needed-message" class="text-sm font-medium m-0" style="color: var(--color-body);"></p>
+          </div>
+
+          <!-- Scenario cards -->
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div class="card p-4" style="background: var(--color-canvas-soft);">
+              <div class="text-xs font-medium uppercase tracking-wide mb-1" style="color: var(--color-mute);">If you get 0%</div>
+              <div id="score-if-zero" class="text-xl font-bold tabular" style="color: var(--color-ink);">—%</div>
+              <div id="letter-if-zero" class="text-sm mt-0.5" style="color: var(--color-body);">—</div>
+            </div>
+            <div class="card p-4" style="background: var(--color-canvas-soft);">
+              <div class="text-xs font-medium uppercase tracking-wide mb-1" style="color: var(--color-mute);">If you get 100%</div>
+              <div id="score-if-hundred" class="text-xl font-bold tabular" style="color: var(--color-ink);">—%</div>
+              <div id="letter-if-hundred" class="text-sm mt-0.5" style="color: var(--color-body);">—</div>
+            </div>
+          </div>
+
+          <!-- Needed score alert -->
+          <div id="final-alert" class="callout" style="display: none;" role="alert">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="final-alert-text"></span>
+          </div>
+        </div>
+
+        <!-- Final empty hint -->
+        <div id="final-empty" class="text-center py-2 text-sm" style="color: var(--color-mute);">
+          Fill in your current grade, final weight, and target grade above.
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GRADE SCALE REFERENCE
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="max-w-3xl mx-auto px-4 pb-6" aria-labelledby="scale-ref-heading">
+    <div class="card p-5" style="background: var(--color-canvas-soft);">
+      <h2 id="scale-ref-heading" class="text-base font-semibold mb-3" style="color: var(--color-ink); letter-spacing: -0.01em;">Grade Scale Reference</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm" style="border-collapse: collapse;">
+          <thead>
+            <tr style="background: var(--color-canvas-soft-2);">
+              <th class="text-left px-3 py-2 text-xs font-semibold uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Letter</th>
+              <th class="text-center px-3 py-2 text-xs font-semibold uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Range</th>
+              <th class="text-left px-3 py-2 text-xs font-semibold uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Standing</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["A", "90–100%", "Excellent", "#16a34a"],
+              ["B", "80–89%", "Good", "#0070f3"],
+              ["C", "70–79%", "Average", "#f5a623"],
+              ["D", "60–69%", "Below Average", "#ea580c"],
+              ["F", "Below 60%", "Failing", "#ee0000"],
+            ].map(([letter, range, standing, color], i) => (
+              <tr style={i % 2 !== 0 ? "background: var(--color-canvas-soft-2);" : ""}>
+                <td class="px-3 py-2 font-bold tabular" style={`color: ${color}; border-bottom: 1px solid var(--color-hairline);`}>{letter}</td>
+                <td class="px-3 py-2 text-center tabular" style="color: var(--color-body); border-bottom: 1px solid var(--color-hairline);">{range}</td>
+                <td class="px-3 py-2" style="color: var(--color-body); border-bottom: 1px solid var(--color-hairline);">{standing}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       EXPLANATION
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="max-w-3xl mx-auto px-4 py-6" aria-labelledby="explanation-heading">
+    <div class="card p-8">
+      <h2 id="explanation-heading" class="mb-4">How to Use the Grade Calculator</h2>
+      <div class="prose">
+        <p>
+          The <strong>Current Grade</strong> tab lets you enter each assignment category in your course — such as Homework, Quizzes, Midterm, and Final — along with its weight percentage and your current score. The calculator multiplies each score by its weight, sums the results, and displays your overall grade percentage and letter grade in real time.
+        </p>
+        <p>
+          All category weights must add up to exactly 100% for an accurate result. If your weights don't sum to 100, a warning appears. This can happen mid-semester when some graded work is still outstanding — in that case, the displayed grade reflects only the completed categories.
+        </p>
+        <p>
+          The <strong>Final Exam Needed</strong> tab answers the most stressful question before finals week: "What do I need to get on my final?" Enter your current grade (excluding the final), how much the final is worth as a percentage, and your target grade. The formula used is:
+        </p>
+        <p style="font-family: var(--font-mono); font-size: 0.875rem; background: var(--color-canvas-soft-2); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--color-hairline);">
+          needed = (target − current × (1 − final_weight ÷ 100)) ÷ (final_weight ÷ 100)
+        </p>
+        <p>
+          The calculator also shows two scenarios: what grade you'd end up with if you scored 0% and if you scored 100% on your final. This helps you understand your grade floor and ceiling before making a study plan.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FAQ
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="max-w-3xl mx-auto px-4 py-6" aria-labelledby="faq-heading">
+    <div class="text-center mb-6">
+      <h2 id="faq-heading" class="mb-2">Frequently Asked Questions</h2>
+      <p class="text-base m-0" style="color: var(--color-body);">Common questions about grade calculation and final exams.</p>
+    </div>
+    <div class="card" style="padding: 0 1.5rem;">
+      {faqItems.map((item, i) => (
+        <div class={`faq-item${i === 0 ? ' open' : ''}`} itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <button
+            class="faq-question"
+            aria-expanded={i === 0 ? "true" : "false"}
+            itemprop="name"
+          >
+            <span>{item.q}</span>
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text" class="m-0 text-sm leading-relaxed" style="color: var(--color-body);">{item.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       RELATED CALCULATORS
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="max-w-3xl mx-auto px-4 py-6 pb-16" aria-labelledby="related-heading">
+    <h2 id="related-heading" class="text-base font-semibold mb-4" style="color: var(--color-ink);">Related Calculators</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {[
+        { href: "/", title: "GPA Calculator", desc: "Calculate your semester or cumulative GPA on the 4.0 scale." },
+        { href: "/college-gpa-calculator", title: "College GPA Calculator", desc: "Standard GPA calculation for college courses and credit hours." },
+        { href: "/weighted-gpa-calculator", title: "Weighted GPA Calculator", desc: "Factor in AP, Honors, and IB bonuses." },
+        { href: "/what-if-gpa-calculator", title: "What If GPA Calculator", desc: "Simulate future grades to project your GPA." },
+        { href: "/high-school-gpa-calculator", title: "High School GPA Calculator", desc: "GPA calculation for high school courses." },
+        { href: "/gpa-scale", title: "GPA Scale Chart", desc: "Full reference for letter grades, percentages, and GPA points." },
+      ].map(card => (
+        <a
+          href={card.href}
+          class="card group block p-4 no-underline transition-all duration-200 hover:shadow-md"
+          aria-label={card.title}
+        >
+          <div class="font-semibold text-sm mb-1 group-hover:text-[color:var(--color-brand)] transition-colors" style="color: var(--color-ink);">{card.title}</div>
+          <div class="text-xs leading-relaxed" style="color: var(--color-body);">{card.desc}</div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+</Layout>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  // ── Grade helpers ─────────────────────────────────────────────────────────
+  function pctToLetter(pct) {
+    if (pct >= 90) return 'A';
+    if (pct >= 80) return 'B';
+    if (pct >= 70) return 'C';
+    if (pct >= 60) return 'D';
+    return 'F';
+  }
+
+  function pctToStanding(pct) {
+    if (pct >= 90) return 'Excellent';
+    if (pct >= 80) return 'Good';
+    if (pct >= 70) return 'Average';
+    if (pct >= 60) return 'Below Average';
+    return 'Failing';
+  }
+
+  function gradeColor(pct) {
+    if (pct >= 90) return '#16a34a';
+    if (pct >= 80) return '#0070f3';
+    if (pct >= 70) return '#f5a623';
+    if (pct >= 60) return '#ea580c';
+    return '#ee0000';
+  }
+
+  // ── TAB SWITCHING ─────────────────────────────────────────────────────────
+  const tabCurrent  = document.getElementById('tab-current')  as HTMLButtonElement;
+  const tabFinal    = document.getElementById('tab-final')    as HTMLButtonElement;
+  const panelCurrent = document.getElementById('panel-current') as HTMLElement;
+  const panelFinal   = document.getElementById('panel-final')   as HTMLElement;
+
+  tabCurrent?.addEventListener('click', () => switchTab('current'));
+  tabFinal?.addEventListener('click',   () => switchTab('final'));
+
+  function switchTab(which: 'current' | 'final') {
+    const isCurrent = which === 'current';
+    tabCurrent?.classList.toggle('active', isCurrent);
+    tabFinal?.classList.toggle('active', !isCurrent);
+    tabCurrent?.setAttribute('aria-selected', String(isCurrent));
+    tabFinal?.setAttribute('aria-selected', String(!isCurrent));
+    if (isCurrent) {
+      panelCurrent?.removeAttribute('hidden');
+      panelFinal?.setAttribute('hidden', '');
+    } else {
+      panelFinal?.removeAttribute('hidden');
+      panelCurrent?.setAttribute('hidden', '');
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TAB 1 — CURRENT GRADE
+  // ═══════════════════════════════════════════════════════════════════════════
+  const container     = document.getElementById('categories-container') as HTMLElement;
+  const addBtn        = document.getElementById('add-category-btn')     as HTMLButtonElement;
+  const weightWarning = document.getElementById('weight-warning')       as HTMLElement;
+  const weightTotal   = document.getElementById('weight-total')         as HTMLElement;
+  const currentResult = document.getElementById('current-result')       as HTMLElement;
+  const currentEmpty  = document.getElementById('current-empty')        as HTMLElement;
+  const currentPct    = document.getElementById('current-pct')          as HTMLElement;
+  const currentLetter = document.getElementById('current-letter')       as HTMLElement;
+  const currentStanding = document.getElementById('current-standing')   as HTMLElement;
+  const currentMeter  = document.getElementById('current-meter-fill')   as HTMLElement;
+  const breakdownBody = document.getElementById('breakdown-body')       as HTMLElement;
+
+  let catCount = 0;
+
+  const DEFAULT_CATEGORIES = [
+    { name: 'Homework',  weight: 20, score: 88, outOf: 100 },
+    { name: 'Quizzes',   weight: 20, score: 75, outOf: 100 },
+    { name: 'Midterm',   weight: 25, score: 82, outOf: 100 },
+    { name: 'Final',     weight: 35, score: 0,  outOf: 100 },
+  ];
+
+  function buildCategoryRow(defaults?: { name: string; weight: number; score: number; outOf: number }) {
+    catCount++;
+    const idx = catCount;
+    const row = document.createElement('div');
+    row.className = 'course-row';
+    row.style.gridTemplateColumns = '2fr 1fr 1fr 1fr auto';
+    row.setAttribute('role', 'listitem');
+
+    // Name
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.className = 'input';
+    nameInput.style.fontSize = '0.875rem';
+    nameInput.placeholder = `Category ${idx}`;
+    nameInput.value = defaults?.name ?? '';
+    nameInput.setAttribute('aria-label', 'Category name');
+    nameInput.addEventListener('input', recalculateCurrent);
+
+    // Weight
+    const weightInput = document.createElement('input');
+    weightInput.type = 'number';
+    weightInput.className = 'input';
+    weightInput.style.cssText = 'font-size:0.875rem;text-align:center;';
+    weightInput.placeholder = '%';
+    weightInput.min = '0';
+    weightInput.max = '100';
+    weightInput.step = '1';
+    weightInput.value = defaults !== undefined ? String(defaults.weight) : '';
+    weightInput.setAttribute('aria-label', 'Weight percentage');
+    weightInput.addEventListener('input', recalculateCurrent);
+
+    // Score
+    const scoreInput = document.createElement('input');
+    scoreInput.type = 'number';
+    scoreInput.className = 'input';
+    scoreInput.style.cssText = 'font-size:0.875rem;text-align:center;';
+    scoreInput.placeholder = 'pts';
+    scoreInput.min = '0';
+    scoreInput.max = '9999';
+    scoreInput.step = '0.1';
+    scoreInput.value = defaults !== undefined ? String(defaults.score) : '';
+    scoreInput.setAttribute('aria-label', 'Score earned');
+    scoreInput.addEventListener('input', recalculateCurrent);
+
+    // Out of
+    const outOfInput = document.createElement('input');
+    outOfInput.type = 'number';
+    outOfInput.className = 'input';
+    outOfInput.style.cssText = 'font-size:0.875rem;text-align:center;';
+    outOfInput.placeholder = '100';
+    outOfInput.min = '1';
+    outOfInput.max = '9999';
+    outOfInput.step = '0.1';
+    outOfInput.value = defaults !== undefined ? String(defaults.outOf) : '100';
+    outOfInput.setAttribute('aria-label', 'Total possible points');
+    outOfInput.addEventListener('input', recalculateCurrent);
+
+    // Remove btn
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn btn-secondary btn-sm';
+    removeBtn.style.cssText = 'padding:0.375rem 0.5rem;color:var(--color-mute);min-width:32px;';
+    removeBtn.setAttribute('aria-label', `Remove ${defaults?.name ?? `Category ${idx}`}`);
+    removeBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    removeBtn.addEventListener('click', () => {
+      row.remove();
+      recalculateCurrent();
+      if (container.children.length === 0) addDefaultCategoryRows();
+    });
+
+    row.appendChild(nameInput);
+    row.appendChild(weightInput);
+    row.appendChild(scoreInput);
+    row.appendChild(outOfInput);
+    row.appendChild(removeBtn);
+    container.appendChild(row);
+    recalculateCurrent();
+  }
+
+  function addDefaultCategoryRows() {
+    DEFAULT_CATEGORIES.forEach(d => buildCategoryRow(d));
+  }
+
+  function recalculateCurrent() {
+    const rows = container.querySelectorAll('.course-row');
+    let totalWeight = 0;
+    let weightedScore = 0;
+    const breakdown: { name: string; weight: number; pct: number; contribution: number }[] = [];
+
+    rows.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      const name    = (inputs[0] as HTMLInputElement).value.trim() || `Category`;
+      const weight  = parseFloat((inputs[1] as HTMLInputElement).value);
+      const score   = parseFloat((inputs[2] as HTMLInputElement).value);
+      const outOf   = parseFloat((inputs[3] as HTMLInputElement).value) || 100;
+
+      if (isNaN(weight) || isNaN(score)) return;
+
+      const pct = (score / outOf) * 100;
+      const contribution = (pct * weight) / 100;
+      totalWeight += weight;
+      weightedScore += contribution;
+      breakdown.push({ name, weight, pct, contribution });
+    });
+
+    // Weight warning
+    const weightOk = Math.abs(totalWeight - 100) < 0.01;
+    if (weightTotal) weightTotal.textContent = totalWeight.toFixed(1);
+    if (weightWarning) weightWarning.style.display = (totalWeight > 0 && !weightOk) ? 'flex' : 'none';
+
+    if (breakdown.length === 0 || totalWeight === 0) {
+      if (currentResult) currentResult.style.display = 'none';
+      if (currentEmpty)  currentEmpty.style.display  = 'block';
+      return;
+    }
+
+    // Normalize to 100% if weights don't add up
+    const grade = weightOk ? weightedScore : (weightedScore / totalWeight) * 100;
+    const letter   = pctToLetter(grade);
+    const standing = pctToStanding(grade);
+    const color    = gradeColor(grade);
+
+    if (currentResult) currentResult.style.display = 'block';
+    if (currentEmpty)  currentEmpty.style.display  = 'none';
+
+    if (currentPct)     { currentPct.textContent = grade.toFixed(1); currentPct.style.color = color; }
+    if (currentLetter)  { currentLetter.textContent = letter; }
+    if (currentStanding) { currentStanding.textContent = standing; }
+    if (currentMeter)   {
+      currentMeter.style.width = Math.min(grade, 100) + '%';
+      currentMeter.style.background = color;
+      currentMeter.setAttribute('aria-valuenow', String(grade.toFixed(1)));
+    }
+
+    // Breakdown table
+    if (breakdownBody) {
+      breakdownBody.innerHTML = '';
+      breakdown.forEach((row, i) => {
+        const tr = document.createElement('tr');
+        tr.style.background = i % 2 !== 0 ? 'var(--color-brand-bg)' : '';
+        tr.innerHTML = `
+          <td class="px-3 py-2 font-medium text-sm" style="color:var(--color-ink);border-bottom:1px solid var(--color-brand-soft);">${row.name}</td>
+          <td class="px-3 py-2 text-center tabular text-sm" style="color:var(--color-body);border-bottom:1px solid var(--color-brand-soft);">${row.weight}%</td>
+          <td class="px-3 py-2 text-center tabular text-sm" style="color:var(--color-body);border-bottom:1px solid var(--color-brand-soft);">${row.pct.toFixed(1)}%</td>
+          <td class="px-3 py-2 text-center tabular text-sm font-semibold" style="color:var(--color-brand);border-bottom:1px solid var(--color-brand-soft);">+${row.contribution.toFixed(2)}%</td>
+        `;
+        breakdownBody.appendChild(tr);
+      });
+      // Total row
+      const total = document.createElement('tr');
+      total.style.background = 'var(--color-brand-bg)';
+      total.innerHTML = `
+        <td class="px-3 py-2 font-semibold text-sm" style="color:var(--color-ink);">Total</td>
+        <td class="px-3 py-2 text-center tabular text-sm font-semibold" style="color:${weightOk ? 'var(--color-success)' : 'var(--color-warning)'};">${totalWeight.toFixed(1)}%</td>
+        <td class="px-3 py-2"></td>
+        <td class="px-3 py-2 text-center tabular text-sm font-bold" style="color:${color};">${grade.toFixed(1)}% (${letter})</td>
+      `;
+      breakdownBody.appendChild(total);
+    }
+  }
+
+  addBtn?.addEventListener('click', () => buildCategoryRow());
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TAB 2 — FINAL EXAM NEEDED
+  // ═══════════════════════════════════════════════════════════════════════════
+  const currentGradeInput   = document.getElementById('current-grade-input')  as HTMLInputElement;
+  const finalWeightInput    = document.getElementById('final-weight-input')    as HTMLInputElement;
+  const targetGradeSelect   = document.getElementById('target-grade-select')   as HTMLSelectElement;
+  const customTargetWrap    = document.getElementById('custom-target-wrap')    as HTMLElement;
+  const customTargetInput   = document.getElementById('custom-target-input')   as HTMLInputElement;
+  const finalResult         = document.getElementById('final-result')          as HTMLElement;
+  const finalEmpty          = document.getElementById('final-empty')           as HTMLElement;
+  const neededScore         = document.getElementById('needed-score')          as HTMLElement;
+  const neededMessage       = document.getElementById('needed-message')        as HTMLElement;
+  const scoreIfZero         = document.getElementById('score-if-zero')         as HTMLElement;
+  const letterIfZero        = document.getElementById('letter-if-zero')        as HTMLElement;
+  const scoreIfHundred      = document.getElementById('score-if-hundred')      as HTMLElement;
+  const letterIfHundred     = document.getElementById('letter-if-hundred')     as HTMLElement;
+  const finalAlert          = document.getElementById('final-alert')           as HTMLElement;
+  const finalAlertText      = document.getElementById('final-alert-text')      as HTMLElement;
+
+  function recalculateFinal() {
+    const current     = parseFloat(currentGradeInput?.value);
+    const finalWeight = parseFloat(finalWeightInput?.value);
+    let target: number;
+
+    if (targetGradeSelect?.value === 'custom') {
+      target = parseFloat(customTargetInput?.value);
+    } else {
+      target = parseFloat(targetGradeSelect?.value ?? '90');
+    }
+
+    if (isNaN(current) || isNaN(finalWeight) || isNaN(target) || finalWeight <= 0 || finalWeight > 100) {
+      if (finalResult) finalResult.style.display = 'none';
+      if (finalEmpty)  finalEmpty.style.display  = 'block';
+      return;
+    }
+
+    const w = finalWeight / 100;
+    // needed_final = (target - current * (1 - w)) / w
+    const needed = (target - current * (1 - w)) / w;
+
+    // Grade if scored 0 on final
+    const gradeIf0   = current * (1 - w) + 0;
+    // Grade if scored 100 on final
+    const gradeIf100 = current * (1 - w) + 100 * w;
+
+    if (finalResult) finalResult.style.display = 'block';
+    if (finalEmpty)  finalEmpty.style.display  = 'none';
+
+    const targetLetter = pctToLetter(target);
+    const neededColor  = needed > 100 ? '#ee0000' : needed < 0 ? '#16a34a' : gradeColor(needed);
+
+    if (neededScore) {
+      neededScore.style.color = neededColor;
+      if (needed > 100) {
+        neededScore.textContent = '>100';
+      } else if (needed < 0) {
+        neededScore.textContent = '0';
+      } else {
+        neededScore.textContent = needed.toFixed(1);
+      }
+    }
+
+    if (neededMessage) {
+      if (needed > 100) {
+        neededMessage.textContent = `A score above 100% is needed — the target grade of ${target}% (${targetLetter}) is mathematically out of reach.`;
+      } else if (needed <= 0) {
+        neededMessage.textContent = `You've already secured a ${targetLetter} — even a 0% on the final won't drop you below ${target}%.`;
+      } else {
+        neededMessage.textContent = `Score ${needed.toFixed(1)}% or higher on the final to get a ${targetLetter} in this course.`;
+      }
+    }
+
+    // Scenario cards
+    if (scoreIfZero)   { scoreIfZero.textContent   = gradeIf0.toFixed(1) + '%';   scoreIfZero.style.color   = gradeColor(gradeIf0); }
+    if (letterIfZero)  { letterIfZero.textContent   = pctToLetter(gradeIf0) + ' — ' + pctToStanding(gradeIf0); }
+    if (scoreIfHundred){ scoreIfHundred.textContent = gradeIf100.toFixed(1) + '%'; scoreIfHundred.style.color = gradeColor(gradeIf100); }
+    if (letterIfHundred){ letterIfHundred.textContent = pctToLetter(gradeIf100) + ' — ' + pctToStanding(gradeIf100); }
+
+    // Alert
+    if (finalAlert && finalAlertText) {
+      if (needed > 100) {
+        finalAlert.className = 'callout callout-yellow';
+        finalAlertText.textContent = 'You would need more than 100% on the final to reach your target. Consider lowering your target grade or speaking with your professor about extra credit.';
+        finalAlert.style.display = 'flex';
+      } else if (needed > 90) {
+        finalAlert.className = 'callout callout-blue';
+        finalAlertText.textContent = `You need a high score on the final (${needed.toFixed(1)}%). Focus your study time on high-weight material and review past exams.`;
+        finalAlert.style.display = 'flex';
+      } else if (needed <= 0) {
+        finalAlert.className = 'callout callout-blue';
+        finalAlertText.textContent = `Your current grade already guarantees a ${targetLetter}. Good work — keep it up!`;
+        finalAlert.style.display = 'flex';
+      } else {
+        finalAlert.style.display = 'none';
+      }
+    }
+  }
+
+  targetGradeSelect?.addEventListener('change', () => {
+    const isCustom = targetGradeSelect.value === 'custom';
+    if (customTargetWrap) customTargetWrap.style.display = isCustom ? 'block' : 'none';
+    recalculateFinal();
+  });
+
+  currentGradeInput?.addEventListener('input', recalculateFinal);
+  finalWeightInput?.addEventListener('input',  recalculateFinal);
+  customTargetInput?.addEventListener('input', recalculateFinal);
+
+  // ── FAQ accordion ──────────────────────────────────────────────────────────
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item   = btn.closest('.faq-item') as HTMLElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  addDefaultCategoryRows();
+
+})();
+</script>

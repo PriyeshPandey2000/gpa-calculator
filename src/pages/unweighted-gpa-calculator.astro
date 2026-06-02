@@ -1,0 +1,283 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is an unweighted GPA?", "acceptedAnswer": { "@type": "Answer", "text": "An unweighted GPA uses the standard 4.0 scale for all courses equally, regardless of difficulty. An A in AP Calculus and an A in a regular class both count as 4.0. The maximum unweighted GPA is 4.0." } },
+    { "@type": "Question", "name": "How do I convert weighted GPA to unweighted?", "acceptedAnswer": { "@type": "Answer", "text": "Remove the course difficulty bonuses — recalculate using only the standard grade points (A=4.0, B=3.0, etc.) without adding AP or Honors bonuses. This calculator does that automatically." } },
+    { "@type": "Question", "name": "Is a 4.0 unweighted GPA possible?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, a 4.0 unweighted GPA means earning an A or A+ in every course. On the standard 4.0 scale, A+ = 4.0 (same as A). Some schools award A+ = 4.3 but most cap at 4.0." } },
+    { "@type": "Question", "name": "Do colleges prefer unweighted GPA?", "acceptedAnswer": { "@type": "Answer", "text": "Most colleges recalculate GPAs using their own formula. Many prefer reviewing unweighted GPA as a standardized comparison. However, course rigor (shown by AP/Honors enrollment) is also evaluated separately." } }
+  ]
+};
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Unweighted GPA Calculator",
+  "url": "https://gpacalculatorfree.com/unweighted-gpa-calculator",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+---
+
+<Layout
+  title="Unweighted GPA Calculator — Calculate Your 4.0 Scale GPA Free"
+  description="Calculate your unweighted GPA on the standard 4.0 scale. All courses count equally regardless of difficulty. Free unweighted GPA calculator."
+  canonical="/unweighted-gpa-calculator"
+  schema={[webAppSchema, faqSchema]}
+>
+
+  <section class="page-hero">
+    <div class="max-w-6xl mx-auto px-4">
+      <nav class="breadcrumb mb-4"><a href="/">Home</a><span class="sep">/</span><span>Unweighted GPA Calculator</span></nav>
+      <h1 class="mb-3">Unweighted GPA Calculator</h1>
+      <p class="text-lg mb-4" style="color:var(--color-body);max-width:560px">Calculate your GPA on the standard 4.0 scale. All courses count equally — no AP or Honors bonuses. The most universal GPA measurement.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="badge badge-blue">Standard 4.0 Scale</span>
+        <span class="badge badge-green">All Courses Equal Weight</span>
+        <span class="badge badge-blue">No Signup</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-8">
+    <div class="grid lg:grid-cols-3 gap-6">
+
+      <div class="lg:col-span-2">
+        <div class="card p-5">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <h2 class="text-lg font-semibold m-0" style="color:var(--color-ink)">Enter Your Courses</h2>
+            <div class="flex items-center gap-3 flex-wrap">
+              <div class="flex items-center gap-2 text-sm">
+                <span style="color:var(--color-body)">Letter</span>
+                <label class="toggle">
+                  <input type="checkbox" id="pct-toggle" />
+                  <span class="toggle-track"></span>
+                  <span class="toggle-thumb"></span>
+                </label>
+                <span style="color:var(--color-body)">%</span>
+              </div>
+              <label class="toggle-wrap text-sm" style="color:var(--color-body)">
+                <span class="toggle"><input type="checkbox" id="no-credits-toggle" /><span class="toggle-track"></span><span class="toggle-thumb"></span></span>
+                No credits
+              </label>
+            </div>
+          </div>
+
+          <div class="hidden sm:grid gap-2 mb-2 px-3 text-xs font-medium uppercase tracking-wide" id="col-headers" style="color:var(--color-mute);grid-template-columns:2fr 1fr 1fr auto">
+            <span>Course</span><span id="grade-header">Grade</span><span id="cr-header">Credits</span><span></span>
+          </div>
+
+          <div id="courses-container" class="flex flex-col gap-2"></div>
+
+          <button id="add-btn" class="btn btn-ghost btn-sm mt-3 w-full" style="border:1px dashed var(--color-hairline-strong)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add Course
+          </button>
+
+          <div class="flex gap-2 mt-4 pt-4 flex-wrap" style="border-top:1px solid var(--color-hairline)">
+            <button id="reset-btn" class="btn btn-secondary btn-sm">Reset</button>
+            <button id="share-btn" class="btn btn-secondary btn-sm">Share</button>
+            <button id="print-btn" class="btn btn-secondary btn-sm">Print</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-1">
+        <div class="result-panel sticky top-20 text-center">
+          <div class="text-xs font-medium uppercase tracking-wide mb-2" style="color:var(--color-brand)">Unweighted GPA</div>
+          <div id="gpa-result" class="tabular font-bold mb-1" style="font-size:3.5rem;letter-spacing:-0.04em;color:var(--color-mute)">—</div>
+          <div class="text-sm mb-3" style="color:var(--color-mute)">out of 4.0</div>
+          <div id="gpa-label" class="text-sm font-medium mb-3" style="color:var(--color-mute)">Enter courses above</div>
+
+          <div class="gpa-meter-container mb-1">
+            <div id="gpa-meter" class="gpa-meter-fill" style="width:0%"></div>
+          </div>
+          <div class="relative mt-1" style="height:16px">
+            <span class="absolute text-xs" style="left:50%;transform:translateX(-50%);color:var(--color-mute)">2.0</span>
+            <span class="absolute text-xs" style="left:75%;transform:translateX(-50%);color:var(--color-mute)">3.0</span>
+            <span class="absolute text-xs" style="left:87.5%;transform:translateX(-50%);color:var(--color-mute)">3.5</span>
+            <span class="absolute text-xs" style="right:0;color:var(--color-mute)">4.0</span>
+          </div>
+
+          <div id="proximity" class="text-xs mt-3" style="color:var(--color-brand);min-height:16px"></div>
+
+          <div class="grid grid-cols-2 gap-3 mt-4 pt-4" style="border-top:1px solid var(--color-brand-soft)">
+            <div><div id="stat-cr" class="font-bold text-lg tabular" style="color:var(--color-ink)">—</div><div class="text-xs" style="color:var(--color-mute)">Credits</div></div>
+            <div><div id="stat-co" class="font-bold text-lg tabular" style="color:var(--color-ink)">—</div><div class="text-xs" style="color:var(--color-mute)">Courses</div></div>
+          </div>
+
+          <div class="mt-4 pt-4 text-xs space-y-1 text-left" style="border-top:1px solid var(--color-brand-soft);color:var(--color-body)">
+            <div class="flex justify-between"><span style="color:#0070f3">● 3.5–4.0</span><span>Dean's List</span></div>
+            <div class="flex justify-between"><span style="color:#16a34a">● 3.0–3.49</span><span>Good Standing</span></div>
+            <div class="flex justify-between"><span style="color:#f5a623">● 2.0–2.99</span><span>Satisfactory</span></div>
+            <div class="flex justify-between"><span style="color:#ee0000">● Below 2.0</span><span>At Risk</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Explanation -->
+  <section class="max-w-3xl mx-auto px-4 py-8 prose">
+    <h2>What is an Unweighted GPA?</h2>
+    <p>An unweighted GPA is the standard Grade Point Average calculated on the 4.0 scale, treating every course equally regardless of difficulty. Whether you take AP Physics or regular English, an A earns 4.0 grade points in both cases.</p>
+    <p>This is the most universal form of GPA measurement. Almost every college and university in the United States uses the unweighted 4.0 scale as a baseline for comparison. Even if your high school uses a weighted system, colleges often recalculate applicants' GPAs on an unweighted basis to ensure fair comparisons.</p>
+    <p>The unweighted GPA scale: A=4.0, A-=3.7, B+=3.3, B=3.0, B-=2.7, C+=2.3, C=2.0, C-=1.7, D+=1.3, D=1.0, D-=0.7, F=0.0. Plus/minus grades vary by school — some schools don't use them.</p>
+    <p>If you want to see both your weighted and unweighted GPA, use our <a href="/weighted-gpa-calculator">Weighted GPA Calculator</a> which shows both side by side.</p>
+  </section>
+
+  <!-- FAQ -->
+  <section class="max-w-3xl mx-auto px-4 py-6 pb-12">
+    <h2 class="text-2xl font-bold mb-6" style="color:var(--color-ink)">Frequently Asked Questions</h2>
+    <div>
+      {[
+        {q:"What is an unweighted GPA?",a:"An unweighted GPA uses the standard 4.0 scale for all courses equally. An A in AP Calculus and an A in gym class both earn 4.0 points. The maximum is 4.0."},
+        {q:"How do I convert weighted to unweighted GPA?",a:"Remove course difficulty bonuses and recalculate using only standard grade points (A=4.0, B=3.0, etc.) without AP or Honors bonuses. This calculator gives you the pure unweighted result."},
+        {q:"Is a 4.0 unweighted GPA perfect?",a:"Yes. A 4.0 unweighted GPA means earning an A or A+ in every course. It's the maximum on the standard scale. Note that A+ = 4.0 on most scales (not 4.3)."},
+        {q:"Do colleges prefer unweighted GPA?",a:"Most colleges recalculate GPAs using their own formula for fair comparisons. Unweighted GPA is standardized and widely used. Course rigor (AP/Honors enrollment) is evaluated separately from GPA."},
+      ].map(({q,a})=>(
+        <div class="faq-item">
+          <button class="faq-question"><span>{q}</span><svg class="faq-chevron w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="faq-answer">{a}</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-8">
+      <h3 class="text-lg font-semibold mb-3" style="color:var(--color-ink)">Related Calculators</h3>
+      <div class="flex flex-wrap gap-3">
+        {[["Weighted GPA Calculator","/weighted-gpa-calculator"],["High School GPA Calculator","/high-school-gpa-calculator"],["College GPA Calculator","/college-gpa-calculator"],["GPA Scale Chart","/gpa-scale"]].map(([l,h])=>(
+          <a href={h} class="btn btn-secondary btn-sm">{l}</a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+(function(){
+  const GP={'A+':4.0,'A':4.0,'A-':3.7,'B+':3.3,'B':3.0,'B-':2.7,'C+':2.3,'C':2.0,'C-':1.7,'D+':1.3,'D':1.0,'D-':0.7,'F':0.0};
+  const GRADES=['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F','P','W'];
+
+  function pctToLetter(p){const n=parseFloat(p);if(isNaN(n))return'F';if(n>=97)return'A+';if(n>=93)return'A';if(n>=90)return'A-';if(n>=87)return'B+';if(n>=83)return'B';if(n>=80)return'B-';if(n>=77)return'C+';if(n>=73)return'C';if(n>=70)return'C-';if(n>=67)return'D+';if(n>=63)return'D';if(n>=60)return'D-';return'F';}
+  function gpaColor(g){if(g<2)return'#ee0000';if(g<3)return'#f5a623';if(g<3.5)return'#16a34a';return'#0070f3';}
+  function gpaLabel(g){if(g>=3.9)return'Summa Cum Laude';if(g>=3.7)return'Magna Cum Laude';if(g>=3.5)return"Dean's List";if(g>=3.0)return'Good Standing';if(g>=2.0)return'Satisfactory';if(g>=1.0)return'Below Average';return'Failing';}
+
+  let noCredits=false,pctMode=false,count=0;
+  const container=document.getElementById('courses-container');
+
+  function buildRow(){
+    count++;
+    const row=document.createElement('div');
+    row.className='course-row';
+    row.style.gridTemplateColumns=noCredits?'2fr 1fr auto':'2fr 1fr 1fr auto';
+
+    const name=document.createElement('input');
+    name.type='text';name.placeholder=`Course ${count}`;name.className='input';name.style.fontSize='0.875rem';
+    name.addEventListener('input',calc);
+
+    const gradeWrap=document.createElement('div');
+    if(pctMode){
+      const pi=document.createElement('input');pi.type='number';pi.min='0';pi.max='100';pi.placeholder='%';pi.className='input pct-input';pi.style.cssText='font-size:0.875rem;text-align:center';pi.addEventListener('input',calc);gradeWrap.appendChild(pi);
+    }else{
+      const gs=document.createElement('select');gs.className='input grade-select';gs.style.fontSize='0.875rem';
+      GRADES.forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=g;if(g==='A')o.selected=true;gs.appendChild(o);});
+      gs.addEventListener('change',calc);gradeWrap.appendChild(gs);
+    }
+
+    const ci=document.createElement('input');ci.type='number';ci.min='0.5';ci.max='12';ci.step='0.5';ci.value='3';ci.className='input';ci.style.cssText='font-size:0.875rem;width:72px;text-align:center';ci.addEventListener('input',calc);
+
+    const rm=document.createElement('button');rm.type='button';rm.className='btn btn-secondary btn-sm';rm.style.cssText='padding:0.375rem 0.5rem;color:var(--color-mute)';
+    rm.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    rm.addEventListener('click',()=>{row.remove();calc();});
+
+    row.appendChild(name);row.appendChild(gradeWrap);if(!noCredits)row.appendChild(ci);row.appendChild(rm);
+    return row;
+  }
+
+  function add(){container.appendChild(buildRow());calc();}
+
+  function calc(){
+    const rows=container.querySelectorAll('.course-row');
+    let totalQP=0,totalCr=0,validCount=0;
+    rows.forEach(row=>{
+      let gp;
+      if(pctMode){const pi=row.querySelector('.pct-input');if(!pi||pi.value==='')return;gp=GP[pctToLetter(pi.value)]??null;}
+      else{const gs=row.querySelector('.grade-select');if(!gs)return;gp=GP[gs.value]??null;}
+      if(gp===null)return;
+      const cr=noCredits?1:parseFloat(row.querySelector('input[type="number"]')?.value||'0');
+      if(!cr||cr<=0)return;
+      totalQP+=gp*cr;totalCr+=cr;validCount++;
+    });
+
+    const res=document.getElementById('gpa-result');
+    const lbl=document.getElementById('gpa-label');
+    const meter=document.getElementById('gpa-meter');
+    const prox=document.getElementById('proximity');
+    const statCr=document.getElementById('stat-cr');
+    const statCo=document.getElementById('stat-co');
+
+    if(validCount===0||totalCr===0){
+      if(res){res.textContent='—';res.style.color='var(--color-mute)';}
+      if(lbl)lbl.textContent='Enter courses above';
+      if(meter)meter.style.width='0%';
+      if(prox)prox.textContent='';
+      if(statCr)statCr.textContent='—';if(statCo)statCo.textContent='—';
+      return;
+    }
+
+    const gpa=Math.round((totalQP/totalCr)*1000)/1000;
+    const color=gpaColor(gpa);
+    if(res){res.textContent=gpa.toFixed(2);res.style.color=color;}
+    if(lbl){lbl.textContent=gpaLabel(gpa);lbl.style.color=color;}
+    if(meter){meter.style.width=Math.min((gpa/4.0)*100,100)+'%';meter.style.background=color;}
+    if(statCr)statCr.textContent=noCredits?`${validCount}`:totalCr.toFixed(1);
+    if(statCo)statCo.textContent=String(validCount);
+
+    const thresholds=[{v:4.0,l:'Perfect (4.0)'},{v:3.5,l:"Dean's List (3.5)"},{v:3.0,l:'Good Standing (3.0)'},{v:2.0,l:'Passing (2.0)'}];
+    let proxMsg='';
+    for(const t of thresholds){if(gpa<t.v){const d=(t.v-gpa).toFixed(2);if(parseFloat(d)<=0.3){proxMsg=`${d} away from ${t.l}`;break;}}}
+    if(prox)prox.textContent=proxMsg;
+
+    // Animate
+    if(res){res.classList.remove('pulse-once');void res.offsetWidth;res.classList.add('pulse-once');}
+  }
+
+  document.getElementById('pct-toggle')?.addEventListener('change',function(){
+    pctMode=this.checked;rebuild();
+  });
+  document.getElementById('no-credits-toggle')?.addEventListener('change',function(){
+    noCredits=this.checked;
+    const h=document.getElementById('cr-header');if(h)h.style.display=noCredits?'none':'';
+    const c=document.getElementById('col-headers');if(c)c.style.gridTemplateColumns=noCredits?'2fr 1fr auto':'2fr 1fr 1fr auto';
+    rebuild();
+  });
+
+  function rebuild(){
+    const n=container.children.length||4;container.innerHTML='';count=0;for(let i=0;i<n;i++)add();
+  }
+
+  document.getElementById('add-btn')?.addEventListener('click',add);
+  document.getElementById('reset-btn')?.addEventListener('click',()=>{container.innerHTML='';count=0;for(let i=0;i<4;i++)add();});
+  document.getElementById('share-btn')?.addEventListener('click',()=>{
+    const g=document.getElementById('gpa-result')?.textContent||'—';
+    const url=new URL(window.location.href);url.searchParams.set('gpa',g);
+    navigator.clipboard?.writeText(url.toString()).then(()=>{const b=document.getElementById('share-btn');if(b){const t=b.textContent;b.textContent='✓ Copied!';setTimeout(()=>{b.textContent=t;},2000);}});
+  });
+  document.getElementById('print-btn')?.addEventListener('click',()=>window.print());
+
+  document.querySelectorAll('.faq-question').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const item=btn.closest('.faq-item');const open=item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el=>el.classList.remove('open'));
+      if(!open)item.classList.add('open');
+    });
+  });
+
+  for(let i=0;i<4;i++)add();
+})();
+</script>

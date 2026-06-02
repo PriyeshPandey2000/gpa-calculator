@@ -1,0 +1,275 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogType?: string;
+  keywords?: string;
+  schema?: object | object[];
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogType = 'website',
+  keywords = '',
+  schema,
+} = Astro.props;
+
+const siteUrl = 'https://gpacalculatorfree.com';
+const canonicalUrl = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.url.pathname}`;
+const ogUrl = canonicalUrl;
+
+// Breadcrumb schema always included
+const breadcrumbItems = Astro.url.pathname === '/'
+  ? [{ "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl }]
+  : [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
+      { "@type": "ListItem", "position": 2, "name": title, "item": canonicalUrl }
+    ];
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbItems
+};
+
+const schemas = [
+  breadcrumbSchema,
+  ...(Array.isArray(schema) ? schema : schema ? [schema] : [])
+];
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={ogUrl} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="GPA Calculator Free" />
+    <meta property="og:image" content={`${siteUrl}/og-image.png`} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}/og-image.png`} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Structured Data -->
+    {schemas.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
+
+    <!-- Google Analytics (replace with real ID) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
+    <!-- Google AdSense (replace with real publisher ID) -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+    <!-- Dark mode: apply before paint to prevent flash -->
+    <script is:inline>
+      (function() {
+        const saved = localStorage.getItem('darkMode');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'true' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Skip to main content (accessibility) -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50">
+      Skip to main content
+    </a>
+
+    <!-- Navigation -->
+    <header class="sticky top-0 z-40 bg-white/95 dark:bg-gray-950/95 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+      <nav class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between" aria-label="Main navigation">
+        <a href="/" class="flex items-center gap-2 font-bold text-blue-600 dark:text-blue-400 text-lg shrink-0" aria-label="GPA Calculator Free - Home">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="3" fill="currentColor" opacity="0.15"/>
+            <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2"/>
+            <text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="10" font-weight="bold">GPA</text>
+          </svg>
+          <span class="hidden sm:inline">GPA Calculator Free</span>
+          <span class="sm:hidden">GPA Calc</span>
+        </a>
+
+        <!-- Desktop nav links -->
+        <ul class="hidden md:flex items-center gap-1 text-sm font-medium" role="list">
+          <li><a href="/college-gpa-calculator" class="px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">College</a></li>
+          <li><a href="/high-school-gpa-calculator" class="px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">High School</a></li>
+          <li><a href="/cumulative-gpa-calculator" class="px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Cumulative</a></li>
+          <li><a href="/weighted-gpa-calculator" class="px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Weighted</a></li>
+          <li><a href="/what-if-gpa-calculator" class="px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-blue-600 dark:text-blue-400">What If?</a></li>
+          <li><a href="/grade-calculator" class="px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Grade Calc</a></li>
+        </ul>
+
+        <div class="flex items-center gap-2">
+          <!-- Dark mode toggle -->
+          <button
+            id="dark-mode-toggle"
+            aria-label="Toggle dark mode (keyboard shortcut: D)"
+            title="Toggle dark mode (D)"
+            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
+          >
+            <!-- Sun icon (shown in dark mode) -->
+            <svg id="icon-sun" class="hidden dark:block w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <!-- Moon icon (shown in light mode) -->
+            <svg id="icon-moon" class="block dark:hidden w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+
+          <!-- Mobile menu toggle -->
+          <button
+            id="mobile-menu-toggle"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Mobile menu -->
+      <div
+        id="mobile-menu"
+        class="hidden md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950"
+        role="navigation"
+        aria-label="Mobile navigation"
+      >
+        <ul class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1" role="list">
+          <li><a href="/" class="block px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">Home</a></li>
+          <li><a href="/college-gpa-calculator" class="block px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">College GPA Calculator</a></li>
+          <li><a href="/high-school-gpa-calculator" class="block px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">High School GPA Calculator</a></li>
+          <li><a href="/cumulative-gpa-calculator" class="block px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Cumulative GPA Calculator</a></li>
+          <li><a href="/weighted-gpa-calculator" class="block px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Weighted GPA Calculator</a></li>
+          <li><a href="/unweighted-gpa-calculator" class="block px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Unweighted GPA Calculator</a></li>
+          <li><a href="/what-if-gpa-calculator" class="block px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-blue-600 dark:text-blue-400 font-medium">What If GPA Calculator ✨</a></li>
+          <li><a href="/grade-calculator" class="block px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Grade Calculator</a></li>
+          <li><a href="/gpa-scale" class="block px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">GPA Scale Chart</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-16 print:hidden">
+      <div class="max-w-6xl mx-auto px-4 py-10">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <!-- Brand -->
+          <div class="col-span-2 md:col-span-1">
+            <a href="/" class="font-bold text-blue-600 dark:text-blue-400 text-lg">GPA Calculator Free</a>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Free GPA calculators for college and high school students. Fast, accurate, no signup.</p>
+          </div>
+          <!-- Calculators -->
+          <div>
+            <h3 class="font-semibold text-sm mb-3 text-gray-900 dark:text-gray-100">Calculators</h3>
+            <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+              <li><a href="/college-gpa-calculator" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">College GPA</a></li>
+              <li><a href="/high-school-gpa-calculator" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">High School GPA</a></li>
+              <li><a href="/cumulative-gpa-calculator" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Cumulative GPA</a></li>
+              <li><a href="/weighted-gpa-calculator" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Weighted GPA</a></li>
+              <li><a href="/unweighted-gpa-calculator" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Unweighted GPA</a></li>
+              <li><a href="/what-if-gpa-calculator" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">What If GPA</a></li>
+              <li><a href="/grade-calculator" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Grade Calculator</a></li>
+            </ul>
+          </div>
+          <!-- Resources -->
+          <div>
+            <h3 class="font-semibold text-sm mb-3 text-gray-900 dark:text-gray-100">Resources</h3>
+            <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+              <li><a href="/gpa-scale" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">GPA Scale Chart</a></li>
+              <li><a href="/middle-school-gpa-calculator" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Middle School GPA</a></li>
+              <li><a href="/uf-gpa-calculator" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">UF GPA Calculator</a></li>
+              <li><a href="/dallas-college-gpa-calculator" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Dallas College GPA</a></li>
+            </ul>
+          </div>
+          <!-- Company -->
+          <div>
+            <h3 class="font-semibold text-sm mb-3 text-gray-900 dark:text-gray-100">Company</h3>
+            <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+              <li><a href="/about" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</a></li>
+              <li><a href="/contact" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contact</a></li>
+              <li><a href="/privacy-policy" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms-of-service" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-gray-200 dark:border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-500">
+          <p>© {new Date().getFullYear()} GPA Calculator Free. All rights reserved.</p>
+          <p>Free GPA calculator for educational purposes. Results are estimates.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Dark mode + mobile menu script -->
+    <script>
+      // Dark mode toggle
+      const toggleBtn = document.getElementById('dark-mode-toggle');
+      toggleBtn?.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('darkMode', document.documentElement.classList.contains('dark') ? 'true' : 'false');
+      });
+
+      // D key shortcut
+      document.addEventListener('keydown', (e) => {
+        const tag = (e.target as HTMLElement)?.tagName;
+        if (e.key === 'd' || e.key === 'D') {
+          if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+          document.documentElement.classList.toggle('dark');
+          localStorage.setItem('darkMode', document.documentElement.classList.contains('dark') ? 'true' : 'false');
+        }
+      });
+
+      // Mobile menu
+      const menuToggle = document.getElementById('mobile-menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      menuToggle?.addEventListener('click', () => {
+        const isOpen = !mobileMenu?.classList.contains('hidden');
+        mobileMenu?.classList.toggle('hidden', isOpen);
+        menuToggle.setAttribute('aria-expanded', String(!isOpen));
+      });
+    </script>
+  </body>
+</html>

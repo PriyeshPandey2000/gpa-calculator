@@ -1,0 +1,11 @@
+# Prevent indexing of the .pages.dev subdomain (Cloudflare Pages preview URL)
+# This avoids duplicate content penalty
+https://gpacalculatorfree.pages.dev/*
+  X-Robots-Tag: noindex
+
+# Security headers for production domain
+https://gpacalculatorfree.com/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()

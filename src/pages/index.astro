@@ -1,0 +1,871 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const faqItems = [
+  {
+    q: "How do I calculate my GPA?",
+    a: "Multiply each course's grade points by its credit hours to get quality points. Sum all quality points, then divide by total credit hours. For example, an A (4.0) in a 3-credit course gives 12 quality points. Add all quality points across courses and divide by total credits for your GPA."
+  },
+  {
+    q: "What is a good GPA?",
+    a: "A GPA of 3.0 or above is generally considered good and meets most academic requirements. A 3.5 or above often qualifies for the Dean's List and is competitive for graduate school applications. A 3.7 or above is considered excellent and can qualify for honors like Magna Cum Laude. Aim for 3.0+ to stay in good standing."
+  },
+  {
+    q: "What GPA do I need for college?",
+    a: "Most colleges require a minimum GPA of 2.0 for admission consideration. Competitive state universities typically look for 3.0–3.5. Highly selective schools like the Ivy League expect an unweighted GPA of approximately 3.9. Graduate programs generally require a 3.0+ undergraduate GPA. Check each school's specific requirements."
+  },
+  {
+    q: "What's my GPA? How do I find it?",
+    a: "Use the GPA Calculator above — enter each course's grade and credit hours, and your GPA is computed instantly. For your official GPA, check your school's student portal or transcript. This calculator uses the standard 4.0 scale and works for semester, annual, and cumulative calculations."
+  },
+  {
+    q: "How much will my GPA go up if I get all A's?",
+    a: "It depends on how many credits you already have completed. More existing credits means each new semester has less impact. Use the What If GPA Calculator to simulate exactly how specific grades in future courses would change your cumulative GPA. It accounts for your current credit hours and GPA automatically."
+  },
+  {
+    q: "What will my GPA be? Can I calculate a future GPA?",
+    a: "Yes — the What If GPA Calculator lets you enter your current GPA and credits, then add planned or hypothetical courses to see your projected GPA instantly. This is ideal for goal-setting before a semester or for understanding what grades you'd need to reach a target GPA like 3.5 or 3.7."
+  },
+  {
+    q: "What is a 4.0 GPA scale?",
+    a: "The 4.0 scale is the standard U.S. grade point system: A = 4.0, A- = 3.7, B+ = 3.3, B = 3.0, B- = 2.7, C+ = 2.3, C = 2.0, C- = 1.7, D+ = 1.3, D = 1.0, D- = 0.7, F = 0.0. Some schools also award A+ = 4.0 (or 4.3 on some scales). Pass (P) and Withdrawal (W) grades are excluded from GPA calculation."
+  },
+  {
+    q: "What is a weighted GPA?",
+    a: "A weighted GPA gives extra grade points for rigorous coursework. AP courses typically add +1.0 points, Honors courses add +0.5, and IB courses add +1.0. This means an A in an AP class counts as 5.0 instead of 4.0, pushing the maximum above 4.0. Weighted GPAs are common in high school and used to reward students who challenge themselves with advanced courses."
+  },
+  {
+    q: "What is the difference between weighted and unweighted GPA?",
+    a: "An unweighted GPA uses the standard 4.0 scale for all courses regardless of difficulty — an A is always 4.0. A weighted GPA applies bonuses for honors, AP, or IB courses, so the scale typically goes up to 5.0. Colleges often recalculate GPAs on an unweighted basis for fair comparison, but weighted GPA shows academic rigor in your transcript."
+  },
+  {
+    q: "How do I raise my GPA?",
+    a: "Focus on high-credit courses first — a strong grade in a 4-credit class moves your GPA more than the same grade in a 1-credit class. If your school allows grade replacement, retaking courses where you earned a D or F can significantly improve your cumulative GPA. Use the What If GPA Calculator to model exactly what grades you need to hit your target. Consistent study habits, office hours, and early tutoring are the most reliable long-term strategies."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "GPA Calculator Free",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any",
+  "url": "https://gpacalculatorfree.com",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free online GPA calculator for college and high school. Calculate semester and cumulative GPA on the 4.0 scale instantly.",
+  "browserRequirements": "Requires JavaScript"
+};
+
+const calculatorCards = [
+  {
+    title: "College GPA Calculator",
+    description: "Calculate your college semester and cumulative GPA using the standard 4.0 scale.",
+    href: "/college-gpa-calculator",
+    icon: "🎓",
+    highlight: false
+  },
+  {
+    title: "High School GPA Calculator",
+    description: "Compute your high school GPA for unweighted and weighted course loads.",
+    href: "/high-school-gpa-calculator",
+    icon: "📚",
+    highlight: false
+  },
+  {
+    title: "Cumulative GPA Calculator",
+    description: "Combine multiple semesters or years to find your overall cumulative GPA.",
+    href: "/cumulative-gpa-calculator",
+    icon: "📊",
+    highlight: false
+  },
+  {
+    title: "Weighted GPA Calculator",
+    description: "Factor in AP, Honors, and IB course bonuses for an accurate weighted GPA.",
+    href: "/weighted-gpa-calculator",
+    icon: "⚖️",
+    highlight: false
+  },
+  {
+    title: "Unweighted GPA Calculator",
+    description: "Calculate your GPA on the standard 4.0 scale without course-difficulty bonuses.",
+    href: "/unweighted-gpa-calculator",
+    icon: "📋",
+    highlight: false
+  },
+  {
+    title: "What If GPA Calculator",
+    description: "Simulate future grades to see exactly how they'll change your GPA — before the semester ends.",
+    href: "/what-if-gpa-calculator",
+    icon: "✨",
+    highlight: true
+  },
+  {
+    title: "Grade Calculator",
+    description: "Figure out what grade you need on your final exam to reach your target course grade.",
+    href: "/grade-calculator",
+    icon: "🔢",
+    highlight: false
+  },
+  {
+    title: "GPA Scale Chart",
+    description: "Full reference chart mapping letter grades and percentages to GPA points.",
+    href: "/gpa-scale",
+    icon: "📈",
+    highlight: false
+  }
+];
+---
+
+<Layout
+  title="GPA Calculator — Free Online GPA Calculator (4.0 Scale)"
+  description="Calculate your GPA instantly for free. Enter your grades and credits to get your semester and cumulative GPA on the 4.0 scale. Works for college and high school."
+  canonical="/"
+  schema={[faqSchema, webAppSchema]}
+>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="page-hero" aria-label="GPA Calculator Hero">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <!-- Badges row -->
+      <div class="flex flex-wrap items-center justify-center gap-2 mb-5" aria-label="Feature badges">
+        <span class="badge badge-blue">4.0 Scale</span>
+        <span class="badge" style="background: var(--color-canvas-soft-2); color: var(--color-body);">No Signup Required</span>
+        <span class="badge" style="background: #dcfce7; color: #16a34a;">Instant Results</span>
+      </div>
+
+      <h1 class="mb-4" style="font-size: clamp(2rem, 5vw, 2.75rem); letter-spacing: -0.03em; font-weight: 600; color: var(--color-ink);">
+        Free GPA Calculator
+      </h1>
+
+      <p class="text-lg mb-2" style="color: var(--color-body); max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.65;">
+        Enter your courses, grades, and credit hours. Your GPA calculates instantly — no account, no ads, no friction.
+      </p>
+      <p class="text-sm mb-0" style="color: var(--color-mute);">
+        Works for college, high school, and graduate programs &middot; Standard 4.0 scale
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       QUICK GPA CALCULATOR WIDGET
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="max-w-3xl mx-auto px-4 py-8" aria-labelledby="calculator-heading" id="calculator">
+    <div class="card p-0 overflow-hidden" style="box-shadow: var(--shadow-lg);">
+
+      <!-- Card header -->
+      <div class="flex items-center justify-between px-5 py-4 border-b" style="border-color: var(--color-hairline); background: var(--color-canvas-soft);">
+        <h2 id="calculator-heading" class="text-base font-semibold m-0" style="color: var(--color-ink); letter-spacing: -0.01em;">
+          GPA Calculator
+        </h2>
+        <div class="flex items-center gap-3 flex-wrap">
+          <!-- Grade mode toggle -->
+          <div class="flex items-center gap-2 text-sm" style="color: var(--color-body);">
+            <span id="grade-mode-label" class="text-sm font-medium" style="color: var(--color-body);">Letter Grade</span>
+            <label class="toggle" aria-label="Toggle between letter grade and percentage input">
+              <input type="checkbox" id="pct-toggle" />
+              <span class="toggle-track"></span>
+              <span class="toggle-thumb"></span>
+            </label>
+            <span class="text-sm" style="color: var(--color-mute);">%</span>
+          </div>
+
+          <!-- No-credits toggle -->
+          <div class="flex items-center gap-2 text-sm" style="color: var(--color-body);">
+            <label class="toggle" aria-label="Toggle credit hours display">
+              <input type="checkbox" id="no-credits-toggle" />
+              <span class="toggle-track"></span>
+              <span class="toggle-thumb"></span>
+            </label>
+            <span class="text-sm" style="color: var(--color-mute);">Equal credits</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course list -->
+      <div class="px-5 pt-4 pb-3">
+        <!-- Column headers -->
+        <div id="course-headers" class="grid gap-2 mb-2 px-1" style="grid-template-columns: 1fr auto auto auto;">
+          <span class="text-xs font-medium uppercase tracking-wide" style="color: var(--color-mute);">Course (optional)</span>
+          <span class="text-xs font-medium uppercase tracking-wide text-center" style="color: var(--color-mute); min-width: 100px;" id="header-grade">Grade</span>
+          <span class="text-xs font-medium uppercase tracking-wide text-center" style="color: var(--color-mute); min-width: 72px;" id="header-credits">Credits</span>
+          <span class="w-8"></span>
+        </div>
+
+        <!-- Courses container -->
+        <div id="courses-container" class="flex flex-col gap-2" role="list" aria-label="Course list">
+          <!-- Rows injected by JS -->
+        </div>
+
+        <!-- Add course button -->
+        <button
+          id="add-course-btn"
+          type="button"
+          class="btn btn-ghost btn-sm mt-3 w-full"
+          aria-label="Add another course"
+          style="border: 1px dashed var(--color-hairline-strong); color: var(--color-brand);"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Add Course
+        </button>
+      </div>
+
+      <!-- Result panel -->
+      <div id="result-panel" class="px-5 pb-5 fade-in" style="display:none;">
+        <div class="result-panel" style="padding: 1.25rem 1.5rem;">
+          <!-- GPA number + label row -->
+          <div class="flex items-start justify-between gap-4 mb-4 flex-wrap">
+            <div>
+              <div class="text-xs font-medium uppercase tracking-widest mb-1" style="color: var(--color-mute); font-family: var(--font-mono);">Your GPA</div>
+              <div class="flex items-baseline gap-3">
+                <span id="gpa-result" class="tabular" style="font-size: 3rem; font-weight: 700; line-height: 1; letter-spacing: -0.04em; color: var(--color-brand);">—</span>
+                <span class="text-lg font-medium" style="color: var(--color-mute);">/ 4.0</span>
+              </div>
+              <div id="gpa-label" class="text-sm font-medium mt-1" style="color: var(--color-body);"></div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs font-medium uppercase tracking-widest mb-1" style="color: var(--color-mute); font-family: var(--font-mono);">Credits</div>
+              <div id="total-credits-display" class="text-2xl font-bold tabular" style="color: var(--color-ink);">0</div>
+              <div class="text-xs mt-0.5" style="color: var(--color-mute);">quality pts: <span id="total-qp-display" class="tabular">0.00</span></div>
+            </div>
+          </div>
+
+          <!-- Progress meter -->
+          <div class="mb-2">
+            <div class="gpa-meter-container" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-label="GPA meter">
+              <div id="gpa-meter-fill" class="gpa-meter-fill" style="width: 0%; background: var(--color-brand);"></div>
+            </div>
+            <!-- Threshold markers -->
+            <div class="relative mt-1" style="height: 16px;">
+              <span class="absolute text-xs" style="left: 50%; transform: translateX(-50%); color: var(--color-mute);">2.0</span>
+              <span class="absolute text-xs" style="left: 75%; transform: translateX(-50%); color: var(--color-mute);">3.0</span>
+              <span class="absolute text-xs" style="left: 87.5%; transform: translateX(-50%); color: var(--color-mute);">3.5</span>
+              <span class="absolute text-xs" style="right: 0; color: var(--color-mute);">4.0</span>
+            </div>
+          </div>
+
+          <!-- Proximity message -->
+          <div id="gpa-proximity" class="text-sm mt-3" style="color: var(--color-brand); min-height: 1.25rem; font-weight: 500;"></div>
+
+          <!-- Action buttons -->
+          <div class="flex flex-wrap gap-2 mt-4 pt-4" style="border-top: 1px solid var(--color-brand-soft);">
+            <button id="share-btn" type="button" class="btn btn-secondary btn-sm" aria-label="Share your GPA result">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              <span id="share-btn-text">Share Result</span>
+            </button>
+            <button id="print-btn" type="button" class="btn btn-secondary btn-sm" aria-label="Print your GPA">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Print
+            </button>
+            <button id="reset-btn" type="button" class="btn btn-secondary btn-sm" aria-label="Reset calculator">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.07"/></svg>
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state hint -->
+      <div id="empty-hint" class="px-5 pb-5 text-center text-sm" style="color: var(--color-mute);">
+        Add courses above and your GPA will appear here instantly.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CALCULATOR LINKS GRID
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-10" aria-labelledby="tools-heading">
+    <div class="text-center mb-8">
+      <h2 id="tools-heading" class="mb-2">All GPA Calculators</h2>
+      <p class="text-base" style="color: var(--color-body); max-width: 500px; margin: 0 auto;">
+        Specialized tools for every scenario — from high school AP classes to graduate school planning.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {calculatorCards.map((card) => (
+        <a
+          href={card.href}
+          class="card group block p-5 transition-all duration-200 hover:shadow-md no-underline relative"
+          style={card.highlight
+            ? "border-color: var(--color-brand-soft); background: var(--color-brand-bg);"
+            : ""}
+          aria-label={card.title}
+        >
+          {card.highlight && (
+            <span class="badge badge-blue absolute top-3 right-3" style="font-size: 0.65rem; padding: 0.15rem 0.5rem;">Unique</span>
+          )}
+          <div class="text-2xl mb-3 leading-none" aria-hidden="true">{card.icon}</div>
+          <h3 class="text-sm font-semibold mb-1.5 group-hover:text-[color:var(--color-brand)] transition-colors" style="color: var(--color-ink); letter-spacing: -0.01em;">
+            {card.title}
+          </h3>
+          <p class="text-xs leading-relaxed m-0" style="color: var(--color-body);">
+            {card.description}
+          </p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       WHAT IS GPA SECTION
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="max-w-3xl mx-auto px-4 py-10" aria-labelledby="what-is-gpa-heading">
+    <div class="card p-8" style="background: var(--color-canvas-soft);">
+      <h2 id="what-is-gpa-heading" class="mb-4">What is GPA?</h2>
+
+      <div class="prose">
+        <p>
+          GPA stands for <strong>Grade Point Average</strong> — a single number that summarizes your academic performance across all courses. In the United States, nearly every college and high school uses the <strong>4.0 scale</strong>, where an A equals 4.0 points, a B equals 3.0, a C equals 2.0, a D equals 1.0, and an F equals 0.
+        </p>
+
+        <p>
+          To calculate your GPA, multiply each course's grade points by its credit hours to get <em>quality points</em>. Sum the quality points for all courses, then divide by the total number of credit hours completed. This weighted average ensures that a 4-credit calculus course counts more toward your GPA than a 1-credit elective.
+        </p>
+
+        <p>
+          There are two common types of GPA. An <strong>unweighted GPA</strong> treats every course the same — an A in gym class and an A in AP Physics both contribute 4.0 points. A <strong>weighted GPA</strong> rewards academic rigor: AP courses typically add 1.0 bonus points, and Honors courses add 0.5, pushing the maximum above 4.0.
+        </p>
+
+        <p>
+          GPA thresholds matter for scholarships, honor societies, graduate school admission, and dean's list eligibility. Most colleges require a minimum <strong>2.0 GPA</strong> to remain in good standing. A <strong>3.5 GPA</strong> typically qualifies for the Dean's List, while a <strong>3.7+</strong> is competitive for graduate programs and academic honors. Top-tier graduate schools often expect a 3.5–3.9 undergraduate GPA.
+        </p>
+
+        <p>
+          This free GPA calculator handles all the math in real time. Enter your course grades and credit hours, and your semester and cumulative GPA appear instantly — no signup, no ads, no hidden costs.
+        </p>
+      </div>
+
+      <!-- Quick reference table -->
+      <div class="mt-6 overflow-x-auto rounded-lg" style="border: 1px solid var(--color-hairline);">
+        <table class="w-full text-sm" style="border-collapse: collapse; margin: 0;">
+          <thead>
+            <tr style="background: var(--color-canvas-soft-2);">
+              <th class="text-left px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); font-family: var(--font-mono); border-bottom: 1px solid var(--color-hairline);">Letter</th>
+              <th class="text-center px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); font-family: var(--font-mono); border-bottom: 1px solid var(--color-hairline);">GPA Points</th>
+              <th class="text-center px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); font-family: var(--font-mono); border-bottom: 1px solid var(--color-hairline);">Percentage</th>
+              <th class="text-left px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); font-family: var(--font-mono); border-bottom: 1px solid var(--color-hairline);">Standing</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["A / A+", "4.0", "93–100%", "Excellent"],
+              ["A-", "3.7", "90–92%", "Excellent"],
+              ["B+", "3.3", "87–89%", "Good"],
+              ["B", "3.0", "83–86%", "Good"],
+              ["B-", "2.7", "80–82%", "Good"],
+              ["C+", "2.3", "77–79%", "Satisfactory"],
+              ["C", "2.0", "73–76%", "Satisfactory"],
+              ["D", "1.0", "60–69%", "Below Average"],
+              ["F", "0.0", "< 60%", "Failing"],
+            ].map(([letter, pts, pct, standing], i) => (
+              <tr style={i % 2 === 0 ? "" : "background: var(--color-canvas-soft-2);"}>
+                <td class="px-4 py-2.5 font-semibold" style="color: var(--color-ink); border-bottom: 1px solid var(--color-hairline); font-family: var(--font-mono);">{letter}</td>
+                <td class="px-4 py-2.5 text-center tabular font-medium" style="color: var(--color-brand); border-bottom: 1px solid var(--color-hairline);">{pts}</td>
+                <td class="px-4 py-2.5 text-center" style="color: var(--color-body); border-bottom: 1px solid var(--color-hairline);">{pct}</td>
+                <td class="px-4 py-2.5" style="color: var(--color-body); border-bottom: 1px solid var(--color-hairline);">{standing}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-xs mt-4 mb-0" style="color: var(--color-mute);">
+        Note: Exact percentage cutoffs vary by institution. P (Pass), NP (No Pass), W (Withdrawal), and I (Incomplete) grades are excluded from GPA calculations.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FAQ SECTION
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="max-w-3xl mx-auto px-4 py-10" aria-labelledby="faq-heading">
+    <div class="text-center mb-8">
+      <h2 id="faq-heading" class="mb-2">Frequently Asked Questions</h2>
+      <p class="text-base m-0" style="color: var(--color-body);">Everything you need to know about GPA calculation.</p>
+    </div>
+
+    <div class="card" style="padding: 0;">
+      {faqItems.map((item, i) => (
+        <div class={`faq-item${i === 0 ? ' open' : ''}`} itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <button
+            class="faq-question"
+            aria-expanded={i === 0 ? "true" : "false"}
+            itemprop="name"
+            style="padding: 1rem 1.5rem;"
+          >
+            <span>{item.q}</span>
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div
+            class="faq-answer"
+            itemscope
+            itemprop="acceptedAnswer"
+            itemtype="https://schema.org/Answer"
+            style="padding: 0 1.5rem 1rem;"
+          >
+            <p itemprop="text" class="m-0 text-sm leading-relaxed" style="color: var(--color-body);">{item.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       INTERNAL LINKS SECTION
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-10" aria-labelledby="explore-heading">
+    <div style="background: var(--color-canvas-soft-2); border: 1px solid var(--color-hairline); border-radius: var(--radius-xl); padding: 2rem 2.5rem;">
+      <h2 id="explore-heading" class="text-lg mb-1" style="font-size: 1.2rem; letter-spacing: -0.02em;">Explore More GPA Tools</h2>
+      <p class="text-sm mb-5" style="color: var(--color-body);">Specialized calculators for every academic situation.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">
+        {[
+          { href: "/college-gpa-calculator", label: "College GPA Calculator" },
+          { href: "/high-school-gpa-calculator", label: "High School GPA Calculator" },
+          { href: "/cumulative-gpa-calculator", label: "Cumulative GPA Calculator" },
+          { href: "/weighted-gpa-calculator", label: "Weighted GPA Calculator" },
+          { href: "/unweighted-gpa-calculator", label: "Unweighted GPA Calculator" },
+          { href: "/what-if-gpa-calculator", label: "What If GPA Calculator" },
+          { href: "/grade-calculator", label: "Grade Calculator" },
+          { href: "/gpa-scale", label: "GPA Scale Chart" },
+          { href: "/middle-school-gpa-calculator", label: "Middle School GPA Calculator" },
+        ].map(link => (
+          <a
+            href={link.href}
+            class="flex items-center gap-2 py-1.5 text-sm no-underline group"
+            style="color: var(--color-body);"
+          >
+            <svg class="shrink-0 group-hover:text-[color:var(--color-brand)] transition-colors" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+            <span class="group-hover:text-[color:var(--color-brand)] transition-colors">{link.label}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CALCULATOR JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  // ── Grade point map ───────────────────────────────────────────────────────
+  const GRADE_POINTS = {
+    'A+': 4.0, 'A': 4.0, 'A-': 3.7,
+    'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+    'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+    'D+': 1.3, 'D': 1.0, 'D-': 0.7,
+    'F': 0.0, 'P': null, 'W': null
+  };
+
+  const GRADE_OPTIONS = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F','P','W'];
+
+  // ── State ─────────────────────────────────────────────────────────────────
+  let courseCount = 0;
+  let noCreditsMode = false;
+  let percentageMode = false;
+
+  // ── DOM references ────────────────────────────────────────────────────────
+  const container     = document.getElementById('courses-container');
+  const addBtn        = document.getElementById('add-course-btn');
+  const noCreditsEl   = document.getElementById('no-credits-toggle');
+  const pctToggleEl   = document.getElementById('pct-toggle');
+  const resultPanel   = document.getElementById('result-panel');
+  const emptyHint     = document.getElementById('empty-hint');
+  const gpaResultEl   = document.getElementById('gpa-result');
+  const gpaLabelEl    = document.getElementById('gpa-label');
+  const gpaProxEl     = document.getElementById('gpa-proximity');
+  const meterFill     = document.getElementById('gpa-meter-fill');
+  const totalCrEl     = document.getElementById('total-credits-display');
+  const totalQpEl     = document.getElementById('total-qp-display');
+  const shareBtn      = document.getElementById('share-btn');
+  const shareBtnText  = document.getElementById('share-btn-text');
+  const printBtn      = document.getElementById('print-btn');
+  const resetBtn      = document.getElementById('reset-btn');
+  const headerCredits = document.getElementById('header-credits');
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function percentToLetter(pct) {
+    const p = parseFloat(pct);
+    if (isNaN(p)) return 'F';
+    if (p >= 97) return 'A+';
+    if (p >= 93) return 'A';
+    if (p >= 90) return 'A-';
+    if (p >= 87) return 'B+';
+    if (p >= 83) return 'B';
+    if (p >= 80) return 'B-';
+    if (p >= 77) return 'C+';
+    if (p >= 73) return 'C';
+    if (p >= 70) return 'C-';
+    if (p >= 67) return 'D+';
+    if (p >= 63) return 'D';
+    if (p >= 60) return 'D-';
+    return 'F';
+  }
+
+  function formatGPA(g) {
+    return (g === null || isNaN(g)) ? '—' : g.toFixed(2);
+  }
+
+  function gpaColorClass(g) {
+    if (g === null || isNaN(g)) return 'gray';
+    if (g < 2.0) return 'red';
+    if (g < 3.0) return 'yellow';
+    if (g < 3.5) return 'green';
+    return 'blue';
+  }
+
+  function gpaLabel(g) {
+    if (g === null || isNaN(g)) return '';
+    if (g >= 3.9) return 'Perfect / Summa Cum Laude';
+    if (g >= 3.7) return 'Magna Cum Laude';
+    if (g >= 3.5) return "Dean's List";
+    if (g >= 3.0) return 'Good Standing';
+    if (g >= 2.0) return 'Satisfactory';
+    if (g >= 1.0) return 'Below Average';
+    return 'Failing';
+  }
+
+  function gpaProximityMsg(g) {
+    if (g === null || isNaN(g)) return '';
+    const thresholds = [
+      { val: 4.0, label: 'Perfect GPA' },
+      { val: 3.9, label: 'Summa Cum Laude (3.9)' },
+      { val: 3.7, label: 'Magna Cum Laude (3.7)' },
+      { val: 3.5, label: "Dean's List (3.5)" },
+      { val: 3.0, label: 'Good Standing (3.0)' },
+      { val: 2.0, label: 'Passing (2.0)' },
+    ];
+    for (const t of thresholds) {
+      if (g < t.val) {
+        const diff = (t.val - g).toFixed(2);
+        if (parseFloat(diff) <= 0.30) {
+          return `${diff} away from ${t.label}`;
+        }
+        return '';
+      }
+    }
+    return '';
+  }
+
+  const COLOR_MAP = {
+    red:    '#ee0000',
+    yellow: '#f5a623',
+    green:  '#16a34a',
+    blue:   '#0070f3',
+    gray:   '#888888',
+  };
+
+  // ── Build a course row ─────────────────────────────────────────────────────
+  function buildRow(index) {
+    const id = `course-${index}`;
+    const row = document.createElement('div');
+    row.className = 'course-row';
+    row.style.gridTemplateColumns = noCreditsMode
+      ? '1fr auto auto'
+      : '1fr auto auto auto';
+    row.dataset.id = id;
+    row.setAttribute('role', 'listitem');
+    row.setAttribute('aria-label', `Course ${index}`);
+
+    // Course name input
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = `Course ${index}`;
+    nameInput.className = 'input';
+    nameInput.style.fontSize = '0.875rem';
+    nameInput.setAttribute('aria-label', 'Course name (optional)');
+    nameInput.addEventListener('input', recalculate);
+
+    // Grade input — either select or percentage input
+    const gradeWrapper = document.createElement('div');
+    gradeWrapper.style.minWidth = '100px';
+
+    if (percentageMode) {
+      const pctInput = document.createElement('input');
+      pctInput.type = 'number';
+      pctInput.min = '0';
+      pctInput.max = '100';
+      pctInput.step = '1';
+      pctInput.placeholder = '%';
+      pctInput.className = 'input pct-input';
+      pctInput.style.cssText = 'font-size:0.875rem; width:100%; text-align:center;';
+      pctInput.setAttribute('aria-label', 'Grade percentage');
+      pctInput.addEventListener('input', recalculate);
+      gradeWrapper.appendChild(pctInput);
+    } else {
+      const gradeSelect = document.createElement('select');
+      gradeSelect.className = 'input grade-select';
+      gradeSelect.style.cssText = 'font-size:0.875rem; width:100%;';
+      gradeSelect.setAttribute('aria-label', 'Letter grade');
+      GRADE_OPTIONS.forEach(g => {
+        const opt = document.createElement('option');
+        opt.value = g;
+        opt.textContent = g;
+        if (g === 'A') opt.selected = true;
+        gradeSelect.appendChild(opt);
+      });
+      gradeSelect.addEventListener('change', recalculate);
+      gradeWrapper.appendChild(gradeSelect);
+    }
+
+    // Credits input
+    const creditsInput = document.createElement('input');
+    creditsInput.type = 'number';
+    creditsInput.min = '0.5';
+    creditsInput.max = '12';
+    creditsInput.step = '0.5';
+    creditsInput.value = '3';
+    creditsInput.className = 'input credits-input';
+    creditsInput.style.cssText = 'font-size:0.875rem; width:72px; text-align:center;';
+    creditsInput.setAttribute('aria-label', 'Credit hours');
+    creditsInput.addEventListener('input', recalculate);
+
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn btn-secondary btn-sm';
+    removeBtn.style.cssText = 'padding: 0.375rem 0.5rem; color: var(--color-mute); min-width: 32px;';
+    removeBtn.setAttribute('aria-label', `Remove course ${index}`);
+    removeBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    removeBtn.addEventListener('click', () => {
+      row.remove();
+      recalculate();
+      if (container.children.length === 0) addDefaultRows();
+    });
+
+    row.appendChild(nameInput);
+    row.appendChild(gradeWrapper);
+    if (!noCreditsMode) row.appendChild(creditsInput);
+    row.appendChild(removeBtn);
+
+    return row;
+  }
+
+  function addCourse() {
+    courseCount++;
+    const row = buildRow(courseCount);
+    container.appendChild(row);
+    // Focus the grade input of new row
+    const gradeEl = row.querySelector('.grade-select, .pct-input');
+    if (gradeEl) gradeEl.focus();
+    recalculate();
+  }
+
+  function addDefaultRows(count = 4) {
+    for (let i = 0; i < count; i++) addCourse();
+  }
+
+  // ── Recalculate GPA ────────────────────────────────────────────────────────
+  function recalculate() {
+    const rows = container.querySelectorAll('.course-row');
+    let totalQP = 0;
+    let totalCr = 0;
+
+    rows.forEach(row => {
+      let gradePoints = null;
+
+      if (percentageMode) {
+        const pctEl = row.querySelector('.pct-input');
+        if (pctEl && pctEl.value !== '') {
+          const letter = percentToLetter(pctEl.value);
+          gradePoints = GRADE_POINTS[letter] ?? null;
+        }
+      } else {
+        const selEl = row.querySelector('.grade-select');
+        if (selEl) {
+          gradePoints = GRADE_POINTS[selEl.value] ?? null;
+        }
+      }
+
+      if (gradePoints === null) return; // P, W — skip
+
+      const credits = noCreditsMode
+        ? 1
+        : parseFloat(row.querySelector('.credits-input')?.value || '0');
+
+      if (!credits || credits <= 0) return;
+
+      totalQP += gradePoints * credits;
+      totalCr  += credits;
+    });
+
+    if (totalCr === 0) {
+      showEmptyState();
+      return;
+    }
+
+    const gpa = Math.round((totalQP / totalCr) * 1000) / 1000;
+    showResult(gpa, totalCr, totalQP);
+  }
+
+  function showEmptyState() {
+    resultPanel.style.display = 'none';
+    emptyHint.style.display   = 'block';
+  }
+
+  function showResult(gpa, totalCr, totalQP) {
+    emptyHint.style.display   = 'none';
+    resultPanel.style.display = 'block';
+
+    const color  = gpaColorClass(gpa);
+    const hexCol = COLOR_MAP[color] || COLOR_MAP.gray;
+
+    // GPA number
+    gpaResultEl.textContent  = formatGPA(gpa);
+    gpaResultEl.style.color  = hexCol;
+
+    // Label + proximity
+    if (gpaLabelEl) gpaLabelEl.textContent = gpaLabel(gpa);
+    if (gpaProxEl)  gpaProxEl.textContent  = gpaProximityMsg(gpa);
+
+    // Meter
+    const pct = Math.min(Math.max((gpa / 4.0) * 100, 0), 100);
+    meterFill.style.width      = pct + '%';
+    meterFill.style.background = hexCol;
+    meterFill.setAttribute('aria-valuenow', gpa.toFixed(2));
+
+    // Totals
+    if (totalCrEl) totalCrEl.textContent = totalCr % 1 === 0 ? String(totalCr) : totalCr.toFixed(1);
+    if (totalQpEl) totalQpEl.textContent = totalQP.toFixed(2);
+
+    // Subtle pulse animation
+    gpaResultEl.classList.remove('pulse-once');
+    void gpaResultEl.offsetWidth; // reflow
+    gpaResultEl.classList.add('pulse-once');
+  }
+
+  // ── Toggle handlers ────────────────────────────────────────────────────────
+  noCreditsEl?.addEventListener('change', () => {
+    noCreditsMode = noCreditsEl.checked;
+    if (headerCredits) {
+      headerCredits.style.display = noCreditsMode ? 'none' : '';
+    }
+    rebuildRows();
+  });
+
+  pctToggleEl?.addEventListener('change', () => {
+    percentageMode = pctToggleEl.checked;
+    const label = document.getElementById('grade-mode-label');
+    if (label) label.textContent = percentageMode ? 'Percentage' : 'Letter Grade';
+    rebuildRows();
+  });
+
+  function rebuildRows() {
+    // Preserve count but rebuild all rows
+    const count = container.children.length || 4;
+    container.innerHTML = '';
+    courseCount = 0;
+    for (let i = 0; i < count; i++) addCourse();
+  }
+
+  // ── Button actions ─────────────────────────────────────────────────────────
+  addBtn?.addEventListener('click', addCourse);
+
+  shareBtn?.addEventListener('click', () => {
+    const gpaText = gpaResultEl?.textContent || '—';
+    const url = new URL(window.location.href);
+    url.searchParams.set('gpa', gpaText);
+    const shareUrl = url.toString();
+
+    const copy = (text) => {
+      if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text);
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      return Promise.resolve();
+    };
+
+    copy(shareUrl).then(() => {
+      if (shareBtnText) {
+        shareBtnText.textContent = 'Copied!';
+        setTimeout(() => { if (shareBtnText) shareBtnText.textContent = 'Share Result'; }, 2000);
+      }
+    }).catch(() => {
+      if (shareBtnText) shareBtnText.textContent = 'Copy failed';
+      setTimeout(() => { if (shareBtnText) shareBtnText.textContent = 'Share Result'; }, 2000);
+    });
+  });
+
+  printBtn?.addEventListener('click', () => window.print());
+
+  resetBtn?.addEventListener('click', () => {
+    container.innerHTML = '';
+    courseCount = 0;
+    noCreditsMode   = false;
+    percentageMode  = false;
+    if (noCreditsEl)  noCreditsEl.checked  = false;
+    if (pctToggleEl)  pctToggleEl.checked  = false;
+    const label = document.getElementById('grade-mode-label');
+    if (label) label.textContent = 'Letter Grade';
+    if (headerCredits) headerCredits.style.display = '';
+    showEmptyState();
+    addDefaultRows();
+    recalculate();
+  });
+
+  // ── FAQ accordion ──────────────────────────────────────────────────────────
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item   = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // ── Restore from URL param ────────────────────────────────────────────────
+  const urlParams = new URLSearchParams(window.location.search);
+  const sharedGpa = urlParams.get('gpa');
+  if (sharedGpa && gpaResultEl) {
+    // Show a banner
+    const banner = document.createElement('div');
+    banner.className = 'callout callout-blue';
+    banner.style.cssText = 'margin-bottom: 1rem; font-size: 0.875rem;';
+    banner.innerHTML = `<span>Shared result: <strong>${sharedGpa}</strong> GPA — enter your courses above to recalculate.</span>`;
+    const calculatorSection = document.getElementById('calculator');
+    if (calculatorSection) calculatorSection.insertBefore(banner, calculatorSection.firstChild);
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  addDefaultRows(4);
+  recalculate();
+
+})();
+</script>

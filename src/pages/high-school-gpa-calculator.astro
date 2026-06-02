@@ -1,0 +1,1135 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "High School GPA Calculator",
+  "url": "https://gpacalculatorfree.com/high-school-gpa-calculator",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Calculate your high school GPA with weighted and unweighted results. Supports AP, Honors, and IB courses. Free, instant, no signup required.",
+  "featureList": [
+    "Weighted and unweighted GPA calculated simultaneously",
+    "Supports AP, Honors, IB, and Regular courses",
+    "Multiple semester tracking with cumulative GPA",
+    "Previous GPA inclusion mode",
+    "No-credits equal-weight mode",
+    "Percentage-to-letter-grade conversion",
+    "Share and print results"
+  ]
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between weighted and unweighted high school GPA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An unweighted GPA uses the standard 4.0 scale for all courses regardless of difficulty — an A always equals 4.0 points, a B equals 3.0, and so on. A weighted GPA adds bonus points for rigorous coursework such as AP and IB courses (+1.0) and Honors courses (+0.5), pushing the maximum above 4.0 to a 5.0 scale. Unweighted GPA treats every class equally, while weighted GPA rewards students who challenge themselves with advanced coursework."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is weighted high school GPA calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Weighted GPA is calculated the same way as unweighted GPA, but course-type bonuses are added before the calculation. For AP and IB courses, add 1.0 to the standard grade points (so an A in AP = 5.0). For Honors courses, add 0.5 (an A in Honors = 4.5). Regular courses get no bonus. Then multiply each course's (grade points + bonus) by its credit hours to get weighted quality points, sum all weighted quality points, and divide by total credit hours. The result is capped at 5.0."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do colleges look at weighted or unweighted GPA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most colleges recalculate applicants' GPAs on their own unweighted 4.0 scale for fair comparison across different schools. However, colleges do see your weighted GPA and transcript, which shows the rigor of your coursework. Taking AP and Honors courses signals academic challenge even if admissions offices standardize the GPA. Both numbers matter: unweighted for direct comparison, weighted for demonstrating rigor."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I calculate GPA without credit hours?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Use the 'No Credits' toggle in the calculator to switch to equal-weight mode, where every course counts the same regardless of credit hours. This is useful if you don't know your credit hours or if your school assigns equal weight to all courses. Simply enable the toggle and your GPA will be calculated as a simple average of your grade points."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the highest possible weighted GPA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The highest possible weighted GPA is 5.0, achieved by earning an A or A+ in every AP or IB course. On the weighted scale, an A in an AP or IB class earns 5.0 grade points (4.0 base + 1.0 bonus), and an A in an Honors class earns 4.5 (4.0 + 0.5). A 5.0 weighted GPA requires a perfect record in the most demanding courses available."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do AP courses affect my GPA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AP courses add a +1.0 bonus to your weighted GPA grade points. This means an A in an AP class contributes 5.0 weighted points instead of the standard 4.0 unweighted points. A B in an AP class contributes 4.0 weighted points — the same as an A in a regular class. However, for unweighted GPA purposes, an A in AP still only counts as 4.0 points. AP courses can significantly boost your weighted GPA while your unweighted GPA reflects only your raw grades."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a good high school GPA for college applications?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A 3.5 or higher unweighted GPA is considered competitive for most four-year colleges. For selective universities, a 3.7 or above unweighted is typically expected. For highly competitive schools (Ivy League, MIT, Stanford), applicants commonly have unweighted GPAs of 3.9 or higher. Remember, colleges also look at the rigor of your coursework — a 3.5 GPA with many AP classes may be viewed more favorably than a 3.7 GPA with only regular courses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does high school GPA include all 4 years?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cumulative high school GPA typically includes all four years (grades 9–12). However, some colleges and scholarship programs calculate a 'junior-year GPA' using only grades 9 through 11, since 12th-grade grades may not be available at the time of application. Some schools also weight later grades more heavily. Use the semester-by-semester feature in this calculator to see how each year affects your overall cumulative GPA."
+      }
+    }
+  ]
+};
+---
+
+<Layout
+  title="High School GPA Calculator — Weighted & Unweighted (Free)"
+  description="Calculate your high school GPA with weighted and unweighted results. Supports AP, Honors, and IB courses. Free, instant, no signup required."
+  canonical="/high-school-gpa-calculator"
+  schema={[webAppSchema, faqSchema]}
+>
+
+  <!-- ══════════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════════ -->
+  <section class="page-hero" aria-label="High School GPA Calculator Hero">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb justify-center mb-5" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        <span aria-current="page">High School GPA Calculator</span>
+      </nav>
+
+      <!-- Badges -->
+      <div class="flex flex-wrap items-center justify-center gap-2 mb-5" aria-label="Feature highlights">
+        <span class="badge badge-blue">Weighted + Unweighted</span>
+        <span class="badge badge-green">AP / Honors / IB</span>
+        <span class="badge" style="background: var(--color-canvas-soft-2); color: var(--color-body);">No Signup Required</span>
+        <span class="badge" style="background: var(--color-canvas-soft-2); color: var(--color-body);">Free Forever</span>
+      </div>
+
+      <h1 class="mb-4">
+        High School GPA Calculator
+      </h1>
+
+      <p class="text-lg mb-2" style="color: var(--color-body); max-width: 580px; margin-left: auto; margin-right: auto; line-height: 1.65;">
+        Calculate both your <strong>weighted</strong> and <strong>unweighted</strong> high school GPA instantly. Supports AP, Honors, IB, and Regular courses across multiple semesters.
+      </p>
+      <p class="text-sm mb-0" style="color: var(--color-mute);">
+        Unweighted 4.0 scale &middot; Weighted 5.0 scale &middot; Works for all 4 years of high school
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       MAIN CALCULATOR
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-8" aria-labelledby="hs-calc-heading" id="hs-calculator">
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
+
+      <!-- LEFT: Input column -->
+      <div class="flex-1 min-w-0 w-full">
+
+        <!-- Previous GPA toggle -->
+        <div class="card p-4 mb-4" id="prev-gpa-section">
+          <div class="flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <div class="font-semibold text-sm" style="color: var(--color-ink);">Include Previous GPA</div>
+              <div class="text-xs mt-0.5" style="color: var(--color-mute);">Add existing GPA &amp; credits before this semester</div>
+            </div>
+            <label class="toggle" aria-label="Toggle previous GPA inclusion">
+              <input type="checkbox" id="prev-gpa-toggle" />
+              <span class="toggle-track"></span>
+              <span class="toggle-thumb"></span>
+            </label>
+          </div>
+          <div id="prev-gpa-inputs" class="hidden mt-4 grid grid-cols-2 gap-3">
+            <div>
+              <label for="prev-unweighted-gpa" class="text-xs font-medium" style="color: var(--color-mute);">Previous Unweighted GPA (4.0)</label>
+              <input type="number" id="prev-unweighted-gpa" min="0" max="4" step="0.01" placeholder="e.g. 3.50" class="input mt-1" style="font-size: 0.875rem;" aria-label="Previous unweighted GPA" />
+            </div>
+            <div>
+              <label for="prev-weighted-gpa" class="text-xs font-medium" style="color: var(--color-mute);">Previous Weighted GPA (5.0)</label>
+              <input type="number" id="prev-weighted-gpa" min="0" max="5" step="0.01" placeholder="e.g. 4.10" class="input mt-1" style="font-size: 0.875rem;" aria-label="Previous weighted GPA" />
+            </div>
+            <div class="col-span-2">
+              <label for="prev-credits" class="text-xs font-medium" style="color: var(--color-mute);">Previous Credit Hours</label>
+              <input type="number" id="prev-credits" min="0" step="0.5" placeholder="e.g. 24" class="input mt-1" style="font-size: 0.875rem;" aria-label="Previous credit hours" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Semesters container -->
+        <div id="semesters-container">
+          <!-- Semesters injected by JS -->
+        </div>
+
+        <!-- Add semester button -->
+        <button
+          id="add-semester-btn"
+          type="button"
+          class="btn btn-ghost btn-sm w-full mt-2"
+          style="border: 1px dashed var(--color-hairline-strong); color: var(--color-brand);"
+          aria-label="Add another semester"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Add Semester
+        </button>
+
+      </div><!-- end left column -->
+
+      <!-- RIGHT: Sticky result panel -->
+      <div class="w-full lg:w-80 xl:w-96 shrink-0 lg:sticky lg:top-20" aria-live="polite" aria-atomic="true">
+
+        <!-- Dual GPA result panel -->
+        <div class="card p-0 overflow-hidden" style="box-shadow: var(--shadow-md);">
+
+          <!-- Panel header -->
+          <div class="px-5 py-3 border-b" style="background: var(--color-canvas-soft); border-color: var(--color-hairline);">
+            <h2 id="hs-calc-heading" class="text-sm font-semibold m-0" style="color: var(--color-ink);">Your GPA Results</h2>
+          </div>
+
+          <!-- Empty state -->
+          <div id="hs-empty-hint" class="px-5 py-8 text-center text-sm" style="color: var(--color-mute);">
+            Add courses above and your GPA will appear here instantly.
+          </div>
+
+          <!-- Results (hidden until courses entered) -->
+          <div id="hs-result-panel" class="hidden fade-in">
+
+            <!-- TWO GPA displays side by side -->
+            <div class="grid grid-cols-2 gap-0" style="border-bottom: 1px solid var(--color-hairline);">
+
+              <!-- Unweighted GPA -->
+              <div class="px-5 py-5" style="border-right: 1px solid var(--color-hairline);">
+                <div class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-mute); font-family: var(--font-mono);">Unweighted</div>
+                <div class="flex items-baseline gap-1.5">
+                  <span id="uw-gpa-result" class="tabular" style="font-size: 2.5rem; font-weight: 700; line-height: 1; letter-spacing: -0.04em; color: var(--color-brand);">—</span>
+                  <span class="text-sm font-medium" style="color: var(--color-mute);">/ 4.0</span>
+                </div>
+                <div id="uw-gpa-label" class="text-xs font-medium mt-1.5" style="color: var(--color-body); min-height: 1rem;"></div>
+                <!-- UW progress bar -->
+                <div class="mt-3">
+                  <div class="gpa-meter-container" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-label="Unweighted GPA meter" style="height: 6px;">
+                    <div id="uw-meter-fill" class="gpa-meter-fill" style="width: 0%; background: var(--color-brand);"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Weighted GPA -->
+              <div class="px-5 py-5">
+                <div class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-mute); font-family: var(--font-mono);">Weighted</div>
+                <div class="flex items-baseline gap-1.5">
+                  <span id="w-gpa-result" class="tabular" style="font-size: 2.5rem; font-weight: 700; line-height: 1; letter-spacing: -0.04em; color: var(--color-brand);">—</span>
+                  <span class="text-sm font-medium" style="color: var(--color-mute);">/ 5.0</span>
+                </div>
+                <div id="w-gpa-label" class="text-xs font-medium mt-1.5" style="color: var(--color-body); min-height: 1rem;"></div>
+                <!-- W progress bar -->
+                <div class="mt-3">
+                  <div class="gpa-meter-container" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-label="Weighted GPA meter" style="height: 6px;">
+                    <div id="w-meter-fill" class="gpa-meter-fill" style="width: 0%; background: var(--color-brand);"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- end grid -->
+
+            <!-- Stats row -->
+            <div class="grid grid-cols-2 gap-0" style="border-bottom: 1px solid var(--color-hairline);">
+              <div class="px-5 py-3" style="border-right: 1px solid var(--color-hairline);">
+                <div class="text-xs uppercase tracking-wide" style="color: var(--color-mute); font-family: var(--font-mono);">Total Credits</div>
+                <div id="hs-total-credits" class="text-xl font-bold tabular mt-0.5" style="color: var(--color-ink);">0</div>
+              </div>
+              <div class="px-5 py-3">
+                <div class="text-xs uppercase tracking-wide" style="color: var(--color-mute); font-family: var(--font-mono);">Quality Points</div>
+                <div id="hs-total-qp" class="text-xl font-bold tabular mt-0.5" style="color: var(--color-ink);">0.00</div>
+              </div>
+            </div>
+
+            <!-- Proximity / motivation message -->
+            <div id="hs-proximity-msg" class="px-5 py-2.5 text-sm font-medium" style="color: var(--color-brand); min-height: 2.5rem; border-bottom: 1px solid var(--color-hairline);"></div>
+
+            <!-- Action buttons -->
+            <div class="flex flex-wrap gap-2 px-5 py-4">
+              <button id="hs-share-btn" type="button" class="btn btn-secondary btn-sm" aria-label="Share your GPA result">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                <span id="hs-share-text">Share</span>
+              </button>
+              <button id="hs-print-btn" type="button" class="btn btn-secondary btn-sm" aria-label="Print your GPA">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Print
+              </button>
+              <button id="hs-reset-btn" type="button" class="btn btn-secondary btn-sm" aria-label="Reset calculator">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.07"/></svg>
+                Reset
+              </button>
+            </div>
+
+          </div><!-- end hs-result-panel -->
+        </div>
+
+        <!-- Scale reference card -->
+        <div class="card-soft mt-4 p-4 text-xs" style="color: var(--color-mute);">
+          <div class="font-semibold mb-2" style="color: var(--color-ink); font-size: 0.8rem;">Course Type Bonuses</div>
+          <div class="grid grid-cols-2 gap-y-1.5">
+            <span>Regular:</span><span class="font-mono font-medium" style="color: var(--color-body);">+0.0 (max 4.0)</span>
+            <span>Honors:</span><span class="font-mono font-medium" style="color: var(--color-body);">+0.5 (max 4.5)</span>
+            <span>AP:</span><span class="font-mono font-medium" style="color: var(--color-body);">+1.0 (max 5.0)</span>
+            <span>IB:</span><span class="font-mono font-medium" style="color: var(--color-body);">+1.0 (max 5.0)</span>
+          </div>
+        </div>
+
+      </div><!-- end right sticky column -->
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       WEIGHTED VS UNWEIGHTED EXPLANATION
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-3xl mx-auto px-4 py-10" aria-labelledby="wvu-heading">
+    <div class="card p-8" style="background: var(--color-canvas-soft);">
+      <h2 id="wvu-heading" class="mb-4">Weighted vs. Unweighted High School GPA</h2>
+      <div class="prose">
+        <p>
+          Every high school student has two GPAs: an <strong>unweighted GPA</strong> on the standard 4.0 scale, and a <strong>weighted GPA</strong> that goes up to 5.0 and reflects the difficulty of your courses. Understanding the difference is essential for interpreting your transcript and preparing college applications.
+        </p>
+        <p>
+          Your <strong>unweighted GPA</strong> treats every course identically, regardless of whether it is a regular class or an Advanced Placement course. An A earns 4.0 points, a B earns 3.0, and so on. This scale is used for direct, apples-to-apples comparisons between students at different schools with different curricula.
+        </p>
+        <p>
+          Your <strong>weighted GPA</strong> adds bonus points to reward academic rigor. AP and IB courses earn +1.0 extra points per grade level, so an A in AP Calculus is worth 5.0 weighted points rather than 4.0. Honors courses earn +0.5, so an A in Honors English is worth 4.5. These bonuses mean a student taking all AP classes could achieve a weighted GPA above 4.0 even with a few B grades.
+        </p>
+        <p>
+          <strong>Which matters more for college?</strong> Most colleges recalculate applicants' GPAs on an unweighted basis to compare students from different schools fairly. However, your weighted GPA and your course selection (how many AP, IB, or Honors courses you took) are both visible on your transcript. Admissions officers want to see that you challenged yourself — a 3.5 unweighted GPA earned in a rigorous schedule often impresses more than a 3.8 earned in only easy courses.
+        </p>
+        <p>
+          Use this calculator to see both numbers simultaneously so you always know exactly where you stand on both scales.
+        </p>
+      </div>
+
+      <!-- Comparison table -->
+      <div class="mt-6 overflow-x-auto rounded-lg" style="border: 1px solid var(--color-hairline);">
+        <table class="w-full text-sm" style="border-collapse: collapse; margin: 0;">
+          <thead>
+            <tr style="background: var(--color-canvas-soft-2);">
+              <th class="text-left px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Course Type</th>
+              <th class="text-center px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Grade</th>
+              <th class="text-center px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Unweighted</th>
+              <th class="text-center px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Weighted</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["AP / IB", "A", "4.0", "5.0"],
+              ["AP / IB", "B", "3.0", "4.0"],
+              ["AP / IB", "C", "2.0", "3.0"],
+              ["Honors", "A", "4.0", "4.5"],
+              ["Honors", "B", "3.0", "3.5"],
+              ["Honors", "C", "2.0", "2.5"],
+              ["Regular", "A", "4.0", "4.0"],
+              ["Regular", "B", "3.0", "3.0"],
+              ["Regular", "C", "2.0", "2.0"],
+            ].map(([type, grade, uw, w], i) => (
+              <tr style={i % 2 === 0 ? "" : "background: var(--color-canvas-soft-2);"}>
+                <td class="px-4 py-2 font-medium" style="color: var(--color-ink); border-bottom: 1px solid var(--color-hairline);">{type}</td>
+                <td class="px-4 py-2 text-center" style="color: var(--color-body); border-bottom: 1px solid var(--color-hairline);">{grade}</td>
+                <td class="px-4 py-2 text-center tabular" style="color: var(--color-body); border-bottom: 1px solid var(--color-hairline);">{uw}</td>
+                <td class="px-4 py-2 text-center tabular font-semibold" style="color: var(--color-brand); border-bottom: 1px solid var(--color-hairline);">{w}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       FAQ
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-3xl mx-auto px-4 py-10" aria-labelledby="hs-faq-heading">
+    <div class="text-center mb-8">
+      <h2 id="hs-faq-heading" class="mb-2">Frequently Asked Questions</h2>
+      <p class="text-base m-0" style="color: var(--color-body);">Everything you need to know about high school GPA.</p>
+    </div>
+
+    <div class="card" style="padding: 0;">
+      {[
+        {
+          q: "What is the difference between weighted and unweighted high school GPA?",
+          a: "An unweighted GPA uses the standard 4.0 scale for all courses — an A always equals 4.0 points regardless of whether the class is Regular, Honors, or AP. A weighted GPA adds bonus points for rigorous coursework: +1.0 for AP and IB courses and +0.5 for Honors courses, pushing the maximum to 5.0. Weighted GPA rewards students who challenge themselves with advanced coursework."
+        },
+        {
+          q: "How is weighted high school GPA calculated?",
+          a: "Weighted GPA adds a course-type bonus before multiplying by credit hours. For AP/IB courses, add 1.0 to the standard grade points (A in AP = 5.0). For Honors, add 0.5 (A in Honors = 4.5). Regular courses receive no bonus. Then multiply each course's adjusted grade points by its credits to get quality points, sum all quality points, and divide by total credits. The result is capped at 5.0."
+        },
+        {
+          q: "Do colleges look at weighted or unweighted GPA?",
+          a: "Most colleges recalculate applicants' GPAs on their own unweighted 4.0 scale for fair comparison. However, both your weighted GPA and transcript are visible, showing admissions officers the rigor of your coursework. A 3.5 unweighted GPA earned in an AP-heavy schedule may be viewed more favorably than a higher GPA earned in less challenging courses."
+        },
+        {
+          q: "Can I calculate GPA without credit hours?",
+          a: "Yes. Use the 'No Credits' toggle in any semester section to switch to equal-weight mode, where every course counts equally regardless of credit hours. This is useful if your school assigns equal weight to all courses or if you simply don't have credit-hour information."
+        },
+        {
+          q: "What is the highest possible weighted GPA?",
+          a: "The highest possible weighted GPA is 5.0, achieved by earning an A or A+ in every AP or IB course. An A in AP or IB earns 5.0 weighted points (4.0 base + 1.0 bonus). To achieve a 5.0, a student would need perfect grades across an entirely AP/IB schedule."
+        },
+        {
+          q: "How do AP courses affect my GPA?",
+          a: "AP courses add a +1.0 bonus to your weighted GPA grade points. An A in AP = 5.0 weighted (vs. 4.0 unweighted). A B in AP = 4.0 weighted — the same as an A in a regular class. AP courses boost your weighted GPA and signal academic rigor to colleges, but your unweighted GPA only reflects the raw letter grade."
+        },
+        {
+          q: "What is a good high school GPA for college applications?",
+          a: "A 3.5+ unweighted GPA is competitive for most four-year colleges. For selective universities, aim for 3.7+. For highly competitive schools such as Ivy League institutions, applicants commonly have 3.9+ unweighted GPAs. Course rigor matters too — admissions offices consider both the GPA and the difficulty of your schedule."
+        },
+        {
+          q: "Does high school GPA include all 4 years?",
+          a: "Cumulative high school GPA typically includes all four years (grades 9–12). However, some colleges compute a junior-year GPA using only grades 9–11 because senior year grades may not be available at application time. Some scholarship programs also use only certain years. Use the semester-by-semester feature to track how each year affects your running cumulative GPA."
+        }
+      ].map((item, i) => (
+        <div class={`faq-item${i === 0 ? ' open' : ''}`} itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <button
+            class="faq-question"
+            aria-expanded={i === 0 ? "true" : "false"}
+            itemprop="name"
+            style="padding: 1rem 1.5rem;"
+          >
+            <span>{item.q}</span>
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div
+            class="faq-answer"
+            itemscope
+            itemprop="acceptedAnswer"
+            itemtype="https://schema.org/Answer"
+            style="padding: 0 1.5rem 1rem;"
+          >
+            <p itemprop="text" class="m-0 text-sm leading-relaxed" style="color: var(--color-body);">{item.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       RELATED CALCULATORS
+  ══════════════════════════════════════════════ -->
+  <section class="max-w-6xl mx-auto px-4 py-10" aria-labelledby="related-heading">
+    <div style="background: var(--color-canvas-soft-2); border: 1px solid var(--color-hairline); border-radius: var(--radius-xl); padding: 2rem 2.5rem;">
+      <h2 id="related-heading" class="text-lg mb-1" style="font-size: 1.2rem; letter-spacing: -0.02em;">Related GPA Calculators</h2>
+      <p class="text-sm mb-5" style="color: var(--color-body);">More tools to help you track and improve your academic performance.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          {
+            href: "/weighted-gpa-calculator",
+            title: "Weighted GPA Calculator",
+            desc: "Calculate your weighted GPA with AP, Honors, and IB course bonuses on the 5.0 scale."
+          },
+          {
+            href: "/cumulative-gpa-calculator",
+            title: "Cumulative GPA Calculator",
+            desc: "Combine multiple semesters to find your overall cumulative GPA across all years."
+          },
+          {
+            href: "/college-gpa-calculator",
+            title: "College GPA Calculator",
+            desc: "Calculate your college semester and cumulative GPA using the standard 4.0 scale."
+          },
+          {
+            href: "/unweighted-gpa-calculator",
+            title: "Unweighted GPA Calculator",
+            desc: "Calculate your GPA on the standard 4.0 scale without course-difficulty bonuses."
+          },
+          {
+            href: "/what-if-gpa-calculator",
+            title: "What If GPA Calculator",
+            desc: "Simulate future grades to see exactly how they will change your GPA."
+          },
+          {
+            href: "/grade-calculator",
+            title: "Grade Calculator",
+            desc: "Find out what grade you need on your final exam to hit your target course grade."
+          }
+        ].map(card => (
+          <a
+            href={card.href}
+            class="card group block p-5 transition-all duration-200 hover:shadow-md no-underline"
+            aria-label={card.title}
+          >
+            <h3 class="text-sm font-semibold mb-1.5 group-hover:text-[color:var(--color-brand)] transition-colors" style="color: var(--color-ink); letter-spacing: -0.01em;">
+              {card.title}
+            </h3>
+            <p class="text-xs leading-relaxed m-0" style="color: var(--color-body);">
+              {card.desc}
+            </p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     HIGH SCHOOL GPA CALCULATOR JAVASCRIPT
+══════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  // ── Grade point map ─────────────────────────────────────────────────────────
+  const GRADE_POINTS = {
+    'A+': 4.0, 'A': 4.0, 'A-': 3.7,
+    'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+    'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+    'D+': 1.3, 'D': 1.0, 'D-': 0.7,
+    'F': 0.0, 'P': null, 'W': null
+  };
+
+  const GRADE_OPTIONS = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F','P','W'];
+
+  const COURSE_TYPES = ['Regular','Honors','AP','IB'];
+  const TYPE_BONUS   = { Regular: 0, Honors: 0.5, AP: 1.0, IB: 1.0 };
+
+  // Semester label sequences per year
+  const SEMESTER_LABELS = [
+    'Freshman Fall', 'Freshman Spring',
+    'Sophomore Fall', 'Sophomore Spring',
+    'Junior Fall', 'Junior Spring',
+    'Senior Fall', 'Senior Spring'
+  ];
+
+  // ── State ───────────────────────────────────────────────────────────────────
+  let semesterCount  = 0;
+  let totalCourseId  = 0;
+
+  // ── DOM refs ────────────────────────────────────────────────────────────────
+  const semestersContainer = document.getElementById('semesters-container');
+  const addSemesterBtn     = document.getElementById('add-semester-btn');
+  const emptyHint          = document.getElementById('hs-empty-hint');
+  const resultPanel        = document.getElementById('hs-result-panel');
+
+  const uwGpaEl            = document.getElementById('uw-gpa-result');
+  const uwLabelEl          = document.getElementById('uw-gpa-label');
+  const uwMeterEl          = document.getElementById('uw-meter-fill');
+  const wGpaEl             = document.getElementById('w-gpa-result');
+  const wLabelEl           = document.getElementById('w-gpa-label');
+  const wMeterEl           = document.getElementById('w-meter-fill');
+  const totalCreditsEl     = document.getElementById('hs-total-credits');
+  const totalQpEl          = document.getElementById('hs-total-qp');
+  const proximityEl        = document.getElementById('hs-proximity-msg');
+
+  const shareBtn           = document.getElementById('hs-share-btn');
+  const shareBtnText       = document.getElementById('hs-share-text');
+  const printBtn           = document.getElementById('hs-print-btn');
+  const resetBtn           = document.getElementById('hs-reset-btn');
+
+  const prevToggle         = document.getElementById('prev-gpa-toggle');
+  const prevInputs         = document.getElementById('prev-gpa-inputs');
+  const prevUWEl           = document.getElementById('prev-unweighted-gpa');
+  const prevWEl            = document.getElementById('prev-weighted-gpa');
+  const prevCrEl           = document.getElementById('prev-credits');
+
+  // ── Helpers ─────────────────────────────────────────────────────────────────
+  function percentToLetter(pct) {
+    const p = parseFloat(pct);
+    if (isNaN(p)) return 'F';
+    if (p >= 97) return 'A+';
+    if (p >= 93) return 'A';
+    if (p >= 90) return 'A-';
+    if (p >= 87) return 'B+';
+    if (p >= 83) return 'B';
+    if (p >= 80) return 'B-';
+    if (p >= 77) return 'C+';
+    if (p >= 73) return 'C';
+    if (p >= 70) return 'C-';
+    if (p >= 67) return 'D+';
+    if (p >= 63) return 'D';
+    if (p >= 60) return 'D-';
+    return 'F';
+  }
+
+  function fmt(g) {
+    return (g === null || isNaN(g)) ? '—' : g.toFixed(2);
+  }
+
+  function gpaColor(g) {
+    if (g === null || isNaN(g)) return '#888888';
+    if (g < 2.0) return '#ee0000';
+    if (g < 3.0) return '#f5a623';
+    if (g < 3.5) return '#16a34a';
+    return '#0070f3';
+  }
+
+  function gpaLabel(g) {
+    if (g === null || isNaN(g)) return '';
+    if (g >= 3.9) return 'Perfect / Summa Cum Laude';
+    if (g >= 3.7) return 'Magna Cum Laude';
+    if (g >= 3.5) return "Dean's List";
+    if (g >= 3.0) return 'Good Standing';
+    if (g >= 2.0) return 'Satisfactory';
+    if (g >= 1.0) return 'Below Average';
+    return 'Failing';
+  }
+
+  function proximityMsg(uwGpa) {
+    if (uwGpa === null || isNaN(uwGpa)) return '';
+    const thresholds = [
+      { val: 4.0, label: 'Perfect 4.0' },
+      { val: 3.9, label: 'Summa Cum Laude (3.9)' },
+      { val: 3.7, label: 'Magna Cum Laude (3.7)' },
+      { val: 3.5, label: "Dean's List (3.5)" },
+      { val: 3.0, label: 'Good Standing (3.0)' },
+      { val: 2.0, label: 'Passing (2.0)' },
+    ];
+    for (const t of thresholds) {
+      if (uwGpa < t.val) {
+        const diff = (t.val - uwGpa).toFixed(2);
+        if (parseFloat(diff) <= 0.30) {
+          return `${diff} away from ${t.label}`;
+        }
+        return '';
+      }
+    }
+    return '';
+  }
+
+  // ── Build a course row ───────────────────────────────────────────────────────
+  function buildCourseRow(semesterEl) {
+    totalCourseId++;
+    const id = totalCourseId;
+
+    // Inherit semester-level toggle state
+    const noCredits = semesterEl.dataset.noCredits === 'true';
+    const pctMode   = semesterEl.dataset.pctMode   === 'true';
+
+    const row = document.createElement('div');
+    row.className = 'course-row';
+    row.dataset.id = String(id);
+    row.setAttribute('role', 'listitem');
+    row.setAttribute('aria-label', `Course ${id}`);
+
+    // Layout: name | type | grade | [credits] | remove
+    row.style.gridTemplateColumns = noCredits
+      ? '1fr 110px 110px 32px'
+      : '1fr 110px 110px 72px 32px';
+
+    // ── Course name ──
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = `Course ${id}`;
+    nameInput.className = 'input';
+    nameInput.style.fontSize = '0.875rem';
+    nameInput.setAttribute('aria-label', 'Course name');
+    nameInput.addEventListener('input', recalculate);
+
+    // ── Course type ──
+    const typeSelect = document.createElement('select');
+    typeSelect.className = 'input course-type';
+    typeSelect.style.cssText = 'font-size:0.8125rem; padding: 0.5rem 0.5rem; padding-right: 2rem;';
+    typeSelect.setAttribute('aria-label', 'Course type');
+    COURSE_TYPES.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t;
+      typeSelect.appendChild(opt);
+    });
+    typeSelect.addEventListener('change', recalculate);
+
+    // ── Grade ──
+    const gradeWrapper = document.createElement('div');
+
+    if (pctMode) {
+      const pctInput = document.createElement('input');
+      pctInput.type = 'number';
+      pctInput.min = '0';
+      pctInput.max = '100';
+      pctInput.step = '1';
+      pctInput.placeholder = '%';
+      pctInput.className = 'input pct-input';
+      pctInput.style.cssText = 'font-size:0.875rem; text-align:center; padding: 0.5rem;';
+      pctInput.setAttribute('aria-label', 'Grade percentage');
+      pctInput.addEventListener('input', recalculate);
+      gradeWrapper.appendChild(pctInput);
+    } else {
+      const gradeSelect = document.createElement('select');
+      gradeSelect.className = 'input grade-select';
+      gradeSelect.style.cssText = 'font-size:0.8125rem; padding: 0.5rem 0.5rem; padding-right: 2rem;';
+      gradeSelect.setAttribute('aria-label', 'Letter grade');
+      GRADE_OPTIONS.forEach(g => {
+        const opt = document.createElement('option');
+        opt.value = g;
+        opt.textContent = g;
+        if (g === 'A') opt.selected = true;
+        gradeSelect.appendChild(opt);
+      });
+      gradeSelect.addEventListener('change', recalculate);
+      gradeWrapper.appendChild(gradeSelect);
+    }
+
+    // ── Credits ──
+    const creditsInput = document.createElement('input');
+    creditsInput.type = 'number';
+    creditsInput.min = '0.5';
+    creditsInput.max = '12';
+    creditsInput.step = '0.5';
+    creditsInput.value = '1';
+    creditsInput.className = 'input credits-input';
+    creditsInput.style.cssText = 'font-size:0.875rem; text-align:center; padding: 0.5rem;';
+    creditsInput.setAttribute('aria-label', 'Credit hours');
+    creditsInput.addEventListener('input', recalculate);
+
+    // ── Remove button ──
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn btn-secondary btn-sm';
+    removeBtn.style.cssText = 'padding: 0.35rem 0.4rem; color: var(--color-mute); min-width: 32px;';
+    removeBtn.setAttribute('aria-label', `Remove course ${id}`);
+    removeBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    removeBtn.addEventListener('click', () => {
+      row.remove();
+      recalculate();
+    });
+
+    row.appendChild(nameInput);
+    row.appendChild(typeSelect);
+    row.appendChild(gradeWrapper);
+    if (!noCredits) row.appendChild(creditsInput);
+    row.appendChild(removeBtn);
+
+    return row;
+  }
+
+  // ── Build a semester section ─────────────────────────────────────────────────
+  function buildSemester(labelOverride) {
+    semesterCount++;
+    const idx   = semesterCount;
+    const label = labelOverride || SEMESTER_LABELS[idx - 1] || `Semester ${idx}`;
+
+    const section = document.createElement('div');
+    section.className = 'card p-0 overflow-hidden mb-4 semester-section';
+    section.dataset.semesterId = String(idx);
+    section.dataset.noCredits  = 'false';
+    section.dataset.pctMode    = 'false';
+
+    // ── Semester header ──
+    const header = document.createElement('div');
+    header.className = 'flex items-center justify-between gap-3 flex-wrap px-4 py-3';
+    header.style.cssText = 'background: var(--color-canvas-soft); border-bottom: 1px solid var(--color-hairline);';
+
+    // Label (editable)
+    const labelInput = document.createElement('input');
+    labelInput.type = 'text';
+    labelInput.value = label;
+    labelInput.className = 'font-semibold text-sm bg-transparent border-none outline-none';
+    labelInput.style.cssText = 'color: var(--color-ink); font-family: var(--font-sans); min-width: 120px; max-width: 200px;';
+    labelInput.setAttribute('aria-label', 'Semester name');
+    labelInput.addEventListener('input', recalculate);
+
+    // Running GPA badge
+    const runningBadge = document.createElement('span');
+    runningBadge.className = 'badge badge-blue running-gpa-badge';
+    runningBadge.style.display = 'none';
+    runningBadge.setAttribute('aria-label', 'Running cumulative GPA after this semester');
+
+    // Toggles
+    const togglesDiv = document.createElement('div');
+    togglesDiv.className = 'flex items-center gap-3 flex-wrap';
+
+    // Pct toggle
+    const pctLabel = document.createElement('label');
+    pctLabel.className = 'toggle';
+    pctLabel.setAttribute('aria-label', 'Toggle percentage input mode');
+    const pctInput = document.createElement('input');
+    pctInput.type = 'checkbox';
+    const pctTrack = document.createElement('span');
+    pctTrack.className = 'toggle-track';
+    const pctThumb = document.createElement('span');
+    pctThumb.className = 'toggle-thumb';
+    pctLabel.appendChild(pctInput);
+    pctLabel.appendChild(pctTrack);
+    pctLabel.appendChild(pctThumb);
+    const pctText = document.createElement('span');
+    pctText.className = 'text-xs';
+    pctText.style.color = 'var(--color-mute)';
+    pctText.textContent = '%';
+
+    pctInput.addEventListener('change', () => {
+      section.dataset.pctMode = pctInput.checked ? 'true' : 'false';
+      rebuildCourseRows(section);
+    });
+
+    // No-credits toggle
+    const ncLabel = document.createElement('label');
+    ncLabel.className = 'toggle';
+    ncLabel.setAttribute('aria-label', 'Toggle no-credits equal weight mode');
+    const ncInput = document.createElement('input');
+    ncInput.type = 'checkbox';
+    const ncTrack = document.createElement('span');
+    ncTrack.className = 'toggle-track';
+    const ncThumb = document.createElement('span');
+    ncThumb.className = 'toggle-thumb';
+    ncLabel.appendChild(ncInput);
+    ncLabel.appendChild(ncTrack);
+    ncLabel.appendChild(ncThumb);
+    const ncText = document.createElement('span');
+    ncText.className = 'text-xs';
+    ncText.style.color = 'var(--color-mute)';
+    ncText.textContent = 'No Credits';
+
+    ncInput.addEventListener('change', () => {
+      section.dataset.noCredits = ncInput.checked ? 'true' : 'false';
+      const creditHeader = section.querySelector('.credit-col-header');
+      if (creditHeader) {
+        (creditHeader as HTMLElement).style.display = ncInput.checked ? 'none' : '';
+      }
+      rebuildCourseRows(section);
+    });
+
+    // Remove semester button (only if more than 1)
+    const removeSemBtn = document.createElement('button');
+    removeSemBtn.type = 'button';
+    removeSemBtn.className = 'btn btn-secondary btn-sm';
+    removeSemBtn.style.cssText = 'padding: 0.3rem 0.5rem; color: var(--color-mute);';
+    removeSemBtn.setAttribute('aria-label', 'Remove this semester');
+    removeSemBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    removeSemBtn.addEventListener('click', () => {
+      section.remove();
+      semesterCount = document.querySelectorAll('.semester-section').length;
+      recalculate();
+    });
+
+    togglesDiv.appendChild(pctLabel);
+    togglesDiv.appendChild(pctText);
+    togglesDiv.appendChild(ncLabel);
+    togglesDiv.appendChild(ncText);
+    togglesDiv.appendChild(removeSemBtn);
+
+    header.appendChild(labelInput);
+    header.appendChild(runningBadge);
+    header.appendChild(togglesDiv);
+
+    // ── Column headers ──
+    const colHeaders = document.createElement('div');
+    colHeaders.className = 'px-4 pt-3 pb-1 grid gap-2';
+    colHeaders.style.gridTemplateColumns = 'calc(1fr) 110px 110px 72px 32px';
+    colHeaders.innerHTML = `
+      <span class="text-xs font-medium uppercase tracking-wide" style="color: var(--color-mute);">Course</span>
+      <span class="text-xs font-medium uppercase tracking-wide text-center" style="color: var(--color-mute);">Type</span>
+      <span class="text-xs font-medium uppercase tracking-wide text-center" style="color: var(--color-mute);">Grade</span>
+      <span class="text-xs font-medium uppercase tracking-wide text-center credit-col-header" style="color: var(--color-mute);">Credits</span>
+      <span></span>
+    `;
+
+    // ── Course list ──
+    const courseList = document.createElement('div');
+    courseList.className = 'px-4 pb-3 flex flex-col gap-2 course-list';
+    courseList.setAttribute('role', 'list');
+    courseList.setAttribute('aria-label', `Courses for ${label}`);
+
+    // ── Add course button ──
+    const addCourseBtn = document.createElement('button');
+    addCourseBtn.type = 'button';
+    addCourseBtn.className = 'btn btn-ghost btn-sm mx-4 mb-3';
+    addCourseBtn.style.cssText = 'border: 1px dashed var(--color-hairline-strong); color: var(--color-brand);';
+    addCourseBtn.setAttribute('aria-label', 'Add course to this semester');
+    addCourseBtn.innerHTML = `
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      Add Course
+    `;
+    addCourseBtn.addEventListener('click', () => {
+      const row = buildCourseRow(section);
+      courseList.appendChild(row);
+      recalculate();
+    });
+
+    section.appendChild(header);
+    section.appendChild(colHeaders);
+    section.appendChild(courseList);
+    section.appendChild(addCourseBtn);
+
+    // Add 4 default courses
+    for (let i = 0; i < 4; i++) {
+      const row = buildCourseRow(section);
+      courseList.appendChild(row);
+    }
+
+    return section;
+  }
+
+  function rebuildCourseRows(semesterEl) {
+    const courseList = semesterEl.querySelector('.course-list');
+    if (!courseList) return;
+    const count = courseList.children.length || 4;
+    courseList.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      courseList.appendChild(buildCourseRow(semesterEl));
+    }
+    recalculate();
+  }
+
+  // ── Main calculation ─────────────────────────────────────────────────────────
+  function recalculate() {
+    // Previous GPA inputs
+    const prevEnabled = prevToggle && (prevToggle as HTMLInputElement).checked;
+    let prevUW = 0, prevW = 0, prevCr = 0;
+    if (prevEnabled) {
+      prevUW = parseFloat((prevUWEl as HTMLInputElement)?.value || '0') || 0;
+      prevW  = parseFloat((prevWEl as HTMLInputElement)?.value  || '0') || 0;
+      prevCr = parseFloat((prevCrEl as HTMLInputElement)?.value || '0') || 0;
+    }
+
+    let cumulativeUWQP = prevUW * prevCr;
+    let cumulativeWQP  = prevW  * prevCr;
+    let cumulativeCr   = prevCr;
+
+    const allSemesters = document.querySelectorAll('.semester-section');
+
+    allSemesters.forEach(semEl => {
+      const noCredits = (semEl as HTMLElement).dataset.noCredits === 'true';
+      const pctMode   = (semEl as HTMLElement).dataset.pctMode   === 'true';
+      const rows      = semEl.querySelectorAll('.course-row');
+
+      let semUWQP = 0, semWQP = 0, semCr = 0;
+
+      rows.forEach(row => {
+        let gradePoints: number | null = null;
+
+        if (pctMode) {
+          const pctEl = row.querySelector('.pct-input') as HTMLInputElement;
+          if (pctEl && pctEl.value !== '') {
+            const letter = percentToLetter(pctEl.value);
+            gradePoints = GRADE_POINTS[letter] ?? null;
+          }
+        } else {
+          const selEl = row.querySelector('.grade-select') as HTMLSelectElement;
+          if (selEl) gradePoints = GRADE_POINTS[selEl.value] ?? null;
+        }
+
+        if (gradePoints === null) return; // P, W — skip
+
+        const typeEl = row.querySelector('.course-type') as HTMLSelectElement;
+        const type   = typeEl?.value || 'Regular';
+        const bonus  = TYPE_BONUS[type] || 0;
+        const weightedPoints = Math.min(gradePoints + bonus, 5.0);
+
+        const credits = noCredits
+          ? 1
+          : parseFloat((row.querySelector('.credits-input') as HTMLInputElement)?.value || '0');
+
+        if (!credits || credits <= 0) return;
+
+        semUWQP += gradePoints * credits;
+        semWQP  += weightedPoints * credits;
+        semCr   += credits;
+      });
+
+      // Update running cumulative badge
+      const badge = semEl.querySelector('.running-gpa-badge') as HTMLElement;
+      if (semCr > 0) {
+        const runUW = (cumulativeUWQP + semUWQP) / (cumulativeCr + semCr);
+        const runW  = (cumulativeWQP  + semWQP)  / (cumulativeCr + semCr);
+        if (badge) {
+          badge.textContent = `Cumulative: ${fmt(runUW)} UW / ${fmt(runW)} W`;
+          badge.style.display = '';
+        }
+      } else {
+        if (badge) badge.style.display = 'none';
+      }
+
+      cumulativeUWQP += semUWQP;
+      cumulativeWQP  += semWQP;
+      cumulativeCr   += semCr;
+    });
+
+    if (cumulativeCr === 0) {
+      showEmpty();
+      return;
+    }
+
+    const uwGpa = Math.round((cumulativeUWQP / cumulativeCr) * 1000) / 1000;
+    const wGpa  = Math.round((cumulativeWQP  / cumulativeCr) * 1000) / 1000;
+
+    showResult(uwGpa, wGpa, cumulativeCr, cumulativeUWQP);
+  }
+
+  function showEmpty() {
+    emptyHint.style.display = '';
+    emptyHint.classList.remove('hidden');
+    resultPanel.classList.add('hidden');
+  }
+
+  function showResult(uwGpa, wGpa, totalCr, totalUWQP) {
+    emptyHint.style.display = 'none';
+    emptyHint.classList.add('hidden');
+    resultPanel.classList.remove('hidden');
+
+    const uwColor = gpaColor(uwGpa);
+    const wColor  = gpaColor(wGpa);
+
+    // Unweighted
+    uwGpaEl.textContent = fmt(uwGpa);
+    uwGpaEl.style.color = uwColor;
+    uwLabelEl.textContent = gpaLabel(uwGpa);
+    const uwPct = Math.min(Math.max((uwGpa / 4.0) * 100, 0), 100);
+    uwMeterEl.style.width = uwPct + '%';
+    uwMeterEl.style.background = uwColor;
+    uwMeterEl.setAttribute('aria-valuenow', uwGpa.toFixed(2));
+
+    // Weighted
+    wGpaEl.textContent = fmt(wGpa);
+    wGpaEl.style.color = wColor;
+    wLabelEl.textContent = gpaLabel(Math.min(wGpa, 4.0)); // label based on 4.0 equivalent
+    const wPct = Math.min(Math.max((wGpa / 5.0) * 100, 0), 100);
+    wMeterEl.style.width = wPct + '%';
+    wMeterEl.style.background = wColor;
+    wMeterEl.setAttribute('aria-valuenow', wGpa.toFixed(2));
+
+    // Stats
+    totalCreditsEl.textContent = totalCr % 1 === 0 ? String(totalCr) : totalCr.toFixed(1);
+    totalQpEl.textContent = totalUWQP.toFixed(2);
+
+    // Proximity
+    proximityEl.textContent = proximityMsg(uwGpa);
+
+    // Pulse animation
+    uwGpaEl.classList.remove('pulse-once');
+    wGpaEl.classList.remove('pulse-once');
+    void uwGpaEl.offsetWidth;
+    void wGpaEl.offsetWidth;
+    uwGpaEl.classList.add('pulse-once');
+    wGpaEl.classList.add('pulse-once');
+  }
+
+  // ── Previous GPA toggle ──────────────────────────────────────────────────────
+  prevToggle?.addEventListener('change', () => {
+    if ((prevToggle as HTMLInputElement).checked) {
+      prevInputs?.classList.remove('hidden');
+    } else {
+      prevInputs?.classList.add('hidden');
+    }
+    recalculate();
+  });
+
+  prevUWEl?.addEventListener('input', recalculate);
+  prevWEl?.addEventListener('input', recalculate);
+  prevCrEl?.addEventListener('input', recalculate);
+
+  // ── Add semester ─────────────────────────────────────────────────────────────
+  addSemesterBtn?.addEventListener('click', () => {
+    const sem = buildSemester('');
+    semestersContainer.appendChild(sem);
+    recalculate();
+  });
+
+  // ── Action buttons ───────────────────────────────────────────────────────────
+  shareBtn?.addEventListener('click', () => {
+    const uwText = uwGpaEl?.textContent || '—';
+    const wText  = wGpaEl?.textContent  || '—';
+    const url    = new URL(window.location.href);
+    url.searchParams.set('uw', uwText);
+    url.searchParams.set('w', wText);
+    const shareUrl = url.toString();
+
+    const copy = (text: string) => {
+      if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text);
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      return Promise.resolve();
+    };
+
+    copy(shareUrl).then(() => {
+      if (shareBtnText) {
+        shareBtnText.textContent = 'Copied!';
+        setTimeout(() => { if (shareBtnText) shareBtnText.textContent = 'Share'; }, 2000);
+      }
+    }).catch(() => {
+      if (shareBtnText) {
+        shareBtnText.textContent = 'Failed';
+        setTimeout(() => { if (shareBtnText) shareBtnText.textContent = 'Share'; }, 2000);
+      }
+    });
+  });
+
+  printBtn?.addEventListener('click', () => window.print());
+
+  resetBtn?.addEventListener('click', () => {
+    // Clear all semesters
+    semestersContainer.innerHTML = '';
+    semesterCount = 0;
+    totalCourseId = 0;
+
+    // Reset previous GPA section
+    if (prevToggle) (prevToggle as HTMLInputElement).checked = false;
+    prevInputs?.classList.add('hidden');
+    if (prevUWEl) (prevUWEl as HTMLInputElement).value = '';
+    if (prevWEl)  (prevWEl  as HTMLInputElement).value = '';
+    if (prevCrEl) (prevCrEl as HTMLInputElement).value = '';
+
+    // Add fresh semester
+    const sem = buildSemester(SEMESTER_LABELS[0]);
+    semestersContainer.appendChild(sem);
+    showEmpty();
+    recalculate();
+  });
+
+  // ── FAQ accordion ────────────────────────────────────────────────────────────
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item   = btn.closest('.faq-item');
+      const isOpen = item?.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen && item) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // ── Restore from URL params ──────────────────────────────────────────────────
+  const urlParams = new URLSearchParams(window.location.search);
+  const sharedUW  = urlParams.get('uw');
+  const sharedW   = urlParams.get('w');
+  if (sharedUW || sharedW) {
+    const banner = document.createElement('div');
+    banner.className = 'callout callout-blue mb-4';
+    banner.style.fontSize = '0.875rem';
+    banner.innerHTML = `Shared result — Unweighted: <strong>${sharedUW || '—'}</strong> / Weighted: <strong>${sharedW || '—'}</strong>. Enter your courses above to recalculate.`;
+    const calcSection = document.getElementById('hs-calculator');
+    if (calcSection) calcSection.insertBefore(banner, calcSection.firstChild);
+  }
+
+  // ── Init: add first semester ─────────────────────────────────────────────────
+  const firstSem = buildSemester(SEMESTER_LABELS[0]);
+  semestersContainer.appendChild(firstSem);
+  recalculate();
+
+})();
+</script>

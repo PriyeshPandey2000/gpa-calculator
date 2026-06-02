@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+const updated = "June 1, 2025";
+---
+
+<Layout
+  title="Privacy Policy — GPA Calculator Free"
+  description="Privacy policy for GPA Calculator Free. We don't collect personal data. All calculations run in your browser."
+  canonical="/privacy-policy"
+>
+  <section class="page-hero">
+    <div class="max-w-3xl mx-auto px-4">
+      <nav class="breadcrumb mb-4"><a href="/">Home</a><span class="sep">/</span><span>Privacy Policy</span></nav>
+      <h1 class="mb-3">Privacy Policy</h1>
+      <p style="color:var(--color-mute)">Last updated: {updated}</p>
+    </div>
+  </section>
+
+  <section class="max-w-3xl mx-auto px-4 py-10 prose">
+    <h2>Overview</h2>
+    <p>GPA Calculator Free ("we", "us", "our") is committed to protecting your privacy. This policy explains what data we collect (very little), how we use it, and your rights.</p>
+
+    <h2>Data We Do NOT Collect</h2>
+    <ul>
+      <li>Your grades, GPA, or course information — all calculator logic runs entirely in your browser using JavaScript. No grade data is ever sent to our servers.</li>
+      <li>Personal information — no name, email, phone number, or account is required to use this site.</li>
+      <li>Payment information — this service is completely free.</li>
+    </ul>
+
+    <h2>Data We May Collect</h2>
+    <h3>Google Analytics</h3>
+    <p>We use Google Analytics 4 (GA4) to understand how visitors use our site. GA4 collects anonymized data such as pages visited, time on page, device type, and general geographic location (country/city level). This data does not identify you personally. You can opt out via the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google Analytics Opt-Out Browser Add-on</a>.</p>
+
+    <h3>Google AdSense</h3>
+    <p>We display advertisements served by Google AdSense. Google may use cookies to serve ads based on your prior visits to our site or other websites. You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Google Ads Settings</a>.</p>
+
+    <h3>Cookies</h3>
+    <p>We store one item in your browser's localStorage: your dark mode preference (true/false). This is never sent to any server. Third-party services (Google Analytics, AdSense) may set their own cookies subject to their respective privacy policies.</p>
+
+    <h2>Third-Party Services</h2>
+    <ul>
+      <li><strong>Google Analytics</strong> — <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a></li>
+      <li><strong>Google AdSense</strong> — <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">Google Ads Policy</a></li>
+      <li><strong>Cloudflare</strong> — This site is hosted on Cloudflare Pages. Cloudflare may log IP addresses for security purposes per their <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</li>
+    </ul>
+
+    <h2>Children's Privacy</h2>
+    <p>This site is intended for use by students of all ages including minors. We do not knowingly collect personal information from children under 13. Since we collect no personal information at all through our calculators, there is no risk to children's privacy from using our tools.</p>
+
+    <h2>Changes to This Policy</h2>
+    <p>We may update this Privacy Policy occasionally. Changes will be posted on this page with an updated date. Continued use of the site after changes constitutes acceptance of the updated policy.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this privacy policy? <a href="/contact">Contact us</a>.</p>
+  </section>
+</Layout>
