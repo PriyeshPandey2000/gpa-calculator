@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Tell Tailwind v4 to use .dark class (not prefers-color-scheme) for dark: variants */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ============================================================
    Design tokens — Vercel-inspired with education blue accent
    ============================================================ */
