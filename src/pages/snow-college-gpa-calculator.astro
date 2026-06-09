@@ -1,11 +1,44 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Snow College academic probation GPA?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Students whose cumulative GPA falls below 2.0 are placed on academic probation at Snow College. Students on probation may enroll in no more than 13 credit hours per semester and must raise their GPA to avoid academic suspension." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the average GPA at Snow College?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The average unweighted GPA at Snow College is approximately 3.4 on the 4.0 scale. Snow College students who transfer to four-year universities typically have GPAs above this average." }
+    },
+    {
+      "@type": "Question",
+      "name": "What GPA do you need for Snow College Presidential Scholarship?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The Snow College Presidential Scholarship requires a high school cumulative GPA of 4.0 and an ACT composite score of 28 or higher. To renew the scholarship each semester, students must maintain a 3.7 GPA." }
+    },
+    {
+      "@type": "Question",
+      "name": "What GPA do you need to transfer from Snow College to a Utah university?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Most Utah four-year universities such as Utah State University and BYU require a minimum 2.5 GPA for transfer from Snow College. Competitive programs may require 3.0 or higher. Snow College has transfer agreements with several Utah institutions." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Snow College transfer GPA count toward your new school's GPA?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. When you transfer to a new university, your Snow College GPA typically does not carry over. Your new school starts a fresh GPA based only on coursework completed there. However, transferred credits still count toward your degree requirements." }
+    }
+  ]
+};
 ---
 
 <Layout
   title="Snow College GPA Calculator — Free GPA Calculator"
   description="Calculate your Snow College GPA instantly. Free GPA calculator for Snow College Utah students on the standard 4.0 scale."
   canonical="/snow-college-gpa-calculator"
+  schema={faqSchema}
 >
   <section class="page-hero">
     <div class="max-w-6xl mx-auto px-4">
@@ -68,7 +101,44 @@ import Layout from '../layouts/Layout.astro';
       <a href="/gpa-scale" class="btn btn-secondary btn-sm">GPA Scale Chart</a>
     </div>
   </section>
+
+  <section class="max-w-3xl mx-auto px-4 pb-12" aria-labelledby="faq-snow">
+    <h2 id="faq-snow" class="mb-6 text-xl font-semibold" style="color:var(--color-ink)">Snow College GPA — Frequently Asked Questions</h2>
+    <div>
+      <div class="faq-item open">
+        <button class="faq-question" type="button" aria-expanded="true">What is Snow College academic probation GPA?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">Students whose cumulative GPA falls below 2.0 are placed on academic probation at Snow College. Students on probation may enroll in no more than 13 credit hours per semester and must raise their GPA to avoid academic suspension.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What is the average GPA at Snow College?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">The average unweighted GPA at Snow College is approximately 3.4 on the 4.0 scale. Snow College students who transfer to four-year universities typically have GPAs above this average.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What GPA do you need for Snow College Presidential Scholarship?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">The Snow College Presidential Scholarship requires a high school cumulative GPA of 4.0 and an ACT composite score of 28 or higher. To renew the scholarship each semester, students must maintain a 3.7 GPA.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What GPA do you need to transfer from Snow College to a Utah university?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">Most Utah four-year universities such as Utah State University and BYU require a minimum 2.5 GPA for transfer from Snow College. Competitive programs may require 3.0 or higher. Snow College has transfer agreements with several Utah institutions.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">Does Snow College transfer GPA count toward your new school's GPA?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">No. When you transfer to a new university, your Snow College GPA typically does not carry over. Your new school starts a fresh GPA based only on coursework completed there. However, transferred credits still count toward your degree requirements.</div>
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<script>
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => { el.classList.remove('open'); el.querySelector('.faq-question')?.setAttribute('aria-expanded','false'); });
+    if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  });
+});
+</script>
 
 <script>
 (function(){

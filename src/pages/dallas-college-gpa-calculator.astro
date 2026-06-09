@@ -1,11 +1,44 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What GPA do you need to stay in good standing at Dallas College?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A cumulative GPA of 2.0 or higher is required to remain in good academic standing at Dallas College. Students falling below this threshold are placed on academic probation." }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if your GPA falls below 2.0 at Dallas College?",
+      "acceptedAnswer": { "@type": "Answer", "text": "If your cumulative GPA falls below 2.0 at Dallas College, you are placed on academic probation. You must raise your GPA to 2.0 or above by the end of the following semester or face academic suspension, which can affect financial aid eligibility." }
+    },
+    {
+      "@type": "Question",
+      "name": "What GPA do you need to transfer from Dallas College to a university?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Most four-year universities in Texas require a minimum 2.5 GPA for transfer from Dallas College, though competitive programs and universities like UT Austin may require 3.0 or higher. Check the specific requirements of the university you are transferring to." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Dallas College use a 4.0 GPA scale?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Dallas College uses the standard 4.0 GPA scale with plus/minus grades. A=4.0, B=3.0, C=2.0, D=1.0, F=0. This scale applies across all Dallas College campuses including Brookhaven, Cedar Valley, Eastfield, El Centro, Mountain View, North Lake, and Richland." }
+    },
+    {
+      "@type": "Question",
+      "name": "How many credits do I need to graduate from Dallas College?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Dallas College Associate Degree programs typically require 60 credit hours. Certificate programs vary from 15 to 45+ credit hours depending on the field. Check your specific program's degree plan in the Dallas College catalog for exact requirements." }
+    }
+  ]
+};
 ---
 
 <Layout
   title="Dallas College GPA Calculator — Free GPA Calculator"
   description="Calculate your Dallas College GPA instantly. Free GPA calculator using the standard 4.0 scale for Dallas College students."
   canonical="/dallas-college-gpa-calculator"
+  schema={faqSchema}
 >
   <section class="page-hero">
     <div class="max-w-6xl mx-auto px-4">
@@ -56,7 +89,7 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <section class="max-w-3xl mx-auto px-4 py-6 prose pb-12">
+  <section class="max-w-3xl mx-auto px-4 py-6 prose pb-8">
     <h2>Dallas College GPA Information</h2>
     <p>Dallas College (formerly Dallas County Community College District) uses the standard 4.0 GPA scale. Students must maintain a cumulative GPA of 2.0 or higher for good academic standing. Dallas College includes multiple campuses: Brookhaven, Cedar Valley, Eastfield, El Centro, Mountain View, North Lake, and Richland.</p>
     <p>Good standing requires 2.0+ cumulative GPA. Contact Dallas College registrar for specific program GPA requirements.</p>
@@ -68,7 +101,44 @@ import Layout from '../layouts/Layout.astro';
       <a href="/gpa-scale" class="btn btn-secondary btn-sm">GPA Scale Chart</a>
     </div>
   </section>
+
+  <section class="max-w-3xl mx-auto px-4 pb-12" aria-labelledby="faq-dallas">
+    <h2 id="faq-dallas" class="mb-6 text-xl font-semibold" style="color:var(--color-ink)">Dallas College GPA — Frequently Asked Questions</h2>
+    <div>
+      <div class="faq-item open">
+        <button class="faq-question" type="button" aria-expanded="true">What GPA do you need to stay in good standing at Dallas College?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">A cumulative GPA of 2.0 or higher is required to remain in good academic standing at Dallas College. Students falling below this threshold are placed on academic probation.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What happens if your GPA falls below 2.0 at Dallas College?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">If your cumulative GPA falls below 2.0 at Dallas College, you are placed on academic probation. You must raise your GPA to 2.0 or above by the end of the following semester or face academic suspension, which can affect financial aid eligibility.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What GPA do you need to transfer from Dallas College to a university?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">Most four-year universities in Texas require a minimum 2.5 GPA for transfer from Dallas College, though competitive programs and universities like UT Austin may require 3.0 or higher. Check the specific requirements of the university you are transferring to.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">Does Dallas College use a 4.0 GPA scale?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">Yes. Dallas College uses the standard 4.0 GPA scale with plus/minus grades. A=4.0, B=3.0, C=2.0, D=1.0, F=0. This scale applies across all Dallas College campuses including Brookhaven, Cedar Valley, Eastfield, El Centro, Mountain View, North Lake, and Richland.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">How many credits do I need to graduate from Dallas College?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">Dallas College Associate Degree programs typically require 60 credit hours. Certificate programs vary from 15 to 45+ credit hours depending on the field. Check your specific program's degree plan in the Dallas College catalog for exact requirements.</div>
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<script>
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => { el.classList.remove('open'); el.querySelector('.faq-question')?.setAttribute('aria-expanded','false'); });
+    if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  });
+});
+</script>
 
 <script>
 (function(){

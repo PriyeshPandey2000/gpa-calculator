@@ -1,11 +1,44 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What GPA do you need to graduate from Montgomery College?",
+      "acceptedAnswer": { "@type": "Answer", "text": "You must have at least a 2.0 cumulative GPA to graduate from Montgomery College. This applies to all degree and certificate programs. Falling below 2.0 places you on academic probation and makes you ineligible to graduate." }
+    },
+    {
+      "@type": "Question",
+      "name": "What GPA do you need to transfer from Montgomery College?",
+      "acceptedAnswer": { "@type": "Answer", "text": "You should have at least a 2.5 GPA to transfer from Montgomery College to most four-year institutions. Competitive universities and programs may require 3.0 or higher. Maryland's guaranteed transfer agreements may have specific GPA requirements." }
+    },
+    {
+      "@type": "Question",
+      "name": "What GPA do you need to transfer to University of Maryland from Montgomery College?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The majority of students admitted to the University of Maryland via transfer from Montgomery College have at least a 3.5 cumulative GPA. UMD is competitive for transfer students — a higher GPA improves your chances significantly." }
+    },
+    {
+      "@type": "Question",
+      "name": "What GPA do you need for Montgomery College Honors Program?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Admission to the Montgomery College Honors Program requires a minimum cumulative GPA of 3.2 with at least 12 completed credit hours, including ENGL101 with an A or B grade. Students must maintain a 3.2 GPA to remain in the program." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is academic probation at Montgomery College?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Students whose cumulative GPA falls below 2.0 at Montgomery College are placed on academic probation. Probationary students must raise their GPA to at least 2.0 within the next enrolled semester or face academic suspension." }
+    }
+  ]
+};
 ---
 
 <Layout
   title="Montgomery College GPA Calculator — Free GPA Calculator"
   description="Calculate your Montgomery College GPA instantly. Free GPA calculator for Montgomery College Maryland students on the standard 4.0 scale."
   canonical="/montgomery-college-gpa-calculator"
+  schema={faqSchema}
 >
   <section class="page-hero">
     <div class="max-w-6xl mx-auto px-4">
@@ -56,7 +89,7 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <section class="max-w-3xl mx-auto px-4 py-6 prose pb-12">
+  <section class="max-w-3xl mx-auto px-4 py-6 prose pb-8">
     <h2>Montgomery College GPA Information</h2>
     <p>Montgomery College (Maryland) uses the standard 4.0 GPA scale. Students must maintain a 2.0 cumulative GPA to remain in good academic standing. The college has three campuses: Rockville, Germantown, and Takoma Park/Silver Spring.</p>
     <p>Good standing: 2.0+ GPA. Honor roll typically requires 3.5+ GPA. Check with Montgomery College registrar for honors requirements.</p>
@@ -68,7 +101,44 @@ import Layout from '../layouts/Layout.astro';
       <a href="/gpa-scale" class="btn btn-secondary btn-sm">GPA Scale Chart</a>
     </div>
   </section>
+
+  <section class="max-w-3xl mx-auto px-4 pb-12" aria-labelledby="faq-mc">
+    <h2 id="faq-mc" class="mb-6 text-xl font-semibold" style="color:var(--color-ink)">Montgomery College GPA — Frequently Asked Questions</h2>
+    <div>
+      <div class="faq-item open">
+        <button class="faq-question" type="button" aria-expanded="true">What GPA do you need to graduate from Montgomery College?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">You must have at least a 2.0 cumulative GPA to graduate from Montgomery College. This applies to all degree and certificate programs. Falling below 2.0 places you on academic probation and makes you ineligible to graduate.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What GPA do you need to transfer from Montgomery College?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">You should have at least a 2.5 GPA to transfer from Montgomery College to most four-year institutions. Competitive universities and programs may require 3.0 or higher. Maryland's guaranteed transfer agreements may have specific GPA requirements.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What GPA do you need to transfer to University of Maryland from Montgomery College?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">The majority of students admitted to the University of Maryland via transfer from Montgomery College have at least a 3.5 cumulative GPA. UMD is competitive for transfer students — a higher GPA improves your chances significantly.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What GPA do you need for Montgomery College Honors Program?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">Admission to the Montgomery College Honors Program requires a minimum cumulative GPA of 3.2 with at least 12 completed credit hours, including ENGL101 with an A or B grade. Students must maintain a 3.2 GPA to remain in the program.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What is academic probation at Montgomery College?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">Students whose cumulative GPA falls below 2.0 at Montgomery College are placed on academic probation. Probationary students must raise their GPA to at least 2.0 within the next enrolled semester or face academic suspension.</div>
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<script>
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => { el.classList.remove('open'); el.querySelector('.faq-question')?.setAttribute('aria-expanded','false'); });
+    if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  });
+});
+</script>
 
 <script>
 (function(){

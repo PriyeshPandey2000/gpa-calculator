@@ -3,11 +3,44 @@ import Layout from '../layouts/Layout.astro';
 const uniName = "University of Florida (UF)";
 const slug = "uf-gpa-calculator";
 const keyword = "uf gpa calculator";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What GPA do you need for Dean's List at UF?",
+      "acceptedAnswer": { "@type": "Answer", "text": "To qualify for Dean's List at the University of Florida, you need at least a 3.5 GPA with 12 or more graded credit hours completed in the semester. The Dean's List is awarded each semester, not cumulatively." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is UF's academic probation GPA?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Any UF student whose cumulative GPA falls below 2.0 is placed on academic probation. Students on probation must raise their cumulative GPA to 2.0 or above by the end of the following semester or face academic suspension." }
+    },
+    {
+      "@type": "Question",
+      "name": "What GPA do you need to graduate from UF?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A minimum cumulative GPA of 2.0 is required to earn any undergraduate degree from the University of Florida. Some majors and colleges at UF require a higher minimum GPA — check your specific program requirements." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does UF have a grade forgiveness policy?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. UF allows students to retake up to three courses under grade forgiveness. Only the better grade counts toward your GPA, though both grades remain on your transcript. This policy can significantly improve your cumulative GPA if you retake courses where you earned a D or F." }
+    },
+    {
+      "@type": "Question",
+      "name": "What GPA do you need to get into UF as a freshman?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The middle 50% of admitted UF freshmen have a weighted high school GPA between 4.4 and 4.6. UF is highly selective — a strong GPA combined with rigorous coursework (AP/IB) is important. Check UF's admissions website for the most current statistics." }
+    }
+  ]
+};
 ---
 <Layout
   title="UF GPA Calculator — University of Florida GPA Calculator (Free)"
   description="Calculate your University of Florida GPA instantly. Free UF GPA calculator using the standard 4.0 scale. Works for all UF colleges and degree programs."
   canonical={`/${slug}`}
+  schema={faqSchema}
 >
   <section class="page-hero">
     <div class="max-w-6xl mx-auto px-4">
@@ -68,14 +101,51 @@ const keyword = "uf gpa calculator";
     </div>
   </section>
 
-  <section class="max-w-3xl mx-auto px-4 py-6 prose pb-12">
+  <section class="max-w-3xl mx-auto px-4 py-6 prose pb-8">
     <h2>University of Florida GPA Information</h2>
     <p>The University of Florida (UF) uses the standard 4.0 GPA scale. All letter grades A through F are used, including plus and minus grades. UF requires a minimum cumulative GPA of 2.0 to maintain good academic standing. Students who fall below 2.0 may be placed on academic probation.</p>
     <p>UF's plus/minus grading system: A=4.0, A-=3.67, B+=3.33, B=3.0, B-=2.67, C+=2.33, C=2.0, C-=1.67, D+=1.33, D=1.0, D-=0.67, F=0. Note: UF uses 3.67 for A- (not 3.7), so results may vary slightly from standard calculations.</p>
     <p>For honors at graduation: Cum Laude typically requires 3.5+, Magna Cum Laude 3.7+, and Summa Cum Laude 3.9+. Check with UF's registrar for current requirements as policies may change.</p>
     <p>Use our <a href="/cumulative-gpa-calculator">Cumulative GPA Calculator</a> to track your GPA across all semesters, or the <a href="/what-if-gpa-calculator">What If GPA Calculator</a> to simulate how future grades will affect your UF GPA.</p>
   </section>
+
+  <section class="max-w-3xl mx-auto px-4 pb-12" aria-labelledby="faq-uf">
+    <h2 id="faq-uf" class="mb-6 text-xl font-semibold" style="color:var(--color-ink)">UF GPA — Frequently Asked Questions</h2>
+    <div>
+      <div class="faq-item open">
+        <button class="faq-question" type="button" aria-expanded="true">What GPA do you need for Dean's List at UF?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">To qualify for Dean's List at the University of Florida, you need at least a 3.5 GPA with 12 or more graded credit hours completed in the semester. The Dean's List is awarded each semester, not cumulatively.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What is UF's academic probation GPA?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">Any UF student whose cumulative GPA falls below 2.0 is placed on academic probation. Students on probation must raise their cumulative GPA to 2.0 or above by the end of the following semester or face academic suspension.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What GPA do you need to graduate from UF?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">A minimum cumulative GPA of 2.0 is required to earn any undergraduate degree from the University of Florida. Some majors and colleges at UF require a higher minimum GPA — check your specific program requirements.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">Does UF have a grade forgiveness policy?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">Yes. UF allows students to retake up to three courses under grade forgiveness. Only the better grade counts toward your GPA, though both grades remain on your transcript. This can significantly improve your cumulative GPA if you retake courses where you earned a D or F.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false">What GPA do you need to get into UF as a freshman?<svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-answer">The middle 50% of admitted UF freshmen have a weighted high school GPA between 4.4 and 4.6. UF is highly selective — a strong GPA combined with rigorous coursework (AP/IB) is important. Check UF's admissions website for the most current statistics.</div>
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<script>
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => { el.classList.remove('open'); el.querySelector('.faq-question')?.setAttribute('aria-expanded','false'); });
+    if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  });
+});
+</script>
 
 <script>
 (function(){
