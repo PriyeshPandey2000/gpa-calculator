@@ -19,14 +19,21 @@ import Layout from '../layouts/Layout.astro';
     <div class="card p-8">
       <h2 class="text-xl font-semibold mb-6" style="color:var(--color-ink)">Send a Message</h2>
 
-      <form id="contact-form" class="flex flex-col gap-5" novalidate>
+      <div data-fs-success class="callout callout-blue hidden">
+        <span>✓ Message sent! We'll get back to you within 2-3 business days.</span>
+      </div>
+      <div data-fs-error class="callout hidden" style="background:var(--color-error-soft);border-left:3px solid var(--color-error);color:var(--color-error)"></div>
+
+      <form id="contact-form" class="flex flex-col gap-5">
         <div>
           <label for="name">Your Name</label>
-          <input type="text" id="name" name="name" placeholder="Jane Smith" class="input" required />
+          <input type="text" id="name" name="name" placeholder="Jane Smith" class="input" data-fs-field required />
+          <span data-fs-error="name" class="text-xs" style="color:var(--color-error)"></span>
         </div>
         <div>
           <label for="email">Email Address</label>
-          <input type="email" id="email" name="email" placeholder="jane@example.com" class="input" required />
+          <input type="email" id="email" name="email" placeholder="jane@example.com" class="input" data-fs-field required />
+          <span data-fs-error="email" class="text-xs" style="color:var(--color-error)"></span>
         </div>
         <div>
           <label for="subject">Subject</label>
@@ -39,46 +46,24 @@ import Layout from '../layouts/Layout.astro';
         </div>
         <div>
           <label for="message">Message</label>
-          <textarea id="message" name="message" rows="5" placeholder="Describe your question or issue..." class="input" style="resize:vertical" required></textarea>
+          <textarea id="message" name="message" rows="5" placeholder="Describe your question or issue..." class="input" style="resize:vertical" data-fs-field required></textarea>
+          <span data-fs-error="message" class="text-xs" style="color:var(--color-error)"></span>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg w-full">Send Message</button>
-        <div id="form-success" class="callout callout-blue hidden">
-          <span>✓ Message sent! We'll get back to you within 2-3 business days.</span>
-        </div>
-        <div id="form-error" class="callout hidden" style="background:var(--color-error-soft);border-left:3px solid var(--color-error);color:var(--color-error)">
-          <span>Please fill in all required fields.</span>
-        </div>
+        <button type="submit" class="btn btn-primary btn-lg w-full" data-fs-submit-btn>Send Message</button>
       </form>
+
+      <script>
+        window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+        formspree('initForm', { formElement: '#contact-form', formId: 'xqeobbjg' });
+      </script>
+      <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
     </div>
 
     <div class="mt-8 text-sm" style="color:var(--color-body)">
       <h3 class="font-semibold mb-2" style="color:var(--color-ink)">Other Ways to Reach Us</h3>
-      <p class="mb-1">Email: <a href="mailto:contact@gpacalculatorfree.com">contact@gpacalculatorfree.com</a></p>
+      <p class="mb-1">Email: <a href="mailto:priyeshpandey2000@gmail.com">priyeshpandey2000@gmail.com</a></p>
       <p>Response time: typically 2-3 business days</p>
     </div>
   </section>
 </Layout>
 
-<script>
-document.getElementById('contact-form')?.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const form = e.target as HTMLFormElement;
-  const name = (form.querySelector('#name') as HTMLInputElement)?.value.trim();
-  const email = (form.querySelector('#email') as HTMLInputElement)?.value.trim();
-  const message = (form.querySelector('#message') as HTMLTextAreaElement)?.value.trim();
-  const success = document.getElementById('form-success');
-  const error = document.getElementById('form-error');
-
-  if (!name || !email || !message) {
-    error?.classList.remove('hidden');
-    success?.classList.add('hidden');
-    return;
-  }
-
-  // In production, integrate with a form service like Formspree or Netlify Forms
-  // For now, show success message
-  error?.classList.add('hidden');
-  success?.classList.remove('hidden');
-  form.reset();
-});
-</script>
