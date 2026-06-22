@@ -20,7 +20,8 @@ const {
 } = Astro.props;
 
 const siteUrl = 'https://gpacalculatorfree.com';
-const canonicalUrl = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.url.pathname}`;
+const rawPath = canonical ?? Astro.url.pathname;
+const canonicalUrl = `${siteUrl}${rawPath.endsWith('/') ? rawPath : rawPath + '/'}`;
 const ogUrl = canonicalUrl;
 
 // Breadcrumb schema always included
