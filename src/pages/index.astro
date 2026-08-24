@@ -658,8 +658,8 @@ const calculatorCards = [
     decBtn.textContent = '−';
     decBtn.setAttribute('aria-label', 'Decrease credit hours');
     decBtn.addEventListener('click', () => {
-      const next = Math.max(0.5, (parseFloat(creditsInput.value) || 0) - 0.5);
-      creditsInput.value = next;
+      const current = Math.min(12, Math.max(0.5, parseFloat(creditsInput.value) || 0.5));
+      creditsInput.value = Math.max(0.5, current - 0.5);
       recalculate();
     });
 
@@ -669,8 +669,8 @@ const calculatorCards = [
     incBtn.textContent = '+';
     incBtn.setAttribute('aria-label', 'Increase credit hours');
     incBtn.addEventListener('click', () => {
-      const next = Math.min(12, (parseFloat(creditsInput.value) || 0) + 0.5);
-      creditsInput.value = next;
+      const current = Math.min(12, Math.max(0.5, parseFloat(creditsInput.value) || 0.5));
+      creditsInput.value = Math.min(12, current + 0.5);
       recalculate();
     });
 
@@ -836,7 +836,17 @@ const calculatorCards = [
       return selEl ? (GRADE_POINTS[selEl.value] ?? null) : null;
     };
 
-    const countedRows = rows.filter((row) => gradeOf(row) !== null);
+    // A graded row still doesn't count if its credits are blank/zero — mirrors
+    // recalculate()'s `if (!credits || credits <= 0) return;` check.
+    const isCountedRow = (row) => {
+      if (gradeOf(row) === null) return false;
+      if (noCreditsMode) return true;
+      const crEl = row.querySelector('.credits-input');
+      const credits = parseFloat(crEl?.value);
+      return !!credits && credits > 0;
+    };
+
+    const countedRows = rows.filter(isCountedRow);
     const courseCountText = String(countedRows.length);
 
     // Course-level detail (subject name + grade) so the shared card can show
@@ -980,8 +990,15 @@ const calculatorCards = [
   }
 
   // ── Init ───────────────────────────────────────────────────────────────────
-  addDefaultRows(4);
-  recalculate();
+  // Opening a shared link must not auto-populate default courses below the
+  // shared-result card — that would render an unrelated, misleading 4.00 GPA
+  // right under the real shared number. Leave the calculator empty instead.
+  if (sharedGpa) {
+    showEmptyState();
+  } else {
+    addDefaultRows(4);
+    recalculate();
+  }
 
 })();
 </script>
