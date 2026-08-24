@@ -586,7 +586,7 @@ const calculatorCards = [
   function buildRow(index) {
     const id = `course-${index}`;
     const row = document.createElement('div');
-    row.className = 'course-row';
+    row.className = 'course-row gpa-home-row' + (noCreditsMode ? ' no-credits-row' : '');
     row.style.gridTemplateColumns = noCreditsMode
       ? '1fr auto auto'
       : '1fr auto auto auto';
@@ -647,13 +647,44 @@ const calculatorCards = [
     creditsInput.setAttribute('aria-label', 'Credit hours');
     creditsInput.addEventListener('input', recalculate);
 
+    // Wrap credits input with +/- steppers — replaces the native number-input
+    // spin arrows (which don't render at all on touch browsers anyway).
+    const creditsWrap = document.createElement('div');
+    creditsWrap.className = 'credits-wrap';
+
+    const decBtn = document.createElement('button');
+    decBtn.type = 'button';
+    decBtn.className = 'credits-step';
+    decBtn.textContent = '−';
+    decBtn.setAttribute('aria-label', 'Decrease credit hours');
+    decBtn.addEventListener('click', () => {
+      const current = Math.min(12, Math.max(0.5, parseFloat(creditsInput.value) || 0.5));
+      creditsInput.value = Math.max(0.5, current - 0.5);
+      recalculate();
+    });
+
+    const incBtn = document.createElement('button');
+    incBtn.type = 'button';
+    incBtn.className = 'credits-step';
+    incBtn.textContent = '+';
+    incBtn.setAttribute('aria-label', 'Increase credit hours');
+    incBtn.addEventListener('click', () => {
+      const current = Math.min(12, Math.max(0.5, parseFloat(creditsInput.value) || 0.5));
+      creditsInput.value = Math.min(12, current + 0.5);
+      recalculate();
+    });
+
+    creditsWrap.appendChild(decBtn);
+    creditsWrap.appendChild(creditsInput);
+    creditsWrap.appendChild(incBtn);
+
     // Remove button
     const removeBtn = document.createElement('button');
     removeBtn.type = 'button';
-    removeBtn.className = 'btn btn-secondary btn-sm';
-    removeBtn.style.cssText = 'padding: 0.375rem 0.5rem; color: var(--color-mute); min-width: 32px;';
+    removeBtn.className = 'btn btn-sm remove-course-btn';
+    removeBtn.style.cssText = 'padding: 0.375rem 0.5rem; border: none; background: transparent; color: var(--color-error); min-width: 32px;';
     removeBtn.setAttribute('aria-label', `Remove course ${index}`);
-    removeBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    removeBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>';
     removeBtn.addEventListener('click', () => {
       row.remove();
       recalculate();
@@ -662,7 +693,7 @@ const calculatorCards = [
 
     row.appendChild(nameInput);
     row.appendChild(gradeWrapper);
-    if (!noCreditsMode) row.appendChild(creditsInput);
+    if (!noCreditsMode) row.appendChild(creditsWrap);
     row.appendChild(removeBtn);
 
     return row;
@@ -789,9 +820,53 @@ const calculatorCards = [
   addBtn?.addEventListener('click', addCourse);
 
   shareBtn?.addEventListener('click', () => {
-    const gpaText = gpaResultEl?.textContent || '—';
+    const gpaText     = gpaResultEl?.textContent || '—';
+    const creditsText = totalCrEl?.textContent || '0';
+    const rows = Array.from(container.querySelectorAll('.course-row'));
+
+    // Mirror recalculate()'s inclusion rule (P/W/blank grades are excluded
+    // from the GPA) so the shared card's course count matches its credits.
+    const gradeOf = (row) => {
+      if (percentageMode) {
+        const pctEl = row.querySelector('.pct-input');
+        if (!pctEl || pctEl.value === '') return null;
+        return GRADE_POINTS[percentToLetter(pctEl.value)] ?? null;
+      }
+      const selEl = row.querySelector('.grade-select');
+      return selEl ? (GRADE_POINTS[selEl.value] ?? null) : null;
+    };
+
+    // A graded row still doesn't count if its credits are blank/zero — mirrors
+    // recalculate()'s `if (!credits || credits <= 0) return;` check.
+    const isCountedRow = (row) => {
+      if (gradeOf(row) === null) return false;
+      if (noCreditsMode) return true;
+      const crEl = row.querySelector('.credits-input');
+      const credits = parseFloat(crEl?.value);
+      return !!credits && credits > 0;
+    };
+
+    const countedRows = rows.filter(isCountedRow);
+    const courseCountText = String(countedRows.length);
+
+    // Course-level detail (subject name + grade) so the shared card can show
+    // what the person actually entered, not just the final GPA number.
+    const coursesData = countedRows.map((row) => {
+      const nameEl  = row.querySelector('input[type="text"]');
+      const gradeEl = row.querySelector('.grade-select, .pct-input');
+      const name  = nameEl?.value?.trim() || '';
+      const grade = gradeEl?.value?.trim() || '';
+      return grade ? [name, grade] : null;
+    }).filter(Boolean);
+
     const url = new URL(window.location.href);
+    url.search = '';
     url.searchParams.set('gpa', gpaText);
+    url.searchParams.set('cr', creditsText);
+    url.searchParams.set('n', courseCountText);
+    if (coursesData.length) {
+      url.searchParams.set('courses', JSON.stringify(coursesData));
+    }
     const shareUrl = url.toString();
 
     const copy = (text) => {
@@ -805,6 +880,13 @@ const calculatorCards = [
       document.body.removeChild(ta);
       return Promise.resolve();
     };
+
+    const shareText = `I just calculated my GPA: ${gpaText}/4.0 🎓`;
+
+    if (navigator.share) {
+      navigator.share({ title: 'My GPA Result', text: shareText, url: shareUrl }).catch(() => {});
+      return;
+    }
 
     copy(shareUrl).then(() => {
       if (shareBtnText) {
@@ -851,21 +933,72 @@ const calculatorCards = [
   });
 
   // ── Restore from URL param ────────────────────────────────────────────────
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+  }
+
   const urlParams = new URLSearchParams(window.location.search);
   const sharedGpa = urlParams.get('gpa');
-  if (sharedGpa && gpaResultEl) {
-    // Show a banner
-    const banner = document.createElement('div');
-    banner.className = 'callout callout-blue';
-    banner.style.cssText = 'margin-bottom: 1rem; font-size: 0.875rem;';
-    banner.innerHTML = `<span>Shared result: <strong>${sharedGpa}</strong> GPA — enter your courses above to recalculate.</span>`;
+  const sharedCr  = urlParams.get('cr');
+  const sharedN   = urlParams.get('n');
+
+  let sharedCourses = [];
+  const sharedCoursesRaw = urlParams.get('courses');
+  if (sharedCoursesRaw) {
+    try {
+      const parsed = JSON.parse(sharedCoursesRaw);
+      if (Array.isArray(parsed)) sharedCourses = parsed;
+    } catch { /* ignore malformed param */ }
+  }
+
+  if (sharedGpa) {
+    const gpaNum   = parseFloat(sharedGpa);
+    const colorHex = COLOR_MAP[gpaColorClass(gpaNum)] || COLOR_MAP.gray;
+    const label    = gpaLabel(gpaNum) || 'GPA Result';
+
+    const statsBits = [];
+    if (sharedCr) statsBits.push(`${escapeHtml(sharedCr)} credits`);
+    if (sharedN)  statsBits.push(`${escapeHtml(sharedN)} course${sharedN === '1' ? '' : 's'}`);
+    const statsText = statsBits.join(' · ');
+
+    const coursesHtml = sharedCourses.length
+      ? `<div class="shared-card-courses">${sharedCourses.map((c) => {
+          if (!Array.isArray(c) || !c[1]) return '';
+          const [name, grade] = c;
+          const label = name ? escapeHtml(name) : 'Course';
+          return `<span class="shared-card-course-pill">${label} <strong>${escapeHtml(grade)}</strong></span>`;
+        }).join('')}</div>`
+      : '';
+
+    const card = document.createElement('div');
+    card.className = 'shared-card';
+    card.innerHTML = `
+      <div class="shared-card-eyebrow">Shared GPA Result</div>
+      <div class="shared-card-gpa" style="color:${colorHex}">${escapeHtml(sharedGpa)}<span class="shared-card-scale">/ 4.0</span></div>
+      <div class="shared-card-label">${escapeHtml(label)}</div>
+      ${statsText ? `<div class="shared-card-stats">${statsText}</div>` : ''}
+      ${coursesHtml}
+      <div class="shared-card-cta">↓ Calculate your own GPA below</div>
+    `;
+
     const calculatorSection = document.getElementById('calculator');
-    if (calculatorSection) calculatorSection.insertBefore(banner, calculatorSection.firstChild);
+    if (calculatorSection?.parentNode) {
+      calculatorSection.parentNode.insertBefore(card, calculatorSection);
+    }
   }
 
   // ── Init ───────────────────────────────────────────────────────────────────
-  addDefaultRows(4);
-  recalculate();
+  // Opening a shared link must not auto-populate default courses below the
+  // shared-result card — that would render an unrelated, misleading 4.00 GPA
+  // right under the real shared number. Leave the calculator empty instead.
+  if (sharedGpa) {
+    showEmptyState();
+  } else {
+    addDefaultRows(4);
+    recalculate();
+  }
 
 })();
 </script>
