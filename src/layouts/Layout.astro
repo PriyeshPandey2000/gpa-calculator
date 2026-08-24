@@ -100,6 +100,10 @@ const schemas = [
       posthog.init('phc_D6wnkSX6eHkB3AvPmjL5P7TchG6srhgAN5doLC3J6aJs', {
         api_host: 'https://us.i.posthog.com',
         defaults: '2026-05-30',
+        session_recording: {
+          maskAllInputs: false,
+          maskInputOptions: { password: true },
+        },
       });
     </script>
 
