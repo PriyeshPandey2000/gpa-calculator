@@ -257,6 +257,94 @@ label {
 }
 .course-row:hover { border-color: var(--color-hairline-strong); }
 
+.remove-course-btn { cursor: pointer; }
+.remove-course-btn:hover { background: var(--color-error-soft); }
+
+/* Credits +/- steppers (all breakpoints, desktop and mobile) — replaces the
+   native number-input spin arrows, which are hidden below since they'd now
+   duplicate these. */
+.credits-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.credits-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--color-hairline-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.credits-step:hover,
+.credits-step:active { background: var(--color-canvas-soft-2); }
+
+.credits-input {
+  width: 40px !important;
+  padding-left: 0.25rem !important;
+  padding-right: 0.25rem !important;
+  -moz-appearance: textfield;
+}
+.credits-input::-webkit-inner-spin-button,
+.credits-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Mobile: name field was being crushed to a sliver by the fixed
+   4-column grid — stack it above the grade/credits/remove controls. */
+@media (max-width: 480px) {
+  #course-headers {
+    display: none;
+  }
+
+  .gpa-home-row {
+    grid-template-columns: 1fr auto 44px !important;
+    row-gap: 0.5rem;
+  }
+
+  /* "Equal credits" mode has no credits-wrap in the row, so the 3rd
+     (44px) track from the default template above sits empty — drop it. */
+  .gpa-home-row.no-credits-row {
+    grid-template-columns: 1fr 44px !important;
+  }
+
+  .gpa-home-row input[type="text"] {
+    grid-column: 1 / -1;
+  }
+
+  .gpa-home-row .input {
+    font-size: 16px !important; /* prevent iOS Safari auto-zoom on focus — inline JS styles set 0.875rem, so this needs !important to win */
+  }
+
+  .gpa-home-row .credits-step {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Remove button used .btn-sm's smaller padding than .input,
+     so it rendered shorter and threw off the row's bottom alignment. */
+  .gpa-home-row select.input,
+  .gpa-home-row .credits-input,
+  .gpa-home-row > button {
+    height: 44px;
+  }
+
+  .gpa-home-row > button svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 /* ============================================================
    Tabs
    ============================================================ */
@@ -398,6 +486,88 @@ label {
   50% { transform: scale(1.03); }
 }
 .pulse-once { animation: pulse-once 0.25s ease-out; }
+
+/* ============================================================
+   Shared result card — shown when a "Share Result" link is opened
+   ============================================================ */
+.shared-card {
+  max-width: 42rem;
+  margin: 0 auto 1.5rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, var(--color-brand-bg) 0%, var(--color-canvas) 70%);
+  border: 1px solid var(--color-brand-soft);
+  box-shadow: var(--shadow-lg);
+}
+.dark .shared-card {
+  background: linear-gradient(160deg, var(--color-brand-soft) 0%, var(--color-canvas) 70%);
+}
+
+.shared-card-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+  margin-bottom: 0.75rem;
+}
+
+.shared-card-gpa {
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-family: var(--font-mono);
+}
+.shared-card-scale {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--color-mute);
+  margin-left: 0.35rem;
+}
+
+.shared-card-label {
+  margin-top: 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.shared-card-stats {
+  margin-top: 0.35rem;
+  font-size: 0.875rem;
+  color: var(--color-mute);
+}
+
+.shared-card-courses {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+}
+
+.shared-card-course-pill {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-body);
+  background: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+  border-radius: 999px;
+}
+.shared-card-course-pill strong {
+  color: var(--color-brand);
+  font-weight: 700;
+}
+
+.shared-card-cta {
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-brand);
+}
 
 /* ============================================================
    Print
