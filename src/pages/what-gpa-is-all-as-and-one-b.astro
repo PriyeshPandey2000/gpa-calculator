@@ -1,0 +1,220 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Mirrors the standard 4.0 values in the calculator script in index.astro.
+// Keep in sync: that script has its own copy, so a change there needs a change here.
+const POINTS: Record<string, number> = {
+  'A': 4.0, 'A-': 3.7, 'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+  'C': 2.0, 'D': 1.0, 'F': 0.0,
+};
+
+// All A's plus one other grade, equal credits.
+const gpa = (a: number, other: string, others = 1) =>
+  (a * POINTS['A'] + others * POINTS[other]) / (a + others);
+
+// Round half up, so 3.675 shows as 3.68 rather than depending on float noise.
+const fmt = (x: number) => (Math.round(x * 100 + 1e-9) / 100).toFixed(2);
+
+const oneB = [3, 4, 5, 6, 7, 8, 9, 10].map((n) => ({
+  classes: n,
+  detail: `${n - 1} A's, 1 B`,
+  gpa: fmt(gpa(n - 1, 'B')),
+}));
+
+const lowGrades = ['A-', 'B+', 'B', 'B-', 'C', 'D', 'F'];
+const classCounts = [5, 6, 7, 8, 10];
+const lowTable = lowGrades.map((g) => ({
+  grade: g,
+  values: classCounts.map((n) => fmt(gpa(n - 1, g))),
+}));
+
+const aCounts = [2, 3, 4, 5, 6, 7];
+const bCounts = [1, 2, 3];
+const mixTable = aCounts.map((a) => ({
+  a,
+  values: bCounts.map((b) => fmt(gpa(a, 'B', b))),
+}));
+
+const v = {
+  b3: fmt(gpa(2, 'B')), b4: fmt(gpa(3, 'B')), b5: fmt(gpa(4, 'B')),
+  b6: fmt(gpa(5, 'B')), b10: fmt(gpa(9, 'B')),
+  c5: fmt(gpa(4, 'C')), c6: fmt(gpa(5, 'C')), c8: fmt(gpa(7, 'C')),
+  allAminus: fmt(POINTS['A-']),
+  aMinusOne5: fmt(gpa(4, 'A-')),
+  a4b2: fmt(gpa(4, 'B', 2)),
+};
+// Credit-weighted example: four 3-credit A's plus one B of 4 or 1 credits.
+const weighted = (bCredits: number) =>
+  (4 * 3 * POINTS['A'] + bCredits * POINTS['B']) / (12 + bCredits);
+const w4 = fmt(weighted(4));
+const w1 = fmt(weighted(1));
+const wGap = fmt(weighted(1) - weighted(4));
+const aPts = POINTS['A'] * 4 + POINTS['B'];
+
+const faq = [
+  {
+    q: "What GPA is all A's and one B?",
+    a: `With five classes of equal credit it is ${v.b5}. With four classes it is ${v.b4}, with six it is ${v.b6}, and with ten it is ${v.b10}. The more classes you have, the less a single B matters.`,
+  },
+  {
+    q: "What GPA is all A's?",
+    a: "A 4.0 on the standard unweighted scale, because an A and an A+ are both worth 4.0 points at most schools. A few schools give an A+ extra points, so check your own grading policy.",
+  },
+  {
+    q: "What GPA is all A minuses?",
+    a: `A ${v.allAminus} on the standard scale, since every A- is worth ${v.allAminus} points. Some schools use 3.67 for an A-, which would make it 3.67 instead.`,
+  },
+  {
+    q: "What GPA is all A's and one C?",
+    a: `With five equal-credit classes it is ${v.c5}. With six it is ${v.c6} and with eight it is ${v.c8}. One C takes 2 points off a 4.0 total, divided across all your classes.`,
+  },
+  {
+    q: "Why does my school's GPA come out different from this page?",
+    a: "The most common reasons are unequal credit hours, a school that gives different points to plus and minus grades, or weighted AP and honors courses. This page assumes equal credits and the standard 4.0 scale.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faq.map(({ q, a }) => ({
+    "@type": "Question",
+    "name": q,
+    "acceptedAnswer": { "@type": "Answer", "text": a },
+  })),
+};
+---
+
+<Layout
+  title="What GPA Is All A's and One B? Tables for 3 to 10 Classes"
+  description="All A's and one B is a 3.80 GPA with five equal-credit classes. See the GPA for 3 to 10 classes, plus A's with a C, D or F, all A minuses and A/B mixes."
+  canonical="/what-gpa-is-all-as-and-one-b"
+  schema={[faqSchema]}
+>
+
+  <section class="page-hero">
+    <div class="max-w-6xl mx-auto px-4">
+      <nav class="breadcrumb mb-4"><a href="/">Home</a><span class="sep">/</span><a href="/gpa-scale">GPA Scale</a><span class="sep">/</span><span>All A's and One B</span></nav>
+      <h1 class="mb-3">What GPA Is All A's and One B?</h1>
+      <p class="text-lg mb-4" style="color:var(--color-body);max-width:640px">On the standard 4.0 scale, all A's and one B is a <strong>{v.b5} GPA</strong> if you took five classes with equal credit. It is {v.b4} with four classes, {v.b6} with six and {v.b10} with ten.</p>
+    </div>
+  </section>
+
+  <section class="max-w-3xl mx-auto px-4 py-8 prose">
+    <p>These numbers assume every class counts the same toward your GPA and your school gives an A 4.0 points and a B 3.0 points. If your classes have different credit hours, jump to <a href="#different-credits">when credits differ</a>.</p>
+
+    <h2>How the number is worked out</h2>
+    <p>GPA is your total grade points divided by your total classes (or credits). For four A's and one B:</p>
+    <ul>
+      <li>Grade points: 4 × {POINTS['A'].toFixed(1)} + 1 × {POINTS['B'].toFixed(1)} = {aPts.toFixed(1)}</li>
+      <li>Classes: 5</li>
+      <li>GPA: {aPts.toFixed(1)} ÷ 5 = <strong>{v.b5}</strong></li>
+    </ul>
+    <p>A B is one point below an A, so one B pulls a 4.0 down by exactly 1 ÷ (number of classes). With five classes that is 0.20. With ten classes it is 0.10. That is why the same single B hurts a one-semester GPA far more than a four-year one.</p>
+
+    <h2>All A's and one B, by number of classes</h2>
+    <table>
+      <thead><tr><th>Total classes</th><th>Grades</th><th>GPA</th></tr></thead>
+      <tbody>
+        {oneB.map((row) => (
+          <tr><td>{row.classes}</td><td>{row.detail}</td><td><strong>{row.gpa}</strong></td></tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2>All A's and one lower grade</h2>
+    <p>The same shortcut works for any other grade. Take the grade's distance from 4.0 and divide it by your number of classes. A C is 2.0 points below an A, so one C costs 2 ÷ 5 = 0.40 in a five-class semester. An F costs 4 ÷ 5 = 0.80.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>One of these, rest A's</th>
+          {classCounts.map((n) => <th>{n} classes</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {lowTable.map((row) => (
+          <tr>
+            <td><strong>{row.grade}</strong></td>
+            {row.values.map((v) => <td>{v}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2>What GPA is all A minuses?</h2>
+    <p>If every grade is an A-, your GPA is <strong>{v.allAminus}</strong>, no matter how many classes you have. An A- is worth {v.allAminus} points on the standard scale, and averaging identical numbers gives the same number back.</p>
+    <p>Mix in A's and the number moves up. Four A's and one A- is {v.aMinusOne5}. Some schools score an A- at 3.67 instead of 3.7, so an all-A- transcript would show 3.67 there. Your school's published grading scale decides.</p>
+
+    <h2>A's and B's: how many of each?</h2>
+    <p>Searches like "A A A A B B GPA" are asking for a mix. Find your number of A's down the side and your number of B's across the top. So four A's and two B's is <strong>{v.a4b2}</strong>.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>A's</th>
+          {bCounts.map((b) => <th>{b} B{b > 1 ? "'s" : ''}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {mixTable.map((row) => (
+          <tr>
+            <td><strong>{row.a}</strong></td>
+            {row.values.map((v) => <td>{v}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2 id="different-credits">When classes have different credits</h2>
+    <p>Most colleges weight each grade by credit hours. A B in a 4-credit lab counts for more than a B in a 1-credit seminar. Here is the same set of grades with two different credit loads:</p>
+    <ul>
+      <li>Four A's in 3-credit classes plus a 4-credit B: (4 × 3 × 4.0 + 4 × 3.0) ÷ 16 credits = <strong>{w4}</strong></li>
+      <li>Four A's in 3-credit classes plus a 1-credit B: (4 × 3 × 4.0 + 1 × 3.0) ÷ 13 credits = <strong>{w1}</strong></li>
+    </ul>
+    <p>Same five grades, GPAs {wGap} apart. If your credit hours aren't all equal, use the calculator below rather than the tables above.</p>
+
+    <h2>What can change these numbers</h2>
+    <ul>
+      <li><strong>Weighted classes.</strong> AP, IB and honors classes can be worth 5.0 or 4.5 at some high schools. See the <a href="/weighted-gpa-calculator">weighted GPA calculator</a>.</li>
+      <li><strong>A different plus/minus scale.</strong> The 3.7 for an A- and 3.3 for a B+ used here are the most common values, not the only ones. Compare yours on the <a href="/gpa-scale">GPA scale chart</a>.</li>
+      <li><strong>Pass/fail and withdrawals.</strong> Grades like P and W are normally left out of the GPA, so they don't change the class count.</li>
+      <li><strong>Cumulative vs semester.</strong> These tables are one set of classes. For several terms together, use the <a href="/cumulative-gpa-calculator">cumulative GPA calculator</a>.</li>
+    </ul>
+
+    <h2>Work out your own grades</h2>
+    <p>Enter your actual classes, grades and credits in the <a href="/">GPA calculator</a>. It uses the same point values as the tables above and handles unequal credits.</p>
+    <p><a href="/" class="btn btn-primary">Open the GPA calculator</a></p>
+  </section>
+
+  <section class="max-w-3xl mx-auto px-4 py-6 pb-12">
+    <h2 class="text-2xl font-bold mb-6" style="color:var(--color-ink)">Frequently Asked Questions</h2>
+    <div>
+      {faq.map(({ q, a }) => (
+        <div class="faq-item">
+          <button class="faq-question"><span>{q}</span><svg class="faq-chevron w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="faq-answer">{a}</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-8">
+      <h3 class="text-lg font-semibold mb-3" style="color:var(--color-ink)">Related</h3>
+      <div class="flex flex-wrap gap-3">
+        {[["GPA Calculator","/"],["GPA Scale Chart","/gpa-scale"],["Weighted GPA Calculator","/weighted-gpa-calculator"],["Cumulative GPA Calculator","/cumulative-gpa-calculator"]].map(([l,h])=>(
+          <a href={h} class="btn btn-secondary btn-sm">{l}</a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!open) item.classList.add('open');
+  });
+});
+</script>
