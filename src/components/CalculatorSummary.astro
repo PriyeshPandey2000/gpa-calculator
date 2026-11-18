@@ -1,0 +1,42 @@
+---
+interface Props { target: string }
+const { target } = Astro.props;
+---
+
+<div class="calculator-summary" data-calculator-summary hidden>
+  <div class="summary-copy" role="status" aria-live="polite" aria-atomic="true">
+    <span class="summary-primary" data-summary-primary></span>
+    <span class="summary-secondary" data-summary-secondary></span>
+  </div>
+  <a href={`#${target}`} data-summary-link>View result <span aria-hidden="true">↓</span></a>
+</div>
+
+<style>
+  .calculator-summary { display: none; }
+  @media (max-width: 1023px) {
+    .calculator-summary:not([hidden]) {
+      position: sticky;
+      top: 4rem;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding: 0.625rem 0.875rem;
+      border: 1px solid var(--color-brand-soft);
+      border-radius: var(--radius-md);
+      background: var(--color-canvas);
+      box-shadow: var(--shadow-sm);
+    }
+    .summary-copy { display: flex; flex-direction: column; min-width: 0; }
+    .summary-primary { color: var(--color-ink); font-size: 0.9375rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+    .summary-secondary { color: var(--color-body); font-size: 0.75rem; }
+    a { display: inline-flex; align-items: center; gap: 0.25rem; flex-shrink: 0; min-height: 44px; color: var(--color-brand); font-size: 0.8125rem; font-weight: 600; }
+  }
+  @media print { .calculator-summary { display: none !important; } }
+</style>
+
+<style is:global>
+  [data-calculator-root] :is(input, select, [data-full-result]) { scroll-margin-block: 9rem; }
+</style>

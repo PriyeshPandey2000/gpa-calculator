@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import CalculatorSummary from '../components/CalculatorSummary.astro';
 
 const webAppSchema = {
   "@context": "https://schema.org",
@@ -125,7 +126,8 @@ const faqSchema = {
   <!-- ══════════════════════════════════════════════
        MAIN CALCULATOR
   ══════════════════════════════════════════════ -->
-  <section class="max-w-6xl mx-auto px-4 py-8">
+  <section id="cumulative-calculator" data-calculator-root class="cumulative-calculator max-w-6xl mx-auto px-4 py-8">
+    <CalculatorSummary target="result-panel" />
     <div class="grid lg:grid-cols-[1fr_340px] gap-6 items-start">
 
       <!-- Left: Input panel -->
@@ -145,11 +147,11 @@ const faqSchema = {
         <div id="panel-semester" role="tabpanel" aria-labelledby="tab-semester">
 
           <!-- Column headers (desktop) -->
-          <div class="hidden sm:grid grid-cols-[2fr_1.5fr_1.5fr_auto] gap-3 mb-2 px-1">
+          <div class="semester-columns gap-2 mb-2 px-3">
             <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Semester</span>
             <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">GPA (0–4.0)</span>
             <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Credits</span>
-            <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Running</span>
+            <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Running GPA</span>
           </div>
 
           <!-- Semester rows container -->
@@ -170,7 +172,7 @@ const faqSchema = {
 
           <div class="grid sm:grid-cols-2 gap-4 mb-6 p-4 rounded-xl" style="background:var(--color-canvas-soft);border:1px solid var(--color-hairline)">
             <div>
-              <label for="prev-gpa">Current Cumulative GPA</label>
+              <label for="prev-gpa">Current Cumulative GPA (0–4.0)</label>
               <input
                 type="number"
                 id="prev-gpa"
@@ -201,7 +203,7 @@ const faqSchema = {
           <h3 class="text-base font-semibold mb-3" style="color:var(--color-ink)">New Semester Courses</h3>
 
           <!-- Course headers (desktop) -->
-          <div class="hidden sm:grid grid-cols-[2fr_1.5fr_1fr_auto] gap-3 mb-2 px-1">
+          <div class="new-course-columns gap-2 mb-2 px-3">
             <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Course (optional)</span>
             <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Grade</span>
             <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Credits</span>
@@ -225,7 +227,7 @@ const faqSchema = {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
             Reset
           </button>
-          <button id="share-btn" class="btn btn-secondary btn-sm" type="button">
+          <button id="share-btn" class="btn btn-secondary btn-sm" type="button" disabled>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             Share
           </button>
@@ -246,26 +248,33 @@ const faqSchema = {
       <div class="flex flex-col gap-4 lg:sticky lg:top-20">
 
         <!-- Main result -->
-        <div class="result-panel" id="result-panel">
+        <div class="result-panel" id="result-panel" data-full-result tabindex="-1">
           <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color:var(--color-brand)">Cumulative GPA</p>
-          <div class="flex items-end gap-3 mb-3">
-            <span id="gpa-result" class="tabular text-5xl font-bold" style="color:var(--color-brand)">—</span>
-            <span class="text-sm mb-1" style="color:var(--color-mute)">/ 4.00</span>
+          <div id="result-correction" hidden role="status" aria-live="polite" aria-atomic="true">
+            <p id="correction-title" class="correction-title"></p>
+            <p class="correction-description">Complete or correct your entries to calculate your full GPA.</p>
+            <button id="review-field-btn" class="btn btn-secondary" type="button">Go to field</button>
           </div>
+          <div id="result-values">
+            <div class="flex items-end gap-3 mb-3">
+              <span id="gpa-result" class="tabular text-5xl font-bold" style="color:var(--color-brand)">—</span>
+              <span class="text-sm mb-1" style="color:var(--color-mute)">/ 4.00</span>
+            </div>
 
-          <!-- Progress bar -->
-          <div class="gpa-meter-container mb-2" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="GPA meter" id="gpa-meter-wrap">
-            <div class="gpa-meter-fill" id="gpa-meter-fill" style="width:0%"></div>
-          </div>
+            <!-- Progress bar -->
+            <div class="gpa-meter-container mb-2" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="GPA meter" id="gpa-meter-wrap">
+              <div class="gpa-meter-fill" id="gpa-meter-fill" style="width:0%"></div>
+            </div>
 
-          <div class="flex items-center justify-between mt-2 text-sm">
-            <span id="gpa-label" class="font-medium" style="color:var(--color-ink)"></span>
-            <span id="gpa-proximity" class="text-xs" style="color:var(--color-mute)"></span>
+            <div class="flex items-center justify-between mt-2 text-sm">
+              <span id="gpa-label" class="font-medium" style="color:var(--color-ink)"></span>
+              <span id="gpa-proximity" class="text-xs" style="color:var(--color-mute)"></span>
+            </div>
           </div>
         </div>
 
         <!-- Stats -->
-        <div class="card-soft p-4 grid grid-cols-2 gap-4 text-center">
+        <div id="result-stats" class="card-soft p-4 grid grid-cols-2 gap-4 text-center">
           <div>
             <p class="text-xs uppercase tracking-wide mb-1" style="color:var(--color-mute)">Total Credits</p>
             <p id="total-credits" class="tabular text-2xl font-bold" style="color:var(--color-ink)">—</p>
@@ -277,7 +286,7 @@ const faqSchema = {
         </div>
 
         <!-- Proximity callout (shown when close to a threshold) -->
-        <div id="proximity-callout" class="callout callout-blue hidden">
+        <div id="proximity-callout" class="callout callout-blue" hidden>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5" style="color:var(--color-brand)" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           <span id="proximity-callout-text"></span>
         </div>
@@ -487,10 +496,85 @@ const faqSchema = {
 
 </Layout>
 
+<style is:global>
+  .cumulative-calculator [hidden] { display: none !important; }
+  .cumulative-calculator .semester-row {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1.5fr) 100px;
+    align-items: start;
+  }
+  .cumulative-calculator .new-course-row {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1fr) 39px;
+    align-items: start;
+  }
+  .cumulative-calculator .course-row > div { min-width: 0; }
+  .cumulative-calculator .input { scroll-margin-block: 6rem; }
+  .cumulative-calculator .input[aria-invalid="true"] {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 1px var(--color-error);
+  }
+  .cumulative-calculator .field-error {
+    margin-top: 0.5rem;
+    color: #b91c1c;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  .dark .cumulative-calculator .field-error { color: #fca5a5; }
+  .cumulative-calculator .correction-title {
+    margin-block: 0.75rem 0.5rem;
+    color: var(--color-ink);
+    font-size: 1.5rem;
+    line-height: 1.25;
+    font-weight: 650;
+    text-wrap: balance;
+  }
+  .cumulative-calculator .correction-description {
+    margin-bottom: 1rem;
+    color: var(--color-body);
+    font-size: 0.875rem;
+  }
+  .cumulative-calculator .semester-actions { min-height: 46px; }
+  .cumulative-calculator .semester-actions .running-label { display: none; }
+  .cumulative-calculator .semester-columns,
+  .cumulative-calculator .new-course-columns { display: none; }
+  @media (min-width: 640px) {
+    .cumulative-calculator .course-row label { display: none; }
+    .cumulative-calculator .semester-columns {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1.5fr) 100px;
+    }
+    .cumulative-calculator .new-course-columns {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1fr) 39px;
+    }
+  }
+  .cumulative-calculator .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  @media (max-width: 639px) {
+    .cumulative-calculator .semester-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cumulative-calculator .semester-row > :first-child,
+    .cumulative-calculator .semester-actions { grid-column: 1 / -1; }
+    .cumulative-calculator .semester-actions { justify-content: space-between; align-items: center; }
+    .cumulative-calculator .running-value { flex-direction: row; gap: 0.5rem; }
+    .cumulative-calculator .semester-actions .running-label { display: inline; margin-bottom: 0; }
+    .cumulative-calculator .new-course-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+    .cumulative-calculator .new-course-row > :first-child { grid-column: 1 / -1; }
+    .cumulative-calculator .new-course-row > :last-child { align-self: end; }
+    .cumulative-calculator .semester-actions button,
+    .cumulative-calculator [data-remove-course] { min-width: 44px; min-height: 44px; }
+    .cumulative-calculator .tab-btn { white-space: normal; line-height: 1.4; }
+    .cumulative-calculator .input { font-size: 1rem; }
+  }
+</style>
+
 <!-- ══════════════════════════════════════════════
      VANILLA JS — CALCULATOR LOGIC
 ══════════════════════════════════════════════ -->
 <script>
+  import { createCalculatorFeedback } from '../scripts/calculator-feedback';
   // ── Constants & helpers ──────────────────────────────────────────────────────
 
   const GRADE_POINTS: Record<string, number | null> = {
@@ -576,8 +660,8 @@ const faqSchema = {
   const addCourseBtn   = document.getElementById('add-course-btn')!;
 
   const resetBtn       = document.getElementById('reset-btn')!;
-  const shareBtn       = document.getElementById('share-btn')!;
-  const printBtn       = document.getElementById('print-btn')!;
+  const shareBtn       = document.getElementById('share-btn') as HTMLButtonElement;
+  const printBtn       = document.getElementById('print-btn') as HTMLButtonElement;
   const shareToast     = document.getElementById('share-toast')!;
 
   const gpaResult      = document.getElementById('gpa-result')!;
@@ -589,12 +673,88 @@ const faqSchema = {
   const totalSemsEl    = document.getElementById('total-semesters')!;
   const proximCallout  = document.getElementById('proximity-callout')!;
   const proximCallTxt  = document.getElementById('proximity-callout-text')!;
+  const resultValues   = document.getElementById('result-values')!;
+  const resultStats    = document.getElementById('result-stats')!;
+  const resultCorrection = document.getElementById('result-correction')!;
+  const correctionTitle = document.getElementById('correction-title')!;
+  const reviewFieldBtn = document.getElementById('review-field-btn')!;
+  const feedback = createCalculatorFeedback({
+    root: document.getElementById('cumulative-calculator')!, calculator: 'cumulative',
+    result: document.getElementById('result-panel')!, numbers: [gpaResult],
+  });
 
   // ── State ────────────────────────────────────────────────────────────────────
 
   let activeMode: 'semester' | 'previous' = 'semester';
   let semesterCounter = 0;
   let courseCounter   = 0;
+  type FieldIssue = { input: HTMLInputElement; message: string; group: string };
+  let fieldIssues: FieldIssue[] = [];
+  const revealedFields = new WeakSet<HTMLInputElement>();
+  const validationTimers = new WeakMap<HTMLInputElement, ReturnType<typeof setTimeout>>();
+
+  // Validation blocks partial totals immediately. Inline messages wait for a
+  // typing pause or blur, and never replace the value someone is correcting.
+  function wireValidation(input: HTMLInputElement) {
+    const error = document.createElement('p');
+    error.id = `${input.id}-error`;
+    error.className = 'field-error';
+    error.hidden = true;
+    input.after(error);
+    input.setAttribute('aria-describedby', [input.getAttribute('aria-describedby'), error.id].filter(Boolean).join(' '));
+    input.addEventListener('input', () => {
+      clearTimeout(validationTimers.get(input));
+      recalculate();
+      validationTimers.set(input, setTimeout(() => {
+        if (!input.isConnected) return;
+        revealedFields.add(input);
+        refreshFieldErrors();
+      }, 450));
+    });
+    input.addEventListener('blur', () => {
+      clearTimeout(validationTimers.get(input));
+      revealedFields.add(input);
+      refreshFieldErrors();
+    });
+  }
+
+  function hasEntry(input: HTMLInputElement): boolean {
+    return input.value.trim() !== '' || input.validity.badInput;
+  }
+
+  function readNumber(input: HTMLInputElement, group: string, required: boolean, isGPA: boolean, allowZero = false): number | null {
+    const present = hasEntry(input);
+    if (!present && !required) return null;
+    const value = input.valueAsNumber;
+    const valid = present && Number.isFinite(value) && (isGPA ? value >= 0 && value <= 4 : allowZero ? value >= 0 : value > 0);
+    if (!valid) {
+      fieldIssues.push({ input, group, message: isGPA ? 'Enter a GPA between 0 and 4.0.' : allowZero ? 'Enter zero or more completed credits.' : 'Enter credits greater than 0.' });
+      return null;
+    }
+    return value;
+  }
+
+  function refreshFieldErrors() {
+    document.querySelectorAll<HTMLInputElement>('.cumulative-calculator input[type="number"]').forEach(input => {
+      const issue = fieldIssues.find(issue => issue.input === input);
+      const error = document.getElementById(`${input.id}-error`);
+      if (!error) return;
+      const show = !!issue && revealedFields.has(input);
+      error.textContent = issue?.message || '';
+      error.hidden = !show;
+      if (show) input.setAttribute('aria-invalid', 'true');
+      else input.removeAttribute('aria-invalid');
+    });
+  }
+
+  reviewFieldBtn.addEventListener('click', () => {
+    const input = fieldIssues[0]?.input;
+    if (!input) return;
+    revealedFields.add(input);
+    refreshFieldErrors();
+    input.focus({ preventScroll: true });
+    input.scrollIntoView({ block: 'center', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+  });
 
   // Tracks semester row data for running GPA display
   const SEMESTER_LABELS = [
@@ -628,9 +788,8 @@ const faqSchema = {
   function createSemesterRow(id: number): HTMLElement {
     const label = SEMESTER_LABELS[id] ?? `Semester ${id + 1}`;
     const div = document.createElement('div');
-    div.className = 'course-row';
+    div.className = 'course-row semester-row';
     div.id = `sem-row-${id}`;
-    div.style.cssText = 'grid-template-columns: 2fr 1.5fr 1.5fr auto;';
     div.innerHTML = `
       <div>
         <label class="sm:hidden text-xs" for="sem-label-${id}">Semester</label>
@@ -646,7 +805,7 @@ const faqSchema = {
         />
       </div>
       <div>
-        <label class="sm:hidden text-xs" for="sem-gpa-${id}">GPA</label>
+        <label class="sm:hidden text-xs" for="sem-gpa-${id}">GPA (0–4.0)</label>
         <input
           type="number"
           id="sem-gpa-${id}"
@@ -655,7 +814,7 @@ const faqSchema = {
           min="0"
           max="4"
           step="0.01"
-          aria-label="Semester GPA"
+          aria-label="Semester GPA (0–4.0)"
           data-sem-id="${id}"
           data-field="gpa"
         />
@@ -674,9 +833,9 @@ const faqSchema = {
           data-field="credits"
         />
       </div>
-      <div class="flex items-end gap-2">
-        <div class="flex flex-col items-center min-w-[52px]">
-          <span class="text-xs mb-1 hidden sm:block" style="color:var(--color-mute)">Running</span>
+      <div class="semester-actions flex items-end gap-2">
+        <div class="running-value flex flex-col items-center min-w-[52px]">
+          <span class="running-label text-xs mb-1 hidden sm:block" style="color:var(--color-body)">Running GPA</span>
           <span id="sem-running-${id}" class="tabular text-sm font-semibold" style="color:var(--color-mute)">—</span>
         </div>
         <button
@@ -698,9 +857,7 @@ const faqSchema = {
     row.classList.add('fade-in');
 
     // Wire up inputs for live calculation
-    row.querySelectorAll('input[data-sem-id]').forEach(el => {
-      el.addEventListener('input', recalculate);
-    });
+    row.querySelectorAll<HTMLInputElement>('input[type="number"]').forEach(wireValidation);
 
     // Wire up remove button
     const removeBtn = row.querySelector(`[data-remove-sem="${semesterCounter}"]`);
@@ -719,9 +876,8 @@ const faqSchema = {
 
   function createCourseRow(id: number): HTMLElement {
     const div = document.createElement('div');
-    div.className = 'course-row';
+    div.className = 'course-row new-course-row';
     div.id = `course-row-${id}`;
-    div.style.cssText = 'grid-template-columns: 2fr 1.5fr 1fr auto;';
     div.innerHTML = `
       <div>
         <label class="sm:hidden text-xs" for="cr-name-${id}">Course</label>
@@ -778,9 +934,7 @@ const faqSchema = {
     courseRows.appendChild(row);
     row.classList.add('fade-in');
 
-    row.querySelectorAll('select[data-course-id], input[data-course-id]').forEach(el => {
-      el.addEventListener('input', recalculate);
-    });
+    row.querySelectorAll<HTMLInputElement>('input[type="number"]').forEach(wireValidation);
     row.querySelectorAll('select').forEach(el => el.addEventListener('change', recalculate));
 
     const removeBtn = row.querySelector(`[data-remove-course="${courseCounter}"]`);
@@ -796,12 +950,13 @@ const faqSchema = {
   addCourseBtn.addEventListener('click', addCourseRow);
 
   // Also recalculate when prev GPA/credits change
-  prevGPAInput.addEventListener('input', recalculate);
-  prevCrInput.addEventListener('input', recalculate);
+  wireValidation(prevGPAInput);
+  wireValidation(prevCrInput);
 
   // ── Main calculation ─────────────────────────────────────────────────────────
 
   function recalculate() {
+    fieldIssues = [];
     let cumGPA: number | null = null;
     let totalCredits = 0;
     let totalSems = 0;
@@ -818,16 +973,17 @@ const faqSchema = {
         const crIn   = row.querySelector(`#sem-cr-${semId}`) as HTMLInputElement;
         const runEl  = row.querySelector(`#sem-running-${semId}`)!;
 
-        const gpa = parseFloat(gpaIn?.value);
-        const cr  = parseFloat(crIn?.value);
+        const started = hasEntry(gpaIn) || hasEntry(crIn);
+        const gpa = readNumber(gpaIn, row.id, started, true);
+        const cr = readNumber(crIn, row.id, started, false);
 
-        if (!isNaN(gpa) && !isNaN(cr) && cr > 0 && gpa >= 0 && gpa <= 4.0) {
+        if (gpa !== null && cr !== null) {
           runningQP += gpa * cr;
           runningCr += cr;
           totalSems++;
 
           const runningGPA = runningQP / runningCr;
-          runEl.textContent = formatGPA(runningGPA);
+          runEl.textContent = fieldIssues.length ? '—' : formatGPA(runningGPA);
           runEl.style.color = gpaColorHex(runningGPA);
         } else {
           runEl.textContent = '—';
@@ -842,8 +998,9 @@ const faqSchema = {
 
     } else {
       // Mode 2: Previous GPA + new courses
-      const prevGPA = parseFloat(prevGPAInput.value);
-      const prevCr  = parseFloat(prevCrInput.value);
+      const previousStarted = hasEntry(prevGPAInput) || hasEntry(prevCrInput);
+      const prevGPA = readNumber(prevGPAInput, 'previous', previousStarted, true);
+      const prevCr = readNumber(prevCrInput, 'previous', previousStarted, false, true);
 
       let newQP = 0;
       let newCr = 0;
@@ -855,21 +1012,22 @@ const faqSchema = {
         const crEl    = row.querySelector(`#cr-credits-${crId}`) as HTMLInputElement;
 
         const grade   = gradeEl?.value;
-        const cr      = parseFloat(crEl?.value);
         const points  = grade ? GRADE_POINTS[grade] : null;
+        // Pass / withdrawal grades intentionally do not contribute credits.
+        const cr = points !== null && points !== undefined ? readNumber(crEl, row.id, grade !== 'A', false) : null;
 
-        if (points !== null && points !== undefined && !isNaN(cr) && cr > 0) {
+        if (points !== null && points !== undefined && cr !== null) {
           newQP += points * cr;
           newCr += cr;
         }
       });
 
-      totalSems = 1; // treating current entries as one new semester
+      totalSems = newCr > 0 ? 1 : 0;
 
-      const validPrev = !isNaN(prevGPA) && !isNaN(prevCr) && prevCr >= 0 && prevGPA >= 0 && prevGPA <= 4.0;
+      const validPrev = prevGPA !== null && prevCr !== null;
       const validNew  = newCr > 0;
 
-      if (validPrev && validNew) {
+      if (validPrev && (validNew || prevCr > 0)) {
         const totalQP = (prevGPA * prevCr) + newQP;
         const totalCr = prevCr + newCr;
         cumGPA       = Math.round((totalQP / totalCr) * 1000) / 1000;
@@ -881,10 +1039,41 @@ const faqSchema = {
       }
     }
 
+    if (fieldIssues.length) {
+      cumGPA = null;
+      totalCredits = 0;
+      totalSems = 0;
+    }
+    refreshFieldErrors();
     updateResultPanel(cumGPA, totalCredits, totalSems);
   }
 
   function updateResultPanel(gpa: number | null, credits: number, sems: number) {
+    const needsCorrection = fieldIssues.length > 0;
+    resultValues.hidden = needsCorrection;
+    resultStats.hidden = needsCorrection;
+    resultCorrection.hidden = !needsCorrection;
+    const groups = new Set(fieldIssues.map(issue => issue.group)).size;
+    const noun = activeMode === 'semester' ? 'semester' : 'entry';
+    const title = needsCorrection ? `Check ${groups} ${groups === 1 ? noun : activeMode === 'semester' ? 'semesters' : 'entries'}` : '';
+    if (correctionTitle.textContent !== title) correctionTitle.textContent = title;
+    const inputs = activeMode === 'semester' ? semesterRows : panelPrevious;
+    const issues = fieldIssues.map(issue => ({
+      key: issue.input.id,
+      field: issue.input.id.includes('gpa') ? 'gpa' as const : 'credits' as const,
+      reason: !hasEntry(issue.input) ? 'missing' as const : 'out_of_range' as const,
+    }));
+    feedback.update({ validity: needsCorrection ? 'invalid' : gpa === null ? 'empty' : 'complete', mode: activeMode,
+      primary: needsCorrection ? title : gpa === null ? '' : `GPA ${formatGPA(gpa)} / 4.0`,
+      secondary: needsCorrection ? 'Complete or correct your entries' : '',
+      signature: JSON.stringify([activeMode, [...inputs.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[type="number"], select')].map(input => [input.value, input.validity.badInput]), issues, gpa]),
+      includedRows: needsCorrection ? 0 : activeMode === 'semester' ? sems : [...courseRows.querySelectorAll<HTMLSelectElement>('select')].filter(select => GRADE_POINTS[select.value] != null && Number((select.closest('.course-row')!.querySelector('input[type="number"]') as HTMLInputElement).value) > 0).length,
+      excludedRows: groups, issues,
+    });
+    shareBtn.disabled = needsCorrection || gpa === null;
+    shareBtn.title = needsCorrection ? 'Correct the entries before sharing your result.' : gpa === null ? 'Enter GPA and credits to share a result.' : '';
+    printBtn.disabled = needsCorrection;
+    shareToast.classList.add('hidden');
     const color = gpaColorHex(gpa);
 
     // Big GPA display
@@ -912,17 +1101,17 @@ const faqSchema = {
 
     // Proximity callout
     const msg = gpa !== null ? gpaProximityMsg(gpa) : '';
+    proximCallout.hidden = !msg;
     if (msg) {
-      proximCallout.classList.remove('hidden');
       proximCallTxt.textContent = msg;
-    } else {
-      proximCallout.classList.add('hidden');
     }
   }
 
   // ── Reset ────────────────────────────────────────────────────────────────────
 
   function resetAll() {
+    feedback.reset();
+    fieldIssues = [];
     // Clear semester rows
     semesterRows.innerHTML = '';
     semesterCounter = 0;
@@ -938,15 +1127,12 @@ const faqSchema = {
     // Reset result
     updateResultPanel(null, 0, 0);
 
-    // Re-add default rows
-    if (activeMode === 'semester') {
-      addSemesterRow();
-      addSemesterRow();
-    } else {
-      addCourseRow();
-      addCourseRow();
-      addCourseRow();
-    }
+    // Restore both modes so switching tabs after reset never reveals an empty form.
+    addSemesterRow();
+    addSemesterRow();
+    addCourseRow();
+    addCourseRow();
+    addCourseRow();
   }
 
   resetBtn.addEventListener('click', resetAll);
@@ -954,6 +1140,7 @@ const faqSchema = {
   // ── Share ────────────────────────────────────────────────────────────────────
 
   shareBtn.addEventListener('click', async () => {
+    if (shareBtn.disabled || fieldIssues.length) return;
     const url = window.location.href.split('?')[0];
     // Encode current GPA into URL
     const gpaText = gpaResult.textContent || '—';
@@ -980,7 +1167,7 @@ const faqSchema = {
 
   // ── Print ────────────────────────────────────────────────────────────────────
 
-  printBtn.addEventListener('click', () => window.print());
+  printBtn.addEventListener('click', () => { if (!fieldIssues.length) window.print(); });
 
   // ── FAQ accordion ────────────────────────────────────────────────────────────
 
@@ -1021,10 +1208,10 @@ const faqSchema = {
     if (!encoded) return;
     try {
       const data = JSON.parse(atob(encoded));
-      if (data?.gpa && data.gpa !== '—') {
-        gpaResult.textContent = data.gpa;
-        gpaResult.style.color = 'var(--color-brand)';
-        totalCreditsEl.textContent = data.credits || '—';
+      const gpa = Number(data?.gpa);
+      const credits = Number(data?.credits);
+      if (data?.gpa !== '' && data?.gpa != null && Number.isFinite(gpa) && gpa >= 0 && gpa <= 4 && Number.isFinite(credits) && credits > 0) {
+        updateResultPanel(gpa, credits, 0);
       }
     } catch {
       // ignore malformed
