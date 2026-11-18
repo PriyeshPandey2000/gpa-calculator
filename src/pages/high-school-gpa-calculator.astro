@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import CalculatorSummary from '../components/CalculatorSummary.astro';
 
 const webAppSchema = {
   "@context": "https://schema.org",
@@ -140,7 +141,8 @@ const faqSchema = {
   <!-- ══════════════════════════════════════════════
        MAIN CALCULATOR
   ══════════════════════════════════════════════ -->
-  <section class="max-w-6xl mx-auto px-4 py-8" aria-labelledby="hs-calc-heading" id="hs-calculator">
+  <section class="max-w-6xl mx-auto px-4 py-8" aria-labelledby="hs-calc-heading" id="hs-calculator" data-calculator-root>
+    <CalculatorSummary target="hs-full-result" />
     <div class="flex flex-col lg:flex-row gap-6 items-start">
 
       <!-- LEFT: Input column -->
@@ -198,7 +200,7 @@ const faqSchema = {
       <div class="w-full lg:w-80 xl:w-96 shrink-0 lg:sticky lg:top-20" aria-live="polite" aria-atomic="true">
 
         <!-- Dual GPA result panel -->
-        <div class="card p-0 overflow-hidden" style="box-shadow: var(--shadow-md);">
+        <div id="hs-full-result" data-full-result tabindex="-1" class="card p-0 overflow-hidden" style="box-shadow: var(--shadow-md);">
 
           <!-- Panel header -->
           <div class="px-5 py-3 border-b" style="background: var(--color-canvas-soft); border-color: var(--color-hairline);">
@@ -492,7 +494,29 @@ const faqSchema = {
 <!-- ══════════════════════════════════════════════════════════════════
      HIGH SCHOOL GPA CALCULATOR JAVASCRIPT
 ══════════════════════════════════════════════════════════════════ -->
+<style is:global>
+  #hs-calculator .semester-section { --course-columns: minmax(0, 1fr) 110px 110px 72px 32px; }
+  #hs-calculator .semester-section[data-no-credits="true"] { --course-columns: minmax(0, 1fr) 110px 110px 32px; }
+  #hs-calculator .hs-course-columns,
+  #hs-calculator .hs-course-row { display: grid; grid-template-columns: var(--course-columns); gap: 0.5rem; }
+  #hs-calculator .hs-course-columns { padding: 0.75rem calc(1.75rem + 1px) 0.25rem; }
+  #hs-calculator [data-no-credits="true"] .credit-col-header { display: none; }
+  #hs-calculator .hs-course-row > * { min-width: 0; }
+  #hs-calculator .hs-field-label { display: none; }
+  #hs-calculator .hs-credits-field .credits-input { width: 100% !important; }
+  @media (max-width: 639px) {
+    #hs-calculator .hs-course-columns { display: none; }
+    #hs-calculator .hs-course-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #hs-calculator .hs-course-row > input[type="text"] { grid-column: 1 / -1; }
+    #hs-calculator .hs-course-row > button { grid-column: 2; grid-row: 3; justify-self: end; min-width: 44px; min-height: 44px; }
+    #hs-calculator .hs-credits-field { grid-column: 1; }
+    #hs-calculator .hs-field-label { display: block; margin-bottom: 0.25rem; color: var(--color-body); font-size: 0.75rem; }
+    #hs-calculator .hs-course-row .input { font-size: 1rem !important; }
+  }
+</style>
+
 <script>
+import { createCalculatorFeedback } from '../scripts/calculator-feedback';
 (function () {
   'use strict';
 
@@ -548,6 +572,32 @@ const faqSchema = {
   const prevUWEl           = document.getElementById('prev-unweighted-gpa');
   const prevWEl            = document.getElementById('prev-weighted-gpa');
   const prevCrEl           = document.getElementById('prev-credits');
+  const feedback = createCalculatorFeedback({
+    root: document.getElementById('hs-calculator')!, calculator: 'high_school',
+    result: document.getElementById('hs-full-result')!, numbers: [uwGpaEl!, wGpaEl!],
+  });
+  function updateFeedback(uwGpa: number | null, wGpa: number | null) {
+    const semesters = [...semestersContainer.querySelectorAll<HTMLElement>('.semester-section')];
+    const rows = semesters.flatMap(sem => [...sem.querySelectorAll<HTMLElement>('.course-row')].map(row => ({
+      grade: row.querySelector<HTMLInputElement | HTMLSelectElement>('.grade-select, .pct-input')?.value || '',
+      type: row.querySelector<HTMLSelectElement>('.course-type')?.value,
+      credits: sem.dataset.noCredits === 'true' ? '1' : row.querySelector<HTMLInputElement>('.credits-input')?.value || '',
+      percentage: sem.dataset.pctMode === 'true',
+    })));
+    const excluded = rows.filter(row => row.grade === 'P' || row.grade === 'W').length;
+    const incomplete = rows.filter(row => !['P', 'W'].includes(row.grade) && (!row.grade || (row.percentage && (!Number.isFinite(Number(row.grade)) || Number(row.grade) < 0 || Number(row.grade) > 100)) || !Number.isFinite(Number(row.credits)) || Number(row.credits) < 0.5 || Number(row.credits) > 12)).length;
+    const previousEnabled = (prevToggle as HTMLInputElement).checked;
+    const previous = [prevUWEl, prevWEl, prevCrEl].map(input => (input as HTMLInputElement).value);
+    const previousIncomplete = previousEnabled && previous.some((value, index) => value === '' || !Number.isFinite(Number(value)) || Number(value) < 0 || (index < 2 && Number(value) > (index === 0 ? 4 : 5)));
+    const partial = incomplete > 0 || previousIncomplete;
+    const validity = uwGpa === null ? 'empty' : partial ? 'partial' : 'complete';
+    feedback.update({ validity, mode: 'semesters',
+      primary: uwGpa === null ? '' : `${partial ? 'Partial · ' : ''}Unweighted ${fmt(uwGpa)}`,
+      secondary: wGpa === null ? '' : `Weighted ${fmt(wGpa)}`,
+      signature: JSON.stringify([validity, rows, previousEnabled, previousEnabled ? previous : []]),
+      includedRows: rows.length - excluded - incomplete, excludedRows: excluded + incomplete,
+    });
+  }
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
   function percentToLetter(pct) {
@@ -623,15 +673,13 @@ const faqSchema = {
     const pctMode   = semesterEl.dataset.pctMode   === 'true';
 
     const row = document.createElement('div');
-    row.className = 'course-row';
+    row.className = 'course-row hs-course-row';
     row.dataset.id = String(id);
     row.setAttribute('role', 'listitem');
     row.setAttribute('aria-label', `Course ${id}`);
 
     // Layout: name | type | grade | [credits] | remove
-    row.style.gridTemplateColumns = noCredits
-      ? '1fr 110px 110px 32px'
-      : '1fr 110px 110px 72px 32px';
+    // The header and rows share one grid definition, including equal-credits mode.
 
     // ── Course name ──
     const nameInput = document.createElement('input');
@@ -640,7 +688,6 @@ const faqSchema = {
     nameInput.className = 'input';
     nameInput.style.fontSize = '0.875rem';
     nameInput.setAttribute('aria-label', 'Course name');
-    nameInput.addEventListener('input', recalculate);
 
     // ── Course type ──
     const typeSelect = document.createElement('select');
@@ -710,10 +757,19 @@ const faqSchema = {
       recalculate();
     });
 
+    function field(label: string, control: HTMLElement, className = '') {
+      const wrapper = document.createElement('div');
+      wrapper.className = className;
+      const caption = document.createElement('span');
+      caption.className = 'hs-field-label';
+      caption.textContent = label;
+      wrapper.append(caption, control);
+      return wrapper;
+    }
     row.appendChild(nameInput);
-    row.appendChild(typeSelect);
-    row.appendChild(gradeWrapper);
-    if (!noCredits) row.appendChild(creditsInput);
+    row.appendChild(field('Type', typeSelect));
+    row.appendChild(field(pctMode ? 'Grade (%)' : 'Grade', gradeWrapper));
+    if (!noCredits) row.appendChild(field('Credits', creditsInput, 'hs-credits-field'));
     row.appendChild(removeBtn);
 
     return row;
@@ -798,10 +854,6 @@ const faqSchema = {
 
     ncInput.addEventListener('change', () => {
       section.dataset.noCredits = ncInput.checked ? 'true' : 'false';
-      const creditHeader = section.querySelector('.credit-col-header');
-      if (creditHeader) {
-        (creditHeader as HTMLElement).style.display = ncInput.checked ? 'none' : '';
-      }
       rebuildCourseRows(section);
     });
 
@@ -830,8 +882,7 @@ const faqSchema = {
 
     // ── Column headers ──
     const colHeaders = document.createElement('div');
-    colHeaders.className = 'px-4 pt-3 pb-1 grid gap-2';
-    colHeaders.style.gridTemplateColumns = 'calc(1fr) 110px 110px 72px 32px';
+    colHeaders.className = 'hs-course-columns';
     colHeaders.innerHTML = `
       <span class="text-xs font-medium uppercase tracking-wide" style="color: var(--color-mute);">Course</span>
       <span class="text-xs font-medium uppercase tracking-wide text-center" style="color: var(--color-mute);">Type</span>
@@ -973,12 +1024,14 @@ const faqSchema = {
   }
 
   function showEmpty() {
+    updateFeedback(null, null);
     emptyHint.style.display = '';
     emptyHint.classList.remove('hidden');
     resultPanel.classList.add('hidden');
   }
 
   function showResult(uwGpa, wGpa, totalCr, totalUWQP) {
+    updateFeedback(uwGpa, wGpa);
     emptyHint.style.display = 'none';
     emptyHint.classList.add('hidden');
     resultPanel.classList.remove('hidden');
@@ -1078,6 +1131,7 @@ const faqSchema = {
   printBtn?.addEventListener('click', () => window.print());
 
   resetBtn?.addEventListener('click', () => {
+    feedback.reset();
     // Clear all semesters
     semestersContainer.innerHTML = '';
     semesterCount = 0;
