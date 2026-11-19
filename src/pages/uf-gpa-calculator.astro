@@ -153,7 +153,7 @@ document.querySelectorAll('.faq-question').forEach(btn => {
   const GRADES=['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F','P','W'];
   let count=0;
   const container=document.getElementById('courses-container');
-  function gpaColor(g){if(g<2)return'#ee0000';if(g<3)return'#f5a623';if(g<3.5)return'#16a34a';return'#0070f3';}
+  function gpaColor(g){if(g<2)return'var(--color-gpa-red)';if(g<3)return'var(--color-gpa-yellow)';if(g<3.5)return'var(--color-gpa-green)';return'var(--color-gpa-blue)';}
   function gpaLabel(g){if(g>=3.9)return'Summa Cum Laude';if(g>=3.5)return"Dean's List";if(g>=3.0)return'Good Standing';if(g>=2.0)return'Satisfactory';return'Below 2.0 — At Risk';}
   function buildRow(){
     count++;

@@ -296,20 +296,20 @@ const faqSchema = {
           <p class="text-xs font-semibold uppercase tracking-wide mb-3" style="color:var(--color-mute)">GPA Scale Reference</p>
           <div class="flex flex-col gap-1.5 text-xs">
             <div class="flex items-center justify-between">
-              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#0070f3"></span>3.50 – 4.00</span>
-              <span class="font-medium" style="color:#0070f3">Dean's List</span>
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:var(--color-gpa-blue)"></span>3.50 – 4.00</span>
+              <span class="font-medium" style="color:var(--color-gpa-blue)">Dean's List</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#16a34a"></span>3.00 – 3.49</span>
-              <span class="font-medium" style="color:#16a34a">Good Standing</span>
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:var(--color-gpa-green)"></span>3.00 – 3.49</span>
+              <span class="font-medium" style="color:var(--color-gpa-green)">Good Standing</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#f5a623"></span>2.00 – 2.99</span>
-              <span class="font-medium" style="color:#f5a623">Satisfactory</span>
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:var(--color-gpa-yellow)"></span>2.00 – 2.99</span>
+              <span class="font-medium" style="color:var(--color-gpa-yellow)">Satisfactory</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#ee0000"></span>0.00 – 1.99</span>
-              <span class="font-medium" style="color:#ee0000">Below Average</span>
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:var(--color-gpa-red)"></span>0.00 – 1.99</span>
+              <span class="font-medium" style="color:var(--color-gpa-red)">Below Average</span>
             </div>
           </div>
         </div>
@@ -600,11 +600,11 @@ const faqSchema = {
   }
 
   function gpaColorHex(gpa: number | null): string {
-    if (gpa === null || isNaN(gpa)) return '#888888';
-    if (gpa < 2.0) return '#ee0000';
-    if (gpa < 3.0) return '#f5a623';
-    if (gpa < 3.5) return '#16a34a';
-    return '#0070f3';
+    if (gpa === null || isNaN(gpa)) return 'var(--color-mute)';
+    if (gpa < 2.0) return 'var(--color-gpa-red)';
+    if (gpa < 3.0) return 'var(--color-gpa-yellow)';
+    if (gpa < 3.5) return 'var(--color-gpa-green)';
+    return 'var(--color-gpa-blue)';
   }
 
   function gpaMeterPct(gpa: number | null): number {

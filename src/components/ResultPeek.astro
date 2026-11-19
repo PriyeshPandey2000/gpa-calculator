@@ -1,0 +1,84 @@
+---
+/**
+ * Phone-only sticky bar that mirrors a calculator's visible GPA numbers while
+ * the full result panel is off screen. Display only: it reads the numbers the
+ * page already rendered and sends nothing anywhere.
+ */
+interface Props { sources: { id: string; label: string }[] }
+const { sources } = Astro.props;
+---
+
+<div class="result-peek" data-result-peek data-sources={JSON.stringify(sources)} hidden>
+  <span class="result-peek-copy"></span>
+  <a href="#" data-result-peek-link>View result <span aria-hidden="true">↓</span></a>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-result-peek]').forEach(bar => {
+    const sources = (JSON.parse(bar.dataset.sources || '[]') as { id: string; label: string }[])
+      .map(source => ({ ...source, el: document.getElementById(source.id) }))
+      .filter((source): source is { id: string; label: string; el: HTMLElement } => !!source.el);
+    if (!sources.length) return;
+    const copy = bar.querySelector<HTMLElement>('.result-peek-copy')!;
+    const link = bar.querySelector<HTMLAnchorElement>('[data-result-peek-link]')!;
+    const panel = sources[0].el.closest<HTMLElement>('.result-panel') || sources[0].el;
+    if (!panel.id) panel.id = `${sources[0].id}-panel`;
+    panel.tabIndex = -1;
+    if (!panel.hasAttribute('aria-label') && !panel.hasAttribute('aria-labelledby')) {
+      panel.setAttribute('aria-label', 'GPA result');
+    }
+    panel.style.scrollMarginTop = '5rem';
+    link.href = `#${panel.id}`;
+    const narrow = matchMedia('(max-width: 1023px)');
+    // Visible below the sticky header, so the bar never duplicates numbers already in view.
+    const inView = (el: HTMLElement) => {
+      const rect = el.getBoundingClientRect();
+      const headerBottom = document.querySelector('header')?.getBoundingClientRect().bottom || 0;
+      return rect.height > 0 && rect.bottom > headerBottom && rect.top < innerHeight;
+    };
+
+    const render = () => {
+      // Only real numbers count; '—' and '–.––' placeholders mean no result yet.
+      const shown = sources.filter(({ el }) => /\d/.test(el.textContent || '') && el.offsetParent !== null);
+      copy.textContent = shown.map(({ label, el }) => `${label} ${(el.textContent || '').trim()}`).join(' · ');
+      bar.hidden = !narrow.matches || !shown.length || shown.some(({ el }) => inView(el));
+    };
+
+    // render() is a couple of rect reads; cheap enough to run directly on scroll.
+    sources.forEach(({ el }) => new MutationObserver(render).observe(el, { childList: true, characterData: true, subtree: true }));
+    addEventListener('scroll', render, { passive: true });
+    addEventListener('resize', render);
+    narrow.addEventListener('change', render);
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      panel.focus({ preventScroll: true });
+      panel.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+    });
+    render();
+  });
+</script>
+
+<style>
+  .result-peek { display: none; }
+  @media (max-width: 1023px) {
+    .result-peek:not([hidden]) {
+      position: sticky;
+      top: 4rem;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding: 0.5rem 0.875rem;
+      border: 1px solid var(--color-brand-soft);
+      border-radius: var(--radius-md);
+      background: var(--color-canvas);
+      box-shadow: var(--shadow-sm);
+    }
+    .result-peek-copy { min-width: 0; color: var(--color-ink); font-size: 0.875rem; line-height: 1.3; font-weight: 650; font-variant-numeric: tabular-nums; }
+    .result-peek a { display: inline-flex; align-items: center; gap: 0.25rem; flex-shrink: 0; min-height: 44px; color: var(--color-brand); font-size: 0.8125rem; font-weight: 600; }
+  }
+  @media print { .result-peek { display: none !important; } }
+</style>

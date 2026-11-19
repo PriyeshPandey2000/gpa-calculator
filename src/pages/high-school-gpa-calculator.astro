@@ -623,11 +623,11 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
   }
 
   function gpaColor(g) {
-    if (g === null || isNaN(g)) return '#888888';
-    if (g < 2.0) return '#ee0000';
-    if (g < 3.0) return '#f5a623';
-    if (g < 3.5) return '#16a34a';
-    return '#0070f3';
+    if (g === null || isNaN(g)) return 'var(--color-mute)';
+    if (g < 2.0) return 'var(--color-gpa-red)';
+    if (g < 3.0) return 'var(--color-gpa-yellow)';
+    if (g < 3.5) return 'var(--color-gpa-green)';
+    return 'var(--color-gpa-blue)';
   }
 
   function gpaLabel(g) {

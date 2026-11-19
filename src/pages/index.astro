@@ -144,24 +144,22 @@ const calculatorCards = [
   <!-- ═══════════════════════════════════════════════════════════
        HERO SECTION
   ═══════════════════════════════════════════════════════════ -->
-  <section class="page-hero" aria-label="GPA Calculator Hero">
+  <section class="page-hero home-hero" aria-label="GPA Calculator Hero">
     <div class="max-w-3xl mx-auto px-4 text-center">
       <!-- Badges row -->
-      <div class="flex flex-wrap items-center justify-center gap-2 mb-5" aria-label="Feature badges">
-        <span class="badge badge-blue">4.0 Scale</span>
-        <span class="badge" style="background: var(--color-canvas-soft-2); color: var(--color-body);">No Signup Required</span>
-        <span class="badge" style="background: #dcfce7; color: #16a34a;">Instant Results</span>
+      <div class="home-eyebrow" aria-label="Feature badges">
+        <span class="live-dot" aria-hidden="true"></span> A little clarity for your next semester
       </div>
 
-      <h1 class="mb-4" style="font-size: clamp(2rem, 5vw, 2.75rem); letter-spacing: -0.03em; font-weight: 600; color: var(--color-ink);">
+      <h1 class="mb-4">
         Free GPA Calculator
       </h1>
 
       <p class="text-lg mb-2" style="color: var(--color-body); max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.65;">
-        Enter your courses, grades, and credit hours. Your GPA calculates instantly — no account, no signup, no friction.
+        Your courses, grades, and credits. One clear picture of where you stand.
       </p>
-      <p class="text-sm mb-0" style="color: var(--color-mute);">
-        Works for college, high school, and graduate programs &middot; Standard 4.0 scale
+      <p class="home-assurances text-sm mb-0" style="color: var(--color-mute);">
+        <span>Free to use</span><span>No account needed</span><span>Results as you type</span>
       </p>
     </div>
   </section>
@@ -169,41 +167,38 @@ const calculatorCards = [
   <!-- ═══════════════════════════════════════════════════════════
        QUICK GPA CALCULATOR WIDGET
   ═══════════════════════════════════════════════════════════ -->
-  <section class="max-w-3xl mx-auto px-4 py-8" aria-labelledby="calculator-heading" id="calculator" data-calculator-root>
+  <section class="home-calculator max-w-3xl mx-auto px-4 py-8" aria-labelledby="calculator-heading" id="calculator" data-calculator-root>
     <CalculatorSummary target="result-panel" />
     <div class="card p-0 overflow-hidden" style="box-shadow: var(--shadow-lg);">
 
       <!-- Card header -->
       <div class="home-calculator-header flex items-center justify-between px-5 py-4 border-b" style="border-color: var(--color-hairline); background: var(--color-canvas-soft);">
         <h2 id="calculator-heading" class="text-base font-semibold m-0" style="color: var(--color-ink); letter-spacing: -0.01em;">
-          GPA Calculator
+          Your courses
         </h2>
-        <div class="flex items-center gap-3 flex-wrap">
-          <!-- Grade mode toggle -->
-          <div class="flex items-center gap-2 text-sm" style="color: var(--color-body);">
-            <span id="grade-mode-label" class="text-sm font-medium" style="color: var(--color-body);">Letter Grade</span>
-            <label class="toggle" aria-label="Toggle between letter grade and percentage input">
-              <input type="checkbox" id="pct-toggle" />
-              <span class="toggle-track"></span>
-              <span class="toggle-thumb"></span>
-            </label>
-            <span class="text-sm" style="color: var(--color-mute);">%</span>
-          </div>
+        <div class="mode-controls">
+          <!-- Grade input mode -->
+          <fieldset class="mode-group">
+            <legend class="mode-legend"><span class="seg-long">Enter grades as</span><span class="seg-short">Grades</span></legend>
+            <div class="segmented">
+              <label><input type="radio" name="grade-mode" value="letter" checked /><span class="seg">Letters</span></label>
+              <label><input type="radio" name="grade-mode" value="percent" id="pct-toggle" /><span class="seg"><span class="seg-long">Percentages</span><span class="seg-short">Percent</span></span></label>
+            </div>
+          </fieldset>
 
-          <!-- No-credits toggle -->
-          <div class="flex items-center gap-2 text-sm" style="color: var(--color-body);">
-            <label class="toggle" aria-label="Toggle credit hours display">
-              <input type="checkbox" id="no-credits-toggle" />
-              <span class="toggle-track"></span>
-              <span class="toggle-thumb"></span>
-            </label>
-            <span class="text-sm" style="color: var(--color-mute);">Equal credits</span>
-          </div>
+          <!-- Course weighting mode -->
+          <fieldset class="mode-group">
+            <legend class="mode-legend"><span class="seg-long">Weight courses by</span><span class="seg-short">Weight by</span></legend>
+            <div class="segmented">
+              <label><input type="radio" name="weight-mode" value="credits" checked /><span class="seg"><span class="seg-long">Credit hours</span><span class="seg-short">Credits</span></span></label>
+              <label><input type="radio" name="weight-mode" value="equal" id="no-credits-toggle" /><span class="seg">Equally</span></label>
+            </div>
+          </fieldset>
         </div>
       </div>
 
       <!-- Course list -->
-      <div class="px-5 pt-4 pb-3">
+      <div class="home-course-editor px-5 pt-4 pb-3">
         <!-- Column headers -->
         <div id="course-headers" class="grid gap-2 mb-2 px-1" style="grid-template-columns: 1fr auto auto auto;">
           <span class="text-xs font-medium uppercase tracking-wide" style="color: var(--color-mute);">Course (optional)</span>
@@ -243,32 +238,33 @@ const calculatorCards = [
               </div>
               <div id="gpa-label" class="text-sm font-medium mt-1" style="color: var(--color-body);"></div>
             </div>
-            <div class="text-right">
-              <div class="text-xs font-medium uppercase tracking-widest mb-1" style="color: var(--color-mute); font-family: var(--font-mono);">Credits</div>
-              <div id="total-credits-display" class="text-2xl font-bold tabular" style="color: var(--color-ink);">0</div>
-              <div class="text-xs mt-0.5" style="color: var(--color-mute);">quality pts: <span id="total-qp-display" class="tabular">0.00</span></div>
-            </div>
+            <dl class="result-stats">
+              <div>
+                <dt>Credits counted</dt>
+                <dd id="total-credits-display" class="tabular">0</dd>
+              </div>
+              <div>
+                <dt>Quality points</dt>
+                <dd id="total-qp-display" class="tabular">0.00</dd>
+              </div>
+            </dl>
           </div>
 
           <!-- Progress meter -->
-          <div class="mb-2">
-            <div class="gpa-meter-container" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-label="GPA meter">
+          <div class="result-meter">
+            <div id="gpa-meter" class="gpa-meter-container" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-label="GPA on a 4.0 scale">
               <div id="gpa-meter-fill" class="gpa-meter-fill" style="width: 0%; background: var(--color-brand);"></div>
             </div>
-            <!-- Threshold markers -->
-            <div class="relative mt-1" style="height: 16px;">
-              <span class="absolute text-xs" style="left: 50%; transform: translateX(-50%); color: var(--color-mute);">2.0</span>
-              <span class="absolute text-xs" style="left: 75%; transform: translateX(-50%); color: var(--color-mute);">3.0</span>
-              <span class="absolute text-xs" style="left: 87.5%; transform: translateX(-50%); color: var(--color-mute);">3.5</span>
-              <span class="absolute text-xs" style="right: 0; color: var(--color-mute);">4.0</span>
+            <div class="meter-scale" aria-hidden="true">
+              <span>0</span><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span>
             </div>
           </div>
 
           <!-- Proximity message -->
-          <div id="gpa-proximity" class="text-sm mt-3" style="color: var(--color-brand); min-height: 1.25rem; font-weight: 500;"></div>
+          <div id="gpa-proximity" class="gpa-proximity"></div>
 
           <!-- Action buttons -->
-          <div class="flex flex-wrap gap-2 mt-4 pt-4" style="border-top: 1px solid var(--color-brand-soft);">
+          <div class="home-result-actions flex flex-wrap gap-2 mt-4 pt-4" style="border-top: 1px solid var(--color-brand-soft);">
             <button id="share-btn" type="button" class="btn btn-secondary btn-sm" aria-label="Share your GPA result">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
               <span id="share-btn-text">Share Result</span>
@@ -286,8 +282,11 @@ const calculatorCards = [
       </div>
 
       <!-- Empty state hint -->
-      <div id="empty-hint" class="px-5 pb-5 text-center text-sm" style="color: var(--color-mute);">
-        Add courses above and your GPA will appear here instantly.
+      <div id="empty-hint" class="home-empty-state">
+        <div class="empty-result-mark" aria-hidden="true">–.––<span>/ 4.0</span></div>
+        <h3>Your GPA starts here</h3>
+        <p id="empty-guide">Choose a grade to see your GPA. Credit hours start at 3; adjust them to match your courses.</p>
+        <button id="empty-reset-btn" type="button" class="btn btn-secondary btn-sm" hidden>Clear entries</button>
       </div>
 
     </div>
@@ -296,7 +295,7 @@ const calculatorCards = [
   <!-- ═══════════════════════════════════════════════════════════
        CALCULATOR LINKS GRID
   ═══════════════════════════════════════════════════════════ -->
-  <section class="max-w-6xl mx-auto px-4 py-10" aria-labelledby="tools-heading">
+  <section class="home-tools max-w-6xl mx-auto px-4 py-10" aria-labelledby="tools-heading">
     <div class="text-center mb-8">
       <h2 id="tools-heading" class="mb-2">All GPA Calculators</h2>
       <p class="text-base" style="color: var(--color-body); max-width: 500px; margin: 0 auto;">
@@ -305,7 +304,7 @@ const calculatorCards = [
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {calculatorCards.map((card) => (
+      {calculatorCards.map((card, index) => (
         <a
           href={card.href}
           class="card group block p-5 transition-all duration-200 hover:shadow-md no-underline relative"
@@ -315,9 +314,22 @@ const calculatorCards = [
           aria-label={card.title}
         >
           {card.highlight && (
-            <span class="badge badge-blue absolute top-3 right-3" style="font-size: 0.65rem; padding: 0.15rem 0.5rem;">Unique</span>
+            <span class="badge badge-blue absolute top-3 right-3" style="font-size: 0.65rem; padding: 0.15rem 0.5rem;">Plan ahead</span>
           )}
-          <div class="text-2xl mb-3 leading-none" aria-hidden="true">{card.icon}</div>
+          <div class="tool-icon mb-3" aria-hidden="true">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d={[
+                'M3 9l9-5 9 5-9 5-9-5zm4 3v5c3 3 7 3 10 0v-5M21 9v8',
+                'M12 5v15M3 4c4-1 7 0 9 2 2-2 5-3 9-2v14c-4-1-7 0-9 2-2-2-5-3-9-2V4z',
+                'M4 20V4m0 16h16M8 16v-4m5 4V8m5 8V5',
+                'M3 7l9-4 9 4-9 4-9-4zm0 5l9 4 9-4M3 17l9 4 9-4',
+                'M5 4h14v16H5zM9 8h6M9 12h6M9 16h6',
+                'M4 17l6-6 4 3 6-8m-6 0h6v6',
+                'M5 6h14M5 12h14M5 18h14M9 4v4m6 2v4m-5 2v4',
+                'M9 5h11M9 12h11M9 19h11M4 5h.01M4 12h.01M4 19h.01',
+              ][index]} />
+            </svg>
+          </div>
           <h3 class="text-sm font-semibold mb-1.5 group-hover:text-[color:var(--color-brand)] transition-colors" style="color: var(--color-ink); letter-spacing: -0.01em;">
             {card.title}
           </h3>
@@ -475,15 +487,92 @@ const calculatorCards = [
      CALCULATOR JAVASCRIPT
 ═══════════════════════════════════════════════════════════ -->
 <style is:global>
+  /* ── Mode controls: labeled segmented choices instead of bare switches ── */
+  #calculator .mode-controls { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+  #calculator .mode-group { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; align-items: center; gap: 8px; }
+  #calculator .mode-legend { float: left; padding: 0; color: var(--color-body); font-size: 12px; font-weight: 500; white-space: nowrap; }
+  #calculator .segmented { display: inline-flex; padding: 3px; gap: 2px; border-radius: 10px; background: var(--color-canvas-soft-2); border: 1px solid var(--color-hairline); }
+  #calculator .segmented label { position: relative; margin: 0; display: block; cursor: pointer; }
+  #calculator .segmented input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  #calculator .segmented .seg { display: block; padding: 6px 12px; border-radius: 7px; font-size: 13px; font-weight: 550; color: var(--color-body); white-space: nowrap; transition: background .15s, color .15s, box-shadow .15s; }
+  #calculator .segmented label:hover .seg { color: var(--color-ink); }
+  #calculator .segmented input:checked + .seg { background: var(--color-canvas); color: var(--color-brand); box-shadow: 0 1px 3px #22283d1f, 0 0 0 1px var(--color-hairline); }
+  #calculator .segmented input:focus-visible + .seg { outline: 2px solid var(--color-brand); outline-offset: 1px; }
+
+  #calculator .seg-short { display: none; }
+
+  /* ── Course list: rows divided by hairlines, not boxed inside the card ── */
+  #calculator #courses-container { gap: 0 !important; }
+  #calculator .gpa-home-row { background: transparent; border: 0; border-bottom: 1px solid var(--color-hairline); border-radius: 0; padding: 10px 0; }
+  #calculator .gpa-home-row:hover { border-color: var(--color-hairline); }
+  #calculator .gpa-home-row:last-child { border-bottom: 0; }
+  @media (min-width: 481px) { #calculator .gpa-home-row { align-items: center; } }
+  #calculator #course-headers { padding-inline: 0 !important; }
+
+  /* ── Column labels: readable, not whisper-grey ── */
+  #calculator #course-headers span { color: var(--color-ink) !important; font-size: 13px !important; font-weight: 600 !important; }
+
+  /* ── Result details ── */
+  #calculator .result-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0 0; }
+  #calculator .result-stats > div { padding: 10px 12px; border-radius: 10px; background: var(--color-canvas); border: 1px solid var(--color-brand-soft); }
+  #calculator .result-stats dt { color: var(--color-body); font-size: 12px; font-weight: 500; }
+  #calculator .result-stats dd { margin: 2px 0 0; color: var(--color-ink); font-size: 20px; font-weight: 650; letter-spacing: -.02em; }
+  #calculator #gpa-label { font-size: 14px !important; font-weight: 600 !important; color: var(--color-ink) !important; }
+  #calculator .result-meter { margin-top: 20px; }
+  #calculator .result-meter .gpa-meter-container { margin-top: 0 !important; }
+  #calculator .meter-scale { display: flex; justify-content: space-between; margin-top: 6px; color: var(--color-body); font-size: 12px; font-variant-numeric: tabular-nums; }
+  #calculator .gpa-proximity { margin-top: 12px; color: var(--color-brand); font-size: 14px; font-weight: 550; }
+  #calculator .gpa-proximity:empty { display: none; }
+  #calculator .home-empty-state { padding: 28px 24px; color: var(--color-body); text-align: center; background: var(--color-brand-bg); border-top: 1px solid var(--color-hairline); }
+  #calculator .empty-result-mark { color: var(--color-hairline-strong); font-size: 44px; font-weight: 600; letter-spacing: .06em; line-height: 1; margin-bottom: 18px; font-variant-numeric: tabular-nums; }
+  #calculator .empty-result-mark span { margin-left: 6px; font-size: 17px; font-weight: 500; letter-spacing: 0; color: var(--color-mute); }
+  #calculator #empty-reset-btn[hidden] { display: none; }
+  #calculator .home-empty-state h3 { color: var(--color-ink); font-size: 18px; margin: 0 0 10px; }
+  #calculator .home-empty-state p { font-size: 14px; line-height: 1.65; margin: 0 auto 20px; max-width: 300px; }
+  @media (min-width: 1100px) {
+    #calculator .home-empty-state { align-self: stretch; align-content: center; border-top: 0; border-left: 1px solid var(--color-hairline); }
+  }
+
+  /* ── Phone: two compact lines per course instead of four ── */
   @media (max-width: 480px) {
-    #calculator .home-calculator-header { flex-wrap: wrap; gap: 1rem; }
-    #calculator .home-calculator-header > h2 { flex-basis: 100%; }
-    #calculator .gpa-home-row { grid-template-columns: minmax(0, 1fr) 44px !important; }
+    #calculator .home-calculator-header { flex-direction: column; align-items: stretch; gap: 14px; }
+    #calculator .mode-controls { display: grid; grid-template-columns: auto auto; justify-content: space-between; gap: 10px; }
+    #calculator .mode-group { display: block; }
+    #calculator .mode-legend { float: none; margin-bottom: 6px; font-size: 12px; }
+    #calculator .segmented .seg { padding: 9px 11px; }
+    #calculator .seg-long { display: none; }
+    #calculator .seg-short { display: inline; }
+    #calculator .gpa-home-row { grid-template-columns: minmax(0, 1fr) auto 44px !important; gap: 8px 6px !important; padding: 14px 0 !important; }
     #calculator .gpa-home-row > * { min-width: 0 !important; }
-    #calculator .gpa-home-row > button { grid-column: 2; grid-row: 2; }
-    #calculator .gpa-home-row .credits-wrap { grid-column: 1 / -1; grid-row: 3; }
-    #calculator .gpa-home-row .credits-step { width: 44px; height: 44px; }
-    #calculator .gpa-home-row .credits-input { width: 64px !important; }
+    #calculator .gpa-home-row > input[type="text"] { grid-column: 1 / 3; grid-row: 1; }
+    #calculator .gpa-home-row > button { grid-column: 3; grid-row: 1; width: 44px; height: 44px; }
+    #calculator .gpa-home-row > div:not(.credits-wrap) { grid-column: 1; grid-row: 2; align-self: end; margin-right: 4px; }
+    #calculator .gpa-home-row.no-credits-row > div:not(.credits-wrap) { grid-column: 1 / -1; }
+    #calculator .gpa-home-row .credits-wrap { grid-column: 2 / 4; grid-row: 2; display: grid; grid-template-columns: 40px 52px 40px; gap: 4px; align-self: end; }
+    #calculator .gpa-home-row .credits-wrap .home-field-caption { grid-column: 1 / -1; margin: 0; }
+    #calculator .gpa-home-row .credits-step { width: 40px; height: 44px; }
+    #calculator .gpa-home-row .credits-input { width: 52px !important; }
+    #calculator .home-field-caption { font-size: 12px; font-weight: 600; color: var(--color-ink); }
+    #calculator .gpa-home-row > div:not(.credits-wrap) > .home-field-caption { margin-bottom: 4px; }
+    .home-hero .home-eyebrow, .home-hero .home-assurances { display: none; }
+    .home-hero, .dark .home-hero { padding: 22px 0 8px; }
+    .home-hero h1 { margin-block: 0 10px; }
+  }
+  /* ── Phone: tool links as compact icon rows instead of tall cards ── */
+  @media (max-width: 639px) {
+    .home-tools .grid { gap: 8px !important; }
+    .home-tools .card { display: grid !important; grid-template-columns: 38px minmax(0, 1fr); column-gap: 14px; align-items: start; padding: 14px 16px !important; }
+    .home-tools .card .tool-icon { grid-row: 1 / span 2; margin: 0 !important; }
+    .home-tools .card h3 { margin: 0 0 2px !important; font-size: 15px !important; }
+    .home-tools .card:has(.badge) h3 { padding-right: 84px; }
+    .home-tools .card p { grid-column: 2; }
+    .home-tools .card .badge { top: 14px !important; right: 14px !important; }
+  }
+  @media (max-width: 359px) {
+    #calculator .mode-group { display: block; }
+    #calculator .mode-legend { float: none; margin-bottom: 6px; }
+    #calculator .segmented { display: flex; }
+    #calculator .segmented label { flex: 1; text-align: center; }
   }
 </style>
 
@@ -526,6 +615,7 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
   const printBtn      = document.getElementById('print-btn');
   const resetBtn      = document.getElementById('reset-btn');
   const headerCredits = document.getElementById('header-credits');
+  const headerGrade   = document.getElementById('header-grade');
   const feedback = createCalculatorFeedback({
     root: document.getElementById('calculator')!, calculator: 'quick',
     result: resultPanel!, numbers: [gpaResultEl!],
@@ -535,13 +625,15 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
       grade: row.querySelector<HTMLInputElement | HTMLSelectElement>('.grade-select, .pct-input')?.value || '',
       credits: noCreditsMode ? '1' : row.querySelector<HTMLInputElement>('.credits-input')?.value || '',
     }));
-    const excluded = rows.filter(row => ['P', 'W'].includes(row.grade)).length;
-    const incomplete = rows.filter(row => !['P', 'W'].includes(row.grade) && (!row.grade || (percentageMode && (!Number.isFinite(Number(row.grade)) || Number(row.grade) < 0 || Number(row.grade) > 100)) || !Number.isFinite(Number(row.credits)) || Number(row.credits) < 0.5 || Number(row.credits) > 12)).length;
+    // Untouched blank rows are placeholders, not unfinished courses.
+    const activeRows = rows.filter(row => row.grade !== '' || row.credits !== (noCreditsMode ? '1' : '3'));
+    const excluded = activeRows.filter(row => ['P', 'W'].includes(row.grade)).length;
+    const incomplete = activeRows.filter(row => !['P', 'W'].includes(row.grade) && (!row.grade || (percentageMode && (!Number.isFinite(Number(row.grade)) || Number(row.grade) < 0 || Number(row.grade) > 100)) || !Number.isFinite(Number(row.credits)) || Number(row.credits) < 0.5 || Number(row.credits) > 12)).length;
     const validity = gpa === null ? 'empty' : incomplete ? 'partial' : 'complete';
     feedback.update({ validity, mode: `${percentageMode ? 'percentage' : 'letter'}_${noCreditsMode ? 'equal' : 'credits'}`,
       primary: gpa === null ? '' : `${incomplete ? 'Partial GPA' : 'GPA'} ${formatGPA(gpa)} / 4.0`,
       signature: JSON.stringify([validity, rows, percentageMode, noCreditsMode]),
-      includedRows: rows.length - excluded - incomplete, excludedRows: excluded + incomplete,
+      includedRows: activeRows.length - excluded - incomplete, excludedRows: excluded + incomplete,
     });
   }
 
@@ -610,11 +702,11 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
   }
 
   const COLOR_MAP = {
-    red:    '#ee0000',
-    yellow: '#f5a623',
-    green:  '#16a34a',
-    blue:   '#0070f3',
-    gray:   '#888888',
+    red:    'var(--color-gpa-red)',
+    yellow: 'var(--color-gpa-yellow)',
+    green:  'var(--color-gpa-green)',
+    blue:   'var(--color-gpa-blue)',
+    gray:   'var(--color-mute)',
   };
 
   // ── Build a course row ─────────────────────────────────────────────────────
@@ -636,10 +728,16 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
     nameInput.className = 'input';
     nameInput.style.fontSize = '0.875rem';
     nameInput.setAttribute('aria-label', 'Course name (optional)');
+    nameInput.addEventListener('input', recalculate);
 
     // Grade input — either select or percentage input
     const gradeWrapper = document.createElement('div');
     gradeWrapper.style.minWidth = '100px';
+    const gradeCaption = document.createElement('span');
+    gradeCaption.className = 'home-field-caption';
+    gradeCaption.textContent = percentageMode ? 'Grade (%)' : 'Grade';
+    gradeCaption.setAttribute('aria-hidden', 'true');
+    gradeWrapper.appendChild(gradeCaption);
 
     if (percentageMode) {
       const pctInput = document.createElement('input');
@@ -651,21 +749,31 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
       pctInput.className = 'input pct-input';
       pctInput.style.cssText = 'font-size:0.875rem; width:100%; text-align:center;';
       pctInput.setAttribute('aria-label', 'Grade percentage');
-      pctInput.addEventListener('input', recalculate);
+      pctInput.addEventListener('input', () => {
+        row.dataset.percentGrade = pctInput.value;
+        recalculate();
+      });
       gradeWrapper.appendChild(pctInput);
     } else {
       const gradeSelect = document.createElement('select');
       gradeSelect.className = 'input grade-select';
       gradeSelect.style.cssText = 'font-size:0.875rem; width:100%;';
       gradeSelect.setAttribute('aria-label', 'Letter grade');
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Select';
+      placeholder.selected = true;
+      gradeSelect.appendChild(placeholder);
       GRADE_OPTIONS.forEach(g => {
         const opt = document.createElement('option');
         opt.value = g;
         opt.textContent = g;
-        if (g === 'A') opt.selected = true;
         gradeSelect.appendChild(opt);
       });
-      gradeSelect.addEventListener('change', recalculate);
+      gradeSelect.addEventListener('change', () => {
+        row.dataset.letterGrade = gradeSelect.value;
+        recalculate();
+      });
       gradeWrapper.appendChild(gradeSelect);
     }
 
@@ -685,6 +793,11 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
     // spin arrows (which don't render at all on touch browsers anyway).
     const creditsWrap = document.createElement('div');
     creditsWrap.className = 'credits-wrap';
+    const creditsCaption = document.createElement('span');
+    creditsCaption.className = 'home-field-caption';
+    creditsCaption.textContent = 'Credits';
+    creditsCaption.setAttribute('aria-hidden', 'true');
+    creditsWrap.appendChild(creditsCaption);
 
     const decBtn = document.createElement('button');
     decBtn.type = 'button';
@@ -733,18 +846,18 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
     return row;
   }
 
-  function addCourse() {
+  function addCourse(focus = true) {
     courseCount++;
     const row = buildRow(courseCount);
     container.appendChild(row);
-    // Focus the grade input of new row
-    const gradeEl = row.querySelector('.grade-select, .pct-input');
-    if (gradeEl) gradeEl.focus();
+    // Focus the new row's grade only when the user asked for a row —
+    // default rows on load or rebuild must not steal focus or scroll.
+    if (focus) row.querySelector<HTMLElement>('.grade-select, .pct-input')?.focus();
     recalculate();
   }
 
   function addDefaultRows(count = 4) {
-    for (let i = 0; i < count; i++) addCourse();
+    for (let i = 0; i < count; i++) addCourse(false);
   }
 
   // ── Recalculate GPA ────────────────────────────────────────────────────────
@@ -794,6 +907,11 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
     updateFeedback(null);
     resultPanel.style.display = 'none';
     emptyHint.style.display   = 'block';
+    const touched = container.children.length !== 4 || [...container.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[type="text"], .grade-select, .pct-input, .credits-input')]
+      .some(el => el.classList.contains('credits-input') ? el.value !== '3' : el.value.trim() !== '');
+    const emptyResetBtn = document.getElementById('empty-reset-btn');
+    if (emptyResetBtn) emptyResetBtn.hidden = !touched;
+    document.getElementById('empty-guide')!.textContent = `${percentageMode ? 'Enter a percentage' : 'Choose a grade'} to see your GPA. ${noCreditsMode ? 'Each graded course counts equally.' : 'Credit hours start at 3; adjust them to match your courses.'}`;
   }
 
   function showResult(gpa, totalCr, totalQP) {
@@ -816,7 +934,7 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
     const pct = Math.min(Math.max((gpa / 4.0) * 100, 0), 100);
     meterFill.style.width      = pct + '%';
     meterFill.style.background = hexCol;
-    meterFill.setAttribute('aria-valuenow', gpa.toFixed(2));
+    document.getElementById('gpa-meter')?.setAttribute('aria-valuenow', gpa.toFixed(2));
 
     // Totals
     if (totalCrEl) totalCrEl.textContent = totalCr % 1 === 0 ? String(totalCr) : totalCr.toFixed(1);
@@ -829,31 +947,52 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
   }
 
   // ── Toggle handlers ────────────────────────────────────────────────────────
-  noCreditsEl?.addEventListener('change', () => {
-    noCreditsMode = noCreditsEl.checked;
+  document.querySelectorAll<HTMLInputElement>('input[name="weight-mode"]').forEach(el => el.addEventListener('change', () => {
+    noCreditsMode = !!noCreditsEl?.checked;
     if (headerCredits) {
       headerCredits.style.display = noCreditsMode ? 'none' : '';
     }
-    rebuildRows();
-  });
+    rebuildRows(true);
+  }));
 
-  pctToggleEl?.addEventListener('change', () => {
-    percentageMode = pctToggleEl.checked;
-    const label = document.getElementById('grade-mode-label');
-    if (label) label.textContent = percentageMode ? 'Percentage' : 'Letter Grade';
+  document.querySelectorAll<HTMLInputElement>('input[name="grade-mode"]').forEach(el => el.addEventListener('change', () => {
+    percentageMode = !!pctToggleEl?.checked;
+    if (headerGrade) headerGrade.textContent = percentageMode ? 'Grade (%)' : 'Grade';
     rebuildRows();
-  });
+  }));
 
-  function rebuildRows() {
-    // Preserve count but rebuild all rows
-    const count = container.children.length || 4;
+  function setMode(name, value) {
+    const el = document.querySelector<HTMLInputElement>(`input[name="${name}"][value="${value}"]`);
+    if (el) el.checked = true;
+  }
+
+  function rebuildRows(preserveGrades = false) {
+    const drafts = [...container.querySelectorAll<HTMLElement>('.gpa-home-row')].map(row => ({
+      name: row.querySelector<HTMLInputElement>('input[type="text"]')?.value || '',
+      grade: row.querySelector<HTMLInputElement | HTMLSelectElement>('.grade-select, .pct-input')?.value || '',
+      credits: row.querySelector<HTMLInputElement>('.credits-input')?.value ?? row.dataset.savedCredits ?? '3',
+      letterGrade: row.dataset.letterGrade || '',
+      percentGrade: row.dataset.percentGrade || '',
+    }));
     container.innerHTML = '';
     courseCount = 0;
-    for (let i = 0; i < count; i++) addCourse();
+    for (const draft of drafts) {
+      const row = buildRow(++courseCount);
+      row.querySelector<HTMLInputElement>('input[type="text"]')!.value = draft.name;
+      row.dataset.savedCredits = draft.credits;
+      row.dataset.letterGrade = draft.letterGrade;
+      row.dataset.percentGrade = draft.percentGrade;
+      const credits = row.querySelector<HTMLInputElement>('.credits-input');
+      if (credits) credits.value = draft.credits;
+      row.querySelector<HTMLInputElement | HTMLSelectElement>('.grade-select, .pct-input')!.value = preserveGrades ? draft.grade : percentageMode ? draft.percentGrade : draft.letterGrade;
+      container.appendChild(row);
+    }
+    if (!drafts.length) addDefaultRows();
+    recalculate();
   }
 
   // ── Button actions ─────────────────────────────────────────────────────────
-  addBtn?.addEventListener('click', addCourse);
+  addBtn?.addEventListener('click', () => addCourse());
 
   shareBtn?.addEventListener('click', () => {
     const gpaText     = gpaResultEl?.textContent || '—';
@@ -937,21 +1076,22 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
 
   printBtn?.addEventListener('click', () => window.print());
 
-  resetBtn?.addEventListener('click', () => {
+  function resetCalculator() {
     feedback.reset();
     container.innerHTML = '';
     courseCount = 0;
     noCreditsMode   = false;
     percentageMode  = false;
-    if (noCreditsEl)  noCreditsEl.checked  = false;
-    if (pctToggleEl)  pctToggleEl.checked  = false;
-    const label = document.getElementById('grade-mode-label');
-    if (label) label.textContent = 'Letter Grade';
+    setMode('weight-mode', 'credits');
+    setMode('grade-mode', 'letter');
+    if (headerGrade) headerGrade.textContent = 'Grade';
     if (headerCredits) headerCredits.style.display = '';
     showEmptyState();
     addDefaultRows();
     recalculate();
-  });
+  }
+  resetBtn?.addEventListener('click', resetCalculator);
+  document.getElementById('empty-reset-btn')?.addEventListener('click', resetCalculator);
 
   // ── FAQ accordion ──────────────────────────────────────────────────────────
   document.querySelectorAll('.faq-question').forEach(btn => {
@@ -1027,15 +1167,10 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
   }
 
   // ── Init ───────────────────────────────────────────────────────────────────
-  // Opening a shared link must not auto-populate default courses below the
-  // shared-result card — that would render an unrelated, misleading 4.00 GPA
-  // right under the real shared number. Leave the calculator empty instead.
-  if (sharedGpa) {
-    showEmptyState();
-  } else {
-    addDefaultRows(4);
-    recalculate();
-  }
+  // Blank grades keep the calculator ready to use without inventing a GPA,
+  // including underneath a separately labelled shared-result card.
+  addDefaultRows(4);
+  recalculate();
 
 })();
 </script>
