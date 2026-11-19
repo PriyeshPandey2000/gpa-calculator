@@ -1,0 +1,136 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { GRADE_POINTS, COURSE_WEIGHT } from '../scripts/gpa.js';
+
+const title = 'Weighted to Unweighted GPA: How to Recalculate It';
+const description = 'Learn how to recalculate weighted GPA as unweighted GPA using your course grades and credits. See why a 4.7 GPA can have different unweighted results.';
+const courses = [
+  { name: 'AP course', grade: 'A', type: 'AP', credits: 4 },
+  { name: 'Honors course', grade: 'B+', type: 'Honors', credits: 3 },
+  { name: 'Regular course', grade: 'A-', type: 'Regular', credits: 2 },
+].map(course => {
+  const base = GRADE_POINTS[course.grade]!;
+  const weighted = base + COURSE_WEIGHT[course.type];
+  return { ...course, base, weighted, unweightedQuality: base * course.credits, weightedQuality: weighted * course.credits };
+});
+const credits = courses.reduce((sum, course) => sum + course.credits, 0);
+const unweightedQuality = courses.reduce((sum, course) => sum + course.unweightedQuality, 0);
+const weightedQuality = courses.reduce((sum, course) => sum + course.weightedQuality, 0);
+const unweighted = (unweightedQuality / credits).toFixed(2);
+const weighted = (weightedQuality / credits).toFixed(2);
+const sameWeighted = [
+  { description: "Ten AP courses, all A-minus", base: 10 * GRADE_POINTS['A-'], weighted: 10 * (GRADE_POINTS['A-'] + COURSE_WEIGHT.AP) },
+  { description: "Seven AP A's and three Regular A's", base: 10 * GRADE_POINTS.A, weighted: 7 * (GRADE_POINTS.A + COURSE_WEIGHT.AP) + 3 * GRADE_POINTS.A },
+];
+const schema = {
+  '@context': 'https://schema.org', '@type': 'Article', headline: title, description,
+  mainEntityOfPage: 'https://gpacalculatorfree.com/weighted-to-unweighted-gpa/',
+  author: { '@type': 'Organization', name: 'GPA Calculator Free', url: 'https://gpacalculatorfree.com/about/' },
+  datePublished: '2026-11-19', dateModified: '2026-11-19',
+};
+---
+
+<Layout title={title} description={description} canonical="/weighted-to-unweighted-gpa" ogType="article" schema={schema}>
+  <section class="page-hero">
+    <div class="max-w-3xl mx-auto px-4">
+      <nav class="breadcrumb mb-4" aria-label="Breadcrumb">
+        <a href="/">Home</a><span class="sep" aria-hidden="true">/</span>
+        <a href="/weighted-gpa-calculator/">Weighted GPA</a><span class="sep" aria-hidden="true">/</span>
+        <span aria-current="page">Weighted to Unweighted GPA</span>
+      </nav>
+      <h1 class="mb-3">How to Convert Weighted GPA to Unweighted GPA</h1>
+      <p class="text-lg mb-4"><strong>To find your unweighted GPA, use each course's grade and credits without the extra points for AP, IB or honors classes.</strong> You cannot get an exact answer from your overall weighted GPA alone. A 4.7, for example, can come from more than one set of grades.</p>
+      <p class="text-sm">By <a href="/about/">GPA Calculator Free</a> · Published <time datetime="2026-11-19">November 19, 2026</time></p>
+      <nav class="flex flex-wrap gap-2 mt-4" aria-label="On this page">
+        {[["4.7 GPA example", "#same-weighted-gpa"], ["Recalculate step by step", "#recalculate"], ["Use the calculator", "#calculator"], ["School rules", "#school-rules"]].map(([label, href]) => <a class="btn btn-secondary btn-sm" href={href}>{label}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  <article class="max-w-3xl mx-auto px-4 py-8 prose">
+    <p>Check your transcript first. If it already lists an unweighted GPA for the period you need, you may not need to calculate anything. If it only shows a weighted GPA, gather your course grades, credits and your school's grading scale.</p>
+    <p>For the examples here, an A is worth 4.0, an A-minus 3.7 and a B-plus 3.3. We add 1.0 for AP/IB and 0.5 for Honors courses when calculating the weighted result. These are the settings used by our calculator. Check your school's policy before applying them to your transcript.</p>
+
+    <section aria-labelledby="same-weighted-gpa">
+      <h2 id="same-weighted-gpa">What is a 4.7 weighted GPA on an unweighted scale?</h2>
+      <p><strong>There is no single answer.</strong> These two students have the same 4.7 weighted GPA but different unweighted GPAs. Each has ten courses of equal credit:</p>
+      <div class="table-scroll" role="region" aria-label="Two transcripts with the same weighted GPA" tabindex="0">
+        <table>
+          <caption>Two example transcripts using A-minus = 3.7 and an AP bonus of 1.0</caption>
+          <thead><tr><th scope="col">Course grades</th><th scope="col">Weighted GPA</th><th scope="col">Unweighted GPA</th></tr></thead>
+          <tbody>{sameWeighted.map(row => <tr><th scope="row">{row.description}</th><td>{(row.weighted / 10).toFixed(2)}</td><td><strong>{(row.base / 10).toFixed(2)}</strong></td></tr>)}</tbody>
+        </table>
+      </div>
+      <p>The first student has an A-minus in every class. Each grade is worth 3.7 before the AP bonus and 4.7 after it. The second student earned all A's, so the unweighted GPA is 4.0. Seven AP bonuses raise that student's weighted average to 4.7.</p>
+      <h3>Why multiplying by 4 ÷ 5 is not a reliable conversion</h3>
+      <p>This shortcut gives 4.7 × 4 ÷ 5 = <strong>3.76</strong>, which matches neither student above. In our example, the extra points depend on which courses are AP or Honors. Multiplying the total by 0.8 cannot tell you which classes received those points.</p>
+    </section>
+
+    <section aria-labelledby="recalculate">
+      <h2 id="recalculate">Recalculate unweighted GPA in four steps</h2>
+      <ol>
+        <li><strong>Decide which courses to include.</strong> Use the semesters required by your school or application. Check how repeated, transferred and pass/fail courses are treated.</li>
+        <li><strong>Look up each letter grade's points.</strong> Use the unweighted scale, leaving out AP, IB and Honors bonuses. An A-minus might be 3.7 or 3.67, depending on the school.</li>
+        <li><strong>Multiply the grade points by the course's GPA credits.</strong> Schools call this total the course's quality points. For example, an A worth 4.0 in a 3-credit course gives 12 quality points.</li>
+        <li><strong>Add the quality points and divide by the total GPA credits.</strong> Keep the full numbers until the final step, then follow your school's rounding or truncation rule.</li>
+      </ol>
+      <p class="formula"><strong>Unweighted GPA = Σ(base grade points × course credits) ÷ Σ(GPA credits)</strong></p>
+      <p>A 4-credit class can still count more than a 1-credit class in an unweighted GPA. The word “unweighted” refers to the absence of a course-difficulty bonus. If all your courses have equal credits, simply average their base grade points.</p>
+      <p>Be careful with F, pass and withdrawal grades. An F can add zero quality points while its GPA credits still count in the total. Pass and withdrawal grades may be excluded entirely. Check the policy before removing a course from your calculation.</p>
+
+      <h3>A worked example with unequal credits</h3>
+      <p>Using the example scale and bonuses stated above:</p>
+      <div class="table-scroll" role="region" aria-label="Worked credit-weighted GPA calculation" tabindex="0">
+        <table>
+          <caption>Example grades and credits, with and without course bonuses</caption>
+          <thead><tr><th scope="col">Course</th><th scope="col">Grade</th><th scope="col">Credits</th><th scope="col">Base points</th><th scope="col">Unweighted quality points</th><th scope="col">Weighted quality points</th></tr></thead>
+          <tbody>{courses.map(course => <tr><th scope="row">{course.name}</th><td>{course.grade}</td><td>{course.credits}</td><td>{course.base.toFixed(1)}</td><td>{course.unweightedQuality.toFixed(1)}</td><td>{course.weightedQuality.toFixed(1)}</td></tr>)}</tbody>
+          <tfoot><tr><th scope="row" colspan="2">Total</th><td>{credits}</td><td>Not applicable</td><td>{unweightedQuality.toFixed(1)}</td><td>{weightedQuality.toFixed(1)}</td></tr></tfoot>
+        </table>
+      </div>
+      <p>Add the unweighted quality points: 16.0 + 9.9 + 7.4 = {unweightedQuality.toFixed(1)}. Divide by {credits} credits to get <strong>{unweighted} unweighted</strong>. With the example bonuses included, the total is {weightedQuality.toFixed(1)} ÷ {credits} = <strong>{weighted} weighted</strong>, rounded to two decimals.</p>
+      <p>You cannot just subtract 1.0 from {weighted}: only the AP course gets that full bonus, and each course has a different number of credits.</p>
+    </section>
+
+    <section aria-labelledby="calculator">
+      <h2 id="calculator">Calculate both values from your course grades</h2>
+      <p>Open the <a href="/weighted-gpa-calculator/">weighted and unweighted GPA calculator</a>, select the 5.0 weighted model, and enter each course's letter grade, type and credits. It shows both results side by side. For the worked example, enter AP / A / 4 credits, Honors / B+ / 3 credits, and Regular / A- / 2 credits.</p>
+      <p><a class="btn btn-primary" href="/weighted-gpa-calculator/">Compare weighted and unweighted GPA</a></p>
+      <p>If you only need the base-grade result, use the <a href="/unweighted-gpa-calculator/">unweighted GPA calculator</a>. These tools use the displayed example scale; they are estimates when your school's point values, eligible courses or weighting rules differ.</p>
+    </section>
+
+    <section aria-labelledby="other-numbers">
+      <h2 id="other-numbers">Can I convert a 4.1 weighted GPA to unweighted?</h2>
+      <p>A <strong>4.1 weighted GPA also needs a course-by-course calculation</strong>. Use the same four steps above with your own grades and credits. There is no separate conversion formula for 4.1.</p>
+      <h3>Can I convert unweighted GPA to weighted GPA?</h3>
+      <p>You need the course types for that too. Under our example rules, a 3.7 unweighted GPA stays 3.7 if all courses are Regular. It becomes 4.7 if every course earns the 1.0 AP bonus. Knowing only the unweighted average leaves out that information.</p>
+      <h3>Is a 4.7 weighted GPA good?</h3>
+      <p>On the example 5.0 scale above, 4.7 is a high weighted average. But it cannot tell you your class rank, your admission chances or an exact percentage mark. For a useful comparison, check that the other GPA uses the same grading rules and covers similar courses.</p>
+    </section>
+
+    <section aria-labelledby="school-rules">
+      <h2 id="school-rules">When school and application rules change the calculation</h2>
+      <p>Before using your result, check which courses count, how much extra weight they receive and whether the total is capped. These choices can change the answer even when the arithmetic is correct.</p>
+      <p>For example, <a href="https://admission.universityofcalifornia.edu/admission-requirements/first-year-requirements/gpa-requirement.html">UC's first-year GPA instructions</a> specify eligible courses, a particular school-year window and limits on honors points. They also disregard pluses and minuses. The examples on this page are not a UC GPA calculation.</p>
+      <p>If your goal is an application, first check whether it asks you to convert anything. <a href="https://membersupport.commonapp.org/membersupport/s/article/How-do-I-report-my-class-rank-and-GPA">Common App's reporting instructions</a> ask for the school's GPA scale and weighting, and say to report the weighted value if the school calculates both. Follow the current form and each college's instructions rather than substituting an unofficial conversion.</p>
+    </section>
+
+    <section aria-labelledby="sources">
+      <h2 id="sources">Sources and calculation method</h2>
+      <p>The <a href="https://registrar.umd.edu/grades-records/grades/gpa-calculation">University of Maryland registrar's GPA guide</a> documents the base letter-point values and credit-weighted method used here. Its guide is not the source of our high-school course bonuses.</p>
+      <p>The worked examples use this site's 5.0 calculator settings. For an official GPA, use the value supplied by your school. <a href="/contact/">Report a correction</a> if you find an error.</p>
+      <p>Related: <a href="/gpa-scale/">GPA scale and letter-grade chart</a> · <a href="/what-gpa-is-all-as-and-one-b/">GPA for A's and B's</a> · <a href="/cumulative-gpa-calculator/">Combine multiple semesters</a></p>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  h2[id] { scroll-margin-top: 5rem; }
+  .table-scroll { max-width: 100%; overflow-x: auto; margin-block: 1rem; }
+  table { margin-bottom: 0; }
+  caption { text-align: left; color: var(--color-body); font-size: .875rem; margin-bottom: .75rem; }
+  th, td { vertical-align: top; }
+  .table-scroll th:first-child { min-width: 10rem; }
+  tfoot { font-weight: 600; }
+  .formula { padding: 1rem; border: 1px solid var(--color-hairline); border-radius: var(--radius-md); background: var(--color-canvas-soft); overflow-wrap: anywhere; }
+</style>
