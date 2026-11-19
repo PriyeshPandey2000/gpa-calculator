@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import ResultPeek from '../components/ResultPeek.astro';
+import CalculatorSetting from '../components/CalculatorSetting.astro';
 
 const webAppSchema = {
   "@context": "https://schema.org",
@@ -135,7 +137,8 @@ const faqSchema = {
   <!-- ══════════════════════════════════════════════
        MAIN CALCULATOR
   ══════════════════════════════════════════════ -->
-  <section class="max-w-6xl mx-auto px-4 py-8" id="calculator" aria-labelledby="calc-heading">
+  <section class="calculator-workspace max-w-6xl mx-auto px-4 py-8" id="calculator" aria-labelledby="calc-heading">
+    <ResultPeek sources={[{ id: "semester-gpa-result", label: "Semester GPA" }, { id: "cum-gpa-result", label: "Cumulative" }]} />
     <div class="grid lg:grid-cols-3 gap-6 items-start">
 
       <!-- Left: Input panel (2/3 width on desktop) -->
@@ -156,27 +159,9 @@ const faqSchema = {
         <!-- ── Tab 1: Semester GPA ── -->
         <div id="panel-semester" role="tabpanel" aria-labelledby="tab-semester">
 
-          <!-- Global toggles row -->
-          <div class="card p-4 flex flex-wrap items-center gap-x-6 gap-y-3">
-            <!-- Grade mode toggle -->
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium" style="color:var(--color-body)" id="grade-mode-label-1">Letter Grade</span>
-              <label class="toggle" aria-label="Toggle between letter grade and percentage input">
-                <input type="checkbox" id="pct-toggle-1" />
-                <span class="toggle-track"></span>
-                <span class="toggle-thumb"></span>
-              </label>
-              <span class="text-sm" style="color:var(--color-mute)">%</span>
-            </div>
-            <!-- Equal credits toggle -->
-            <div class="flex items-center gap-2">
-              <label class="toggle" aria-label="Weight all courses equally (no credit hours)">
-                <input type="checkbox" id="equal-credits-toggle" />
-                <span class="toggle-track"></span>
-                <span class="toggle-thumb"></span>
-              </label>
-              <span class="text-sm" style="color:var(--color-mute)">Equal credits (no weighting)</span>
-            </div>
+          <div class="card p-4 calculator-settings">
+            <CalculatorSetting id="pct-toggle-1" label="Enter grades as" off="Letters" on="Percentages" />
+            <CalculatorSetting id="equal-credits-toggle" label="Weight courses by" off="Credit hours" on="Equally" />
           </div>
 
           <!-- Semesters container -->
@@ -234,33 +219,14 @@ const faqSchema = {
             </div>
           </div>
 
-          <!-- Grade mode toggle for tab 2 -->
-          <div class="card p-4 flex flex-wrap items-center gap-x-6 gap-y-3 mb-4">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium" style="color:var(--color-body)" id="grade-mode-label-2">Letter Grade</span>
-              <label class="toggle" aria-label="Toggle percentage input for tab 2">
-                <input type="checkbox" id="pct-toggle-2" />
-                <span class="toggle-track"></span>
-                <span class="toggle-thumb"></span>
-              </label>
-              <span class="text-sm" style="color:var(--color-mute)">%</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <label class="toggle" aria-label="Weight all courses equally in tab 2">
-                <input type="checkbox" id="equal-credits-toggle-2" />
-                <span class="toggle-track"></span>
-                <span class="toggle-thumb"></span>
-              </label>
-              <span class="text-sm" style="color:var(--color-mute)">Equal credits</span>
-            </div>
+          <div class="calculator-settings mb-4">
+            <CalculatorSetting id="pct-toggle-2" label="Enter grades as" off="Letters" on="Percentages" />
+            <CalculatorSetting id="equal-credits-toggle-2" label="Weight courses by" off="Credit hours" on="Equally" />
           </div>
 
-          <!-- Current semester courses -->
           <div class="card p-5">
-            <h3 class="text-sm font-semibold mb-3" style="color:var(--color-ink)">Current Semester Courses</h3>
-
-            <!-- Column headers -->
-            <div class="hidden sm:grid gap-3 mb-2 px-1" id="prev-course-headers" style="grid-template-columns: 1fr 120px 80px 36px;">
+            <h3 class="text-sm font-semibold mb-3" style="color:var(--color-ink)">Your courses</h3>
+          <div class="hidden sm:grid gap-3 mb-2 px-1" id="prev-course-headers" style="grid-template-columns: minmax(0, 1fr) 110px 140px 44px;">
               <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Course (optional)</span>
               <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Grade</span>
               <span class="text-xs font-semibold uppercase tracking-wide" id="prev-credits-header" style="color:var(--color-mute)">Credits</span>
@@ -318,7 +284,7 @@ const faqSchema = {
           </div>
 
           <div class="flex items-end gap-3 mb-1">
-            <span id="semester-gpa-result" class="tabular" style="font-size:3.25rem; font-weight:700; line-height:1; letter-spacing:-0.04em; color:var(--color-brand)">—</span>
+            <span id="semester-gpa-result" class="tabular" style="font-size:3.25rem; font-weight:700; line-height:1; letter-spacing:-0.04em; color:var(--color-mute)">–.––</span>
             <span class="text-base mb-1" style="color:var(--color-mute)">/&nbsp;4.00</span>
           </div>
 
@@ -333,12 +299,7 @@ const faqSchema = {
             <div class="gpa-meter-fill" id="gpa-meter-fill" style="width:0%"></div>
           </div>
           <!-- Markers -->
-          <div class="relative mt-1" style="height:16px;">
-            <span class="absolute text-xs" style="left:50%;transform:translateX(-50%);color:var(--color-mute)">2.0</span>
-            <span class="absolute text-xs" style="left:75%;transform:translateX(-50%);color:var(--color-mute)">3.0</span>
-            <span class="absolute text-xs" style="left:87.5%;transform:translateX(-50%);color:var(--color-mute)">3.5</span>
-            <span class="absolute text-xs" style="right:0;color:var(--color-mute)">4.0</span>
-          </div>
+          <div class="calculator-meter-scale" aria-hidden="true"><span>0</span><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span></div>
 
           <div class="flex items-center justify-between mt-3">
             <span id="gpa-standing-label" class="text-sm font-semibold" style="color:var(--color-ink)"></span>
@@ -370,31 +331,31 @@ const faqSchema = {
           <div class="flex flex-col gap-2 text-xs">
             <div class="flex items-center justify-between">
               <span class="flex items-center gap-2">
-                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:#0070f3"></span>
+                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:var(--color-gpa-blue)"></span>
                 3.50 – 4.00
               </span>
-              <span class="font-semibold" style="color:#0070f3">Dean's List</span>
+              <span class="font-semibold" style="color:var(--color-gpa-blue)">Dean's List</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="flex items-center gap-2">
-                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:#16a34a"></span>
+                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:var(--color-gpa-green)"></span>
                 3.00 – 3.49
               </span>
-              <span class="font-semibold" style="color:#16a34a">Good Standing</span>
+              <span class="font-semibold" style="color:var(--color-gpa-green)">Good Standing</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="flex items-center gap-2">
-                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:#f5a623"></span>
+                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:var(--color-gpa-yellow)"></span>
                 2.00 – 2.99
               </span>
-              <span class="font-semibold" style="color:#f5a623">Satisfactory</span>
+              <span class="font-semibold" style="color:var(--color-gpa-yellow)">Satisfactory</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="flex items-center gap-2">
-                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:#ee0000"></span>
+                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:var(--color-gpa-red)"></span>
                 0.00 – 1.99
               </span>
-              <span class="font-semibold" style="color:#ee0000">Below Average</span>
+              <span class="font-semibold" style="color:var(--color-gpa-red)">Below Average</span>
             </div>
           </div>
         </div>
@@ -649,6 +610,7 @@ const faqSchema = {
      CALCULATOR JAVASCRIPT
 ══════════════════════════════════════════════ -->
 <script>
+import { readCourseDraft, restoreCourseDraft, decorateCourseRow, resetSettings } from '../scripts/course-drafts';
 (function () {
   'use strict';
 
@@ -713,11 +675,11 @@ const faqSchema = {
   }
 
   function gpaColorHex(g) {
-    if (g === null || g === undefined || isNaN(g)) return '#888888';
-    if (g < 2.0) return '#ee0000';
-    if (g < 3.0) return '#f5a623';
-    if (g < 3.5) return '#16a34a';
-    return '#0070f3';
+    if (g === null || g === undefined || isNaN(g)) return 'var(--color-mute)';
+    if (g < 2.0) return 'var(--color-gpa-red)';
+    if (g < 3.0) return 'var(--color-gpa-yellow)';
+    if (g < 3.5) return 'var(--color-gpa-green)';
+    return 'var(--color-gpa-blue)';
   }
 
   function gpaStandingLabel(g) {
@@ -758,11 +720,12 @@ const faqSchema = {
     sel.className = 'input grade-select';
     sel.style.cssText = 'font-size:0.875rem;width:100%;';
     sel.setAttribute('aria-label', 'Letter grade');
+    sel.appendChild(new Option('Select', '', true, true));
     GRADE_OPTIONS.forEach(g => {
       const opt = document.createElement('option');
       opt.value = g;
       opt.textContent = g;
-      if (g === (defaultGrade || 'A')) opt.selected = true;
+      if (defaultGrade && g === defaultGrade) opt.selected = true;
       sel.appendChild(opt);
     });
     return sel;
@@ -864,20 +827,14 @@ const faqSchema = {
 
   // ── Semester block (Tab 1) ───────────────────────────────────────────────────
 
-  const SEMESTER_LABELS = [
-    'Fall 2024','Spring 2025','Summer 2025',
-    'Fall 2025','Spring 2026','Summer 2026',
-    'Fall 2026','Spring 2027','Summer 2027',
-    'Fall 2027','Spring 2028',
-  ];
 
   function createCourseRowEl(rowId, pctMode, noCreditsMode, semId) {
     const row = document.createElement('div');
-    row.className = 'course-row';
+    row.className = 'course-row college-course-row' + (noCreditsMode ? ' no-credits-row' : '');
     row.dataset.semId = semId;
     row.style.gridTemplateColumns = noCreditsMode
-      ? '1fr 120px 36px'
-      : '1fr 120px 80px 36px';
+      ? 'minmax(0, 1fr) 110px 44px'
+      : 'minmax(0, 1fr) 110px 140px 44px';
 
     // Course name
     const nameWrap = document.createElement('div');
@@ -892,11 +849,17 @@ const faqSchema = {
 
     // Grade
     const gradeWrap = document.createElement('div');
+    gradeWrap.className = 'college-grade-field';
+    const gradeCaption = document.createElement('span');
+    gradeCaption.className = 'course-field-caption';
+    gradeCaption.textContent = pctMode ? 'Grade (%)' : 'Grade';
+    gradeCaption.setAttribute('aria-hidden', 'true');
+    gradeWrap.appendChild(gradeCaption);
     let gradeEl;
     if (pctMode) {
       gradeEl = buildPctInput();
     } else {
-      gradeEl = buildGradeSelect('A');
+      gradeEl = buildGradeSelect('');
     }
     gradeEl.addEventListener('input', recalculate);
     gradeEl.addEventListener('change', recalculate);
@@ -904,6 +867,12 @@ const faqSchema = {
 
     // Credits
     const creditsWrap = document.createElement('div');
+    creditsWrap.className = 'college-credits-field';
+    const creditsCaption = document.createElement('span');
+    creditsCaption.className = 'course-field-caption';
+    creditsCaption.textContent = 'Credits';
+    creditsCaption.setAttribute('aria-hidden', 'true');
+    creditsWrap.appendChild(creditsCaption);
     const creditsInput = document.createElement('input');
     creditsInput.type = 'number';
     creditsInput.min = '0.5';
@@ -941,6 +910,7 @@ const faqSchema = {
     if (!noCreditsMode) row.appendChild(creditsWrap);
     row.appendChild(removeWrap);
 
+    decorateCourseRow(row);
     return row;
   }
 
@@ -955,7 +925,7 @@ const faqSchema = {
   }
 
   function createSemesterBlock(semId) {
-    const label = SEMESTER_LABELS[semId] || `Semester ${semId + 1}`;
+    const label = `Semester ${semId + 1}`;
 
     const block = document.createElement('div');
     block.className = 'card p-0 overflow-hidden';
@@ -985,7 +955,8 @@ const faqSchema = {
     semLabel.setAttribute('aria-label', 'Semester name');
 
     const semGPABadge = document.createElement('span');
-    semGPABadge.className = 'badge tabular';
+    semGPABadge.className = 'semester-gpa tabular';
+    semGPABadge.hidden = true;
     semGPABadge.dataset.semGpaBadge = semId;
     semGPABadge.style.cssText = 'font-size:0.75rem;background:var(--color-canvas-soft-2);color:var(--color-mute);';
     semGPABadge.textContent = '— GPA';
@@ -1020,8 +991,8 @@ const faqSchema = {
     const colHeaders = document.createElement('div');
     colHeaders.className = 'hidden sm:grid gap-2 mb-2 px-1 sem-col-headers';
     colHeaders.style.gridTemplateColumns = noCredits1
-      ? '1fr 120px 36px'
-      : '1fr 120px 80px 36px';
+      ? 'minmax(0, 1fr) 110px 44px'
+      : 'minmax(0, 1fr) 110px 140px 44px';
     colHeaders.innerHTML = `
       <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Course (optional)</span>
       <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">${pctMode1 ? 'Score %' : 'Grade'}</span>
@@ -1083,11 +1054,11 @@ const faqSchema = {
 
   function createPrevCourseRow(rowId) {
     const row = document.createElement('div');
-    row.className = 'course-row';
+    row.className = 'course-row college-course-row' + (noCredits2 ? ' no-credits-row' : '');
     row.dataset.prevRowId = rowId;
     row.style.gridTemplateColumns = noCredits2
-      ? '1fr 120px 36px'
-      : '1fr 120px 80px 36px';
+      ? 'minmax(0, 1fr) 110px 44px'
+      : 'minmax(0, 1fr) 110px 140px 44px';
 
     // Course name
     const nameWrap = document.createElement('div');
@@ -1102,11 +1073,17 @@ const faqSchema = {
 
     // Grade
     const gradeWrap = document.createElement('div');
+    gradeWrap.className = 'college-grade-field';
+    const gradeCaption = document.createElement('span');
+    gradeCaption.className = 'course-field-caption';
+    gradeCaption.textContent = pctMode2 ? 'Grade (%)' : 'Grade';
+    gradeCaption.setAttribute('aria-hidden', 'true');
+    gradeWrap.appendChild(gradeCaption);
     let gradeEl;
     if (pctMode2) {
       gradeEl = buildPctInput();
     } else {
-      gradeEl = buildGradeSelect('A');
+      gradeEl = buildGradeSelect('');
     }
     gradeEl.addEventListener('input', recalculate);
     gradeEl.addEventListener('change', recalculate);
@@ -1114,6 +1091,12 @@ const faqSchema = {
 
     // Credits
     const creditsWrap = document.createElement('div');
+    creditsWrap.className = 'college-credits-field';
+    const creditsCaption = document.createElement('span');
+    creditsCaption.className = 'course-field-caption';
+    creditsCaption.textContent = 'Credits';
+    creditsCaption.setAttribute('aria-hidden', 'true');
+    creditsWrap.appendChild(creditsCaption);
     const creditsInput = document.createElement('input');
     creditsInput.type = 'number';
     creditsInput.min = '0.5';
@@ -1148,6 +1131,7 @@ const faqSchema = {
     if (!noCredits2) row.appendChild(creditsWrap);
     row.appendChild(removeWrap);
 
+    decorateCourseRow(row);
     return row;
   }
 
@@ -1193,13 +1177,14 @@ const faqSchema = {
       const semId = block.dataset.semesterId;
       const coursesDiv = block.querySelector('.sem-courses');
       const colHeaders = block.querySelector('.sem-col-headers');
-      const existingCount = Math.max(coursesDiv.children.length, 1);
+      const drafts = [...coursesDiv.querySelectorAll('.course-row')].map(readCourseDraft);
+      const existingCount = Math.max(drafts.length, 1);
 
       // Update column headers
       if (colHeaders) {
         colHeaders.style.gridTemplateColumns = noCredits1
-          ? '1fr 120px 36px'
-          : '1fr 120px 80px 36px';
+          ? 'minmax(0, 1fr) 110px 44px'
+          : 'minmax(0, 1fr) 110px 140px 44px';
         colHeaders.innerHTML = `
           <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Course (optional)</span>
           <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">${pctMode1 ? 'Score %' : 'Grade'}</span>
@@ -1213,6 +1198,7 @@ const faqSchema = {
       for (let i = 0; i < existingCount; i++) {
         courseCounter++;
         const row = createCourseRowEl(courseCounter, pctMode1, noCredits1, semId);
+        if (drafts[i]) restoreCourseDraft(row, drafts[i]);
         coursesDiv.appendChild(row);
       }
     });
@@ -1220,15 +1206,20 @@ const faqSchema = {
   }
 
   function rebuildPrevCourses() {
-    const existingCount = Math.max(prevCoursesContainer.children.length, 1);
+    const drafts = [...prevCoursesContainer.querySelectorAll('.course-row')].map(readCourseDraft);
+    const existingCount = Math.max(drafts.length, 1);
     prevCoursesContainer.innerHTML = '';
     for (let i = 0; i < existingCount; i++) {
       prevCourseCounter++;
       const row = createPrevCourseRow(prevCourseCounter);
+      if (drafts[i]) restoreCourseDraft(row, drafts[i]);
       prevCoursesContainer.appendChild(row);
     }
 
     // Update column headers
+    document.getElementById('prev-course-headers').style.gridTemplateColumns = noCredits2 ? 'minmax(0, 1fr) 110px 44px' : 'minmax(0, 1fr) 110px 140px 44px';
+    const gradeHeader = document.querySelector('#prev-course-headers > span:nth-child(2)');
+    if (gradeHeader) gradeHeader.textContent = pctMode2 ? 'Grade (%)' : 'Grade';
     const prevHeader = document.getElementById('prev-credits-header');
     if (prevHeader) prevHeader.style.display = noCredits2 ? 'none' : '';
     recalculate();
@@ -1289,6 +1280,7 @@ const faqSchema = {
       // Update per-semester badge
       const badge = block.querySelector(`[data-sem-gpa-badge="${semId}"]`);
       if (badge) {
+        badge.hidden = gpa === null;
         if (gpa !== null) {
           badge.textContent = `${gpa.toFixed(2)} GPA`;
           badge.style.color = gpaColorHex(gpa);
@@ -1371,11 +1363,12 @@ const faqSchema = {
 
   function updateResultPanel({ primaryGPA, primaryLabel, showCum, cumGPA, totalCr, totalQP }) {
     const displayGPA = primaryGPA;
+    shareBtn.disabled = displayGPA === null;
     const color = gpaColorHex(displayGPA);
 
     // Primary GPA number
-    semGPAResult.textContent = formatGPA(displayGPA);
-    semGPAResult.style.color = displayGPA !== null ? color : 'var(--color-brand)';
+    semGPAResult.textContent = displayGPA === null ? '–.––' : formatGPA(displayGPA);
+    semGPAResult.style.color = displayGPA !== null ? color : 'var(--color-mute)';
 
     // Pulse animation
     semGPAResult.classList.remove('pulse-once');
@@ -1480,6 +1473,10 @@ const faqSchema = {
     prevCreditsInput.value = '';
 
     // Reset toggles
+    resetSettings();
+    document.getElementById('prev-course-headers').style.gridTemplateColumns = 'minmax(0, 1fr) 110px 140px 44px';
+    document.getElementById('prev-credits-header').style.display = '';
+    document.querySelector('#prev-course-headers > span:nth-child(2)').textContent = 'Grade';
     pctMode1 = false;
     noCredits1 = false;
     pctMode2 = false;

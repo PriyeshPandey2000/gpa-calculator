@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import ResultPeek from '../components/ResultPeek.astro';
 
 const webAppSchema = {
   "@context": "https://schema.org",
@@ -106,7 +107,7 @@ const faqSchema = {
   <!-- ══════════════════════════════════════════════
        HERO
   ══════════════════════════════════════════════ -->
-  <section class="page-hero">
+  <section class="page-hero whatif-hero">
     <div class="max-w-6xl mx-auto px-4">
 
       <!-- Breadcrumb -->
@@ -117,32 +118,8 @@ const faqSchema = {
       </nav>
 
       <div class="max-w-3xl">
-        <div class="flex flex-wrap items-center gap-2 mb-3">
-          <span class="badge badge-blue">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Unique Feature
-          </span>
-          <span class="badge badge-green">No Other Calculator Does This</span>
-        </div>
         <h1 class="mb-3">What If GPA Calculator</h1>
-        <p class="text-lg" style="color:var(--color-body)">
-          The only GPA simulator that shows you <em>exactly</em> how your planned future grades will change your cumulative GPA — live, as you type. Enter your current GPA, add upcoming courses, and watch your projected GPA update in real time.
-        </p>
-        <!-- Use-case pills -->
-        <div class="flex flex-wrap gap-2 mt-4">
-          <span class="badge badge-blue">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Plan next semester
-          </span>
-          <span class="badge badge-blue">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            Model GPA recovery
-          </span>
-          <span class="badge badge-blue">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Target Dean's List
-          </span>
-        </div>
+        <p class="text-lg" style="color:var(--color-body)">Enter your current GPA and planned course grades to see your projected GPA.</p>
       </div>
     </div>
   </section>
@@ -150,7 +127,8 @@ const faqSchema = {
   <!-- ══════════════════════════════════════════════
        MAIN WHAT-IF SIMULATOR
   ══════════════════════════════════════════════ -->
-  <section class="max-w-6xl mx-auto px-4 py-8" aria-labelledby="simulator-heading">
+  <section class="calculator-workspace max-w-6xl mx-auto px-4 py-8" aria-labelledby="simulator-heading">
+    <ResultPeek sources={[{ id: "wi-gpa-after", label: "Projected GPA" }]} />
     <h2 id="simulator-heading" class="sr-only">What If GPA Simulator</h2>
 
     <div class="grid lg:grid-cols-[1fr_360px] gap-6 items-start">
@@ -161,9 +139,9 @@ const faqSchema = {
         <!-- Section 1: Current Standing -->
         <div class="mb-6">
           <h3 class="text-base font-semibold mb-1" style="color:var(--color-ink)">Step 1: Your Current Standing</h3>
-          <p class="text-sm mb-4" style="color:var(--color-mute)">Enter your existing GPA and total credits completed before the upcoming semester.</p>
+          <p class="text-sm mb-4" style="color:var(--color-mute)">Your GPA and graded credits so far.</p>
 
-          <div class="grid sm:grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label for="current-gpa">Current GPA</label>
               <input
@@ -176,7 +154,7 @@ const faqSchema = {
                 step="0.01"
                 aria-describedby="current-gpa-hint"
               />
-              <p id="current-gpa-hint" class="text-xs mt-1" style="color:var(--color-mute)">Your GPA before planned courses</p>
+              <p id="current-gpa-hint" class="text-xs mt-1" style="color:var(--color-mute)">Before planned courses</p>
             </div>
             <div>
               <label for="current-credits">Credits Completed</label>
@@ -190,7 +168,7 @@ const faqSchema = {
                 step="1"
                 aria-describedby="current-credits-hint"
               />
-              <p id="current-credits-hint" class="text-xs mt-1" style="color:var(--color-mute)">Total graded credits earned so far</p>
+              <p id="current-credits-hint" class="text-xs mt-1" style="color:var(--color-mute)">Graded credits so far</p>
             </div>
           </div>
         </div>
@@ -200,10 +178,10 @@ const faqSchema = {
         <!-- Section 2: Planned Courses -->
         <div>
           <h3 class="text-base font-semibold mb-1" style="color:var(--color-ink)">Step 2: Planned / Future Courses</h3>
-          <p class="text-sm mb-4" style="color:var(--color-mute)">Add every course you plan to take. Select the grade you expect (or aim for) and the credit hours.</p>
+          <p class="text-sm mb-4" style="color:var(--color-mute)">Add planned courses with the grade you expect or are aiming for.</p>
 
           <!-- Column headers (desktop) -->
-          <div class="hidden sm:grid gap-3 mb-2 px-1" style="grid-template-columns: 2fr 1.4fr 1fr auto;">
+          <div class="hidden sm:grid gap-3 mb-2 px-1" style="grid-template-columns: minmax(0, 1fr) 110px 140px 44px;">
             <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Course (optional)</span>
             <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Expected Grade</span>
             <span class="text-xs font-semibold uppercase tracking-wide" style="color:var(--color-mute)">Credits</span>
@@ -325,20 +303,20 @@ const faqSchema = {
           <p class="text-xs font-semibold uppercase tracking-wide mb-3" style="color:var(--color-mute)">GPA Thresholds</p>
           <div class="flex flex-col gap-1.5 text-xs">
             <div class="flex items-center justify-between">
-              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#0070f3"></span>3.50 – 4.00</span>
-              <span class="font-medium" style="color:#0070f3">Dean's List</span>
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:var(--color-gpa-blue)"></span>3.50 – 4.00</span>
+              <span class="font-medium" style="color:var(--color-gpa-blue)">Dean's List</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#16a34a"></span>3.00 – 3.49</span>
-              <span class="font-medium" style="color:#16a34a">Good Standing</span>
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:var(--color-gpa-green)"></span>3.00 – 3.49</span>
+              <span class="font-medium" style="color:var(--color-gpa-green)">Good Standing</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#f5a623"></span>2.00 – 2.99</span>
-              <span class="font-medium" style="color:#f5a623">Satisfactory</span>
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:var(--color-gpa-yellow)"></span>2.00 – 2.99</span>
+              <span class="font-medium" style="color:var(--color-gpa-yellow)">Satisfactory</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#ee0000"></span>0.00 – 1.99</span>
-              <span class="font-medium" style="color:#ee0000">Below Average</span>
+              <span class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:var(--color-gpa-red)"></span>0.00 – 1.99</span>
+              <span class="font-medium" style="color:var(--color-gpa-red)">Below Average</span>
             </div>
           </div>
         </div>
@@ -360,7 +338,7 @@ const faqSchema = {
       <!-- All A's card -->
       <div class="card p-4 text-center" id="scenario-a">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#eff6ff">
-          <span class="text-lg font-bold" style="color:#0070f3">A</span>
+          <span class="text-lg font-bold" style="color:var(--color-gpa-blue)">A</span>
         </div>
         <p class="text-xs font-semibold uppercase tracking-wide mb-1" style="color:var(--color-mute)">All A's (4.0)</p>
         <p id="scenario-a-gpa" class="tabular text-2xl font-bold mb-1" style="color:var(--color-mute)">—</p>
@@ -371,7 +349,7 @@ const faqSchema = {
       <!-- All B's card -->
       <div class="card p-4 text-center" id="scenario-b">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#f0fdf4">
-          <span class="text-lg font-bold" style="color:#16a34a">B</span>
+          <span class="text-lg font-bold" style="color:var(--color-gpa-green)">B</span>
         </div>
         <p class="text-xs font-semibold uppercase tracking-wide mb-1" style="color:var(--color-mute)">All B's (3.0)</p>
         <p id="scenario-b-gpa" class="tabular text-2xl font-bold mb-1" style="color:var(--color-mute)">—</p>
@@ -382,7 +360,7 @@ const faqSchema = {
       <!-- All C's card -->
       <div class="card p-4 text-center" id="scenario-c">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#fffbeb">
-          <span class="text-lg font-bold" style="color:#f5a623">C</span>
+          <span class="text-lg font-bold" style="color:var(--color-gpa-yellow)">C</span>
         </div>
         <p class="text-xs font-semibold uppercase tracking-wide mb-1" style="color:var(--color-mute)">All C's (2.0)</p>
         <p id="scenario-c-gpa" class="tabular text-2xl font-bold mb-1" style="color:var(--color-mute)">—</p>
@@ -452,9 +430,9 @@ const faqSchema = {
           </div>
           <span class="badge badge-blue text-base px-3 py-1">A</span>
         </div>
-        <div class="callout" style="background:#f0fdf4;border-left:3px solid #16a34a">
+        <div class="callout" style="background:var(--color-success-soft, #f0fdf4);border-left:3px solid var(--color-gpa-green)">
           <div>
-            <p class="text-xs font-semibold" style="color:#16a34a">If you get all B's (3.0)</p>
+            <p class="text-xs font-semibold" style="color:var(--color-gpa-green)">If you get all B's (3.0)</p>
             <p id="target-all-b" class="text-base font-bold mt-0.5" style="color:var(--color-ink)">GPA → —</p>
           </div>
           <span class="badge badge-green text-base px-3 py-1">B</span>
@@ -660,6 +638,7 @@ const faqSchema = {
      VANILLA JS — WHAT IF CALCULATOR LOGIC
 ══════════════════════════════════════════════ -->
 <script>
+import { decorateCourseRow } from '../scripts/course-drafts';
   // ── Grade point map ───────────────────────────────────────────────────────────
   const GRADE_POINTS: Record<string, number> = {
     'A+': 4.0, 'A': 4.0, 'A-': 3.7,
@@ -671,8 +650,8 @@ const faqSchema = {
 
   const GRADE_OPTIONS = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F'];
 
-  function gradeOptionsHTML(selected = 'A'): string {
-    return GRADE_OPTIONS.map(g =>
+  function gradeOptionsHTML(selected = ''): string {
+    return '<option value="">Select</option>' + GRADE_OPTIONS.map(g =>
       `<option value="${g}"${g === selected ? ' selected' : ''}>${g}</option>`
     ).join('');
   }
@@ -684,10 +663,10 @@ const faqSchema = {
 
   function gpaColor(gpa: number | null): string {
     if (gpa === null || isNaN(gpa)) return 'var(--color-mute)';
-    if (gpa < 2.0) return '#ee0000';
-    if (gpa < 3.0) return '#f5a623';
-    if (gpa < 3.5) return '#16a34a';
-    return '#0070f3';
+    if (gpa < 2.0) return 'var(--color-gpa-red)';
+    if (gpa < 3.0) return 'var(--color-gpa-yellow)';
+    if (gpa < 3.5) return 'var(--color-gpa-green)';
+    return 'var(--color-gpa-blue)';
   }
 
   function gpaLabel(gpa: number | null): string {
@@ -790,10 +769,9 @@ const faqSchema = {
     const div = document.createElement('div');
     div.className = 'course-row fade-in';
     div.id = `wi-row-${id}`;
-    div.style.cssText = 'grid-template-columns: 2fr 1.4fr 1fr auto;';
+    div.style.cssText = 'grid-template-columns: minmax(0, 1fr) 110px 140px 44px;';
     div.innerHTML = `
       <div>
-        <label class="sm:hidden text-xs" for="wi-name-${id}">Course</label>
         <input
           type="text"
           id="wi-name-${id}"
@@ -803,21 +781,21 @@ const faqSchema = {
         />
       </div>
       <div>
-        <label class="sm:hidden text-xs" for="wi-grade-${id}">Expected Grade</label>
+        <label class="course-field-caption" for="wi-grade-${id}">Grade</label>
         <select
           id="wi-grade-${id}"
-          class="input"
+          class="input grade-select"
           aria-label="Expected grade"
           data-wi-id="${id}"
-        >${gradeOptionsHTML('A')}</select>
+        >${gradeOptionsHTML('')}</select>
       </div>
       <div>
-        <label class="sm:hidden text-xs" for="wi-credits-${id}">Credits</label>
+        <label class="course-field-caption" for="wi-credits-${id}">Credits</label>
         <input
           type="number"
           id="wi-credits-${id}"
           class="input"
-          placeholder="3"
+          value="3"
           min="0"
           step="0.5"
           aria-label="Credit hours"
@@ -835,6 +813,7 @@ const faqSchema = {
         </button>
       </div>
     `;
+    decorateCourseRow(div);
     return div;
   }
 
@@ -932,11 +911,11 @@ const faqSchema = {
         wiDelta.style.background = 'var(--color-canvas-soft-2)';
         wiDelta.style.color      = 'var(--color-mute)';
       } else if (delta > 0) {
-        wiDelta.style.background = '#dcfce7';
-        wiDelta.style.color      = '#16a34a';
+        wiDelta.style.background = 'var(--color-success-soft, #dcfce7)';
+        wiDelta.style.color      = 'var(--color-gpa-green)';
       } else {
-        wiDelta.style.background = '#fee2e2';
-        wiDelta.style.color      = '#ee0000';
+        wiDelta.style.background = 'var(--color-error-soft)';
+        wiDelta.style.color      = 'var(--color-gpa-red)';
       }
     } else if (after !== null && before === null) {
       wiDelta.textContent      = fmt(after);
@@ -1020,7 +999,7 @@ const faqSchema = {
       const delta = gpa - before;
       const sign  = delta > 0 ? '+' : '';
       deltaEl.textContent = `${sign}${delta.toFixed(2)}`;
-      deltaEl.style.color = delta > 0 ? '#16a34a' : (delta < 0 ? '#ee0000' : 'var(--color-mute)');
+      deltaEl.style.color = delta > 0 ? 'var(--color-gpa-green)' : (delta < 0 ? 'var(--color-gpa-red)' : 'var(--color-mute)');
     } else {
       deltaEl.textContent = '';
       deltaEl.style.color = 'var(--color-mute)';

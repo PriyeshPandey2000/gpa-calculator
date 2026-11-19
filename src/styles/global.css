@@ -173,7 +173,7 @@ select.input {
 }
 
 .dark .input {
-  background: var(--color-canvas-soft);
+  background-color: var(--color-canvas-soft); /* not the shorthand: it wiped select.input's chevron image */
   border-color: var(--color-hairline-strong);
   color: var(--color-ink);
 }

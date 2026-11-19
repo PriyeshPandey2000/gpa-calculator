@@ -1,0 +1,275 @@
+/* Local design exploration. Shared surfaces and controls, with a homepage workspace. */
+:root {
+  --color-ink: #22283d;
+  --color-body: #566179;
+  --color-mute: #606d82;
+  --color-hairline: #e4e9f1;
+  --color-hairline-strong: #cbd4e2;
+  --color-canvas: #fff;
+  --color-canvas-soft: #f7f9fc;
+  --color-canvas-soft-2: #edf1f7;
+  --color-brand: #4057d6;
+  --color-brand-deep: #3045b7;
+  --color-brand-soft: #dce5ff;
+  --color-brand-bg: #f0f2fc;
+  --color-gpa-blue: #4057d6;
+  --color-gpa-yellow: #946007;
+  --color-gpa-green: #147d4c;
+  --color-gpa-red: #bc2b3c;
+  --color-success: #147d4c;
+  --color-success-soft: #dcfce7;
+  --color-error: #bc2b3c;
+  --color-error-soft: #fee2e2;
+  --color-warning: #946007;
+  --radius-sm: 9px;
+  --radius-md: 13px;
+  --radius-lg: 19px;
+  --radius-xl: 24px;
+  --shadow-sm: 0 2px 4px #22283d04, 0 8px 24px #22283d04;
+  --shadow-md: 0 4px 12px #22283d06, 0 16px 40px #22283d09;
+  --shadow-lg: 0 4px 16px #22283d05, 0 24px 65px #22283d0d;
+}
+.dark {
+  --color-ink: #f0f2f8;
+  --color-body: #bcc4d5;
+  --color-mute: #a0acc0;
+  --color-hairline: #303747;
+  --color-hairline-strong: #4a556b;
+  --color-canvas: #181b24;
+  --color-canvas-soft: #1e222d;
+  --color-canvas-soft-2: #272d3a;
+  --color-brand: #a9baff;
+  --color-brand-deep: #c5cfff;
+  --color-brand-soft: #3d4e7c;
+  --color-brand-bg: #232c45;
+  --color-gpa-blue: #a9baff;
+  --color-gpa-yellow: #f4c56a;
+  --color-gpa-green: #69d5a0;
+  --color-gpa-red: #ff9caa;
+  --color-success: #69d5a0;
+  --color-success-soft: #153d30;
+  --color-error: #ff9caa;
+  --color-error-soft: #462635;
+  --color-warning: #f4c56a;
+  --shadow-sm: 0 4px 16px #00000012;
+  --shadow-md: 0 8px 32px #00000020;
+  --shadow-lg: 0 20px 70px #00000025;
+}
+body { background: #f6f7fb; }
+.dark body { background: #101218; }
+#site-header { background: color-mix(in srgb, var(--color-canvas) 92%, transparent); border-color: var(--color-hairline); backdrop-filter: blur(18px); }
+.site-nav { gap: 1rem; }
+.site-brand { color: var(--color-ink); font-size: 17px; letter-spacing: -.65px; gap: 10px; }
+.site-brand:hover { text-decoration: none; }
+.site-brand > svg { flex-shrink: 0; border-radius: 7px; box-shadow: 0 3px 8px #4057d61a; }
+.brand-free { font: 600 9px var(--font-sans); letter-spacing: .6px; color: var(--color-body); border: 1px solid var(--color-hairline); border-radius: 4px; padding: 3px 4px; margin-left: 3px; vertical-align: middle; }
+.site-nav-links a { color: var(--color-body); font-size: 12px; padding: 9px 10px; border-radius: 7px; transition: background .15s, color .15s; }
+.site-nav-links a:hover, .site-nav-links a[aria-current="page"] { color: var(--color-brand); background: var(--color-brand-bg); text-decoration: none; }
+#dark-mode-toggle, #mobile-menu-toggle { color: var(--color-body); border: 1px solid var(--color-hairline); border-radius: 9px; min-height: 36px; min-width: 36px; }
+#mobile-menu { background: var(--color-canvas); border-color: var(--color-hairline); }
+#mobile-menu a { color: var(--color-body); }
+#mobile-menu a[aria-current="page"] { background: var(--color-brand-bg); color: var(--color-brand); }
+.toggle input:focus-visible + .toggle-track { outline: 2px solid var(--color-brand); outline-offset: 4px; }
+.dark .toggle input:checked + .toggle-track { background: #456de7; }
+.page-hero, .dark .page-hero { background: var(--color-canvas); border-color: var(--color-hairline); padding-block: 3rem 2.5rem; }
+.page-hero h1 { letter-spacing: -.045em; line-height: 1.12; }
+.breadcrumb { margin-bottom: 1.5rem; font-size: 12px; }
+.card { border-color: var(--color-hairline); box-shadow: var(--shadow-sm); }
+.card-soft { background: var(--color-canvas-soft); border-color: var(--color-hairline); }
+.input { border-color: var(--color-hairline-strong); box-shadow: 0 1px 2px #22283d03; min-height: 42px; }
+.input:hover:not(:focus) { border-color: var(--color-body); }
+.input:focus { border-color: var(--color-brand); box-shadow: 0 0 0 3px var(--color-brand-soft); }
+.course-row { background: var(--color-canvas); border-color: var(--color-hairline); padding: .65rem; }
+.course-row:hover { border-color: var(--color-hairline-strong); }
+.btn { font-weight: 550; border-radius: 9px; }
+.btn-primary { box-shadow: 0 3px 8px #4057d618; }
+.dark .btn-primary { background: #456de7; color: white; border-color: #456de7; }
+.dark .btn-primary:hover { background: #3d5fce; border-color: #3d5fce; }
+.dark .btn-danger:hover { background: #602c3c; }
+.btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-secondary { border-color: var(--color-hairline); box-shadow: 0 1px 2px #22283d04; }
+.btn-sm { min-height: 32px; }
+.tab-list { background: var(--color-canvas-soft-2); border: 0; padding: 5px; }
+.tab-btn { color: var(--color-body); }
+.tab-btn.active { box-shadow: 0 1px 4px #22283d12; }
+.result-panel { background: var(--color-brand-bg); border-color: var(--color-brand-soft); }
+.gpa-meter-container { height: 7px; border: 0; }
+.badge { font-size: 11px; padding: 5px 10px; letter-spacing: .01em; }
+.badge-blue { background: var(--color-brand-bg); color: var(--color-brand); border: 1px solid var(--color-brand-soft); }
+.badge-green { color: var(--color-gpa-green); }
+.callout.hidden { display: none; }
+.site-footer { background: var(--color-canvas); border-color: var(--color-hairline); }
+.site-footer p, .site-footer li, .site-footer a { color: var(--color-body); }
+.site-footer h3 { color: var(--color-ink); font-size: 12px; }
+.site-footer a:hover { color: var(--color-brand); }
+.home-hero, .dark .home-hero { padding: 44px 0 28px; background: radial-gradient(ellipse at 50% 0, var(--color-brand-bg), transparent 70%); border: 0; }
+.home-hero h1 { font-size: clamp(2rem, 4.2vw, 3.5rem); font-weight: 650; letter-spacing: -.055em; margin-block: 12px 14px; }
+.home-hero p.text-lg { font-size: 16px; }
+.home-eyebrow { display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--color-body); font-size: 12px; font-weight: 500; letter-spacing: .015em; }
+.live-dot { width: 6px; height: 6px; background: var(--color-brand); border-radius: 50%; box-shadow: 0 0 0 4px var(--color-brand-soft); margin-right: 4px; }
+.home-assurances { display: flex; justify-content: center; flex-wrap: wrap; gap: 17px; margin-top: 16px; font-size: 11px; }
+.home-assurances span { display: inline-flex; align-items: center; gap: 5px; }
+.home-assurances span::before { content: '✓'; color: var(--color-brand); font-weight: 600; }
+.home-calculator { max-width: 1120px; padding-top: 16px; }
+.home-calculator > .card { border-radius: 20px; box-shadow: var(--shadow-lg) !important; }
+.home-calculator .home-calculator-header { padding: 20px 24px; background: var(--color-canvas) !important; gap: 16px; }
+.home-calculator .home-calculator-header h2 { font-size: 17px; letter-spacing: -.025em; }
+.home-calculator .home-calculator-header > div { font-size: 12px; gap: 20px; }
+.home-calculator .home-calculator-header span { font-size: 12px; }
+.home-calculator .toggle { margin-bottom: 0; }
+.home-calculator .home-course-editor { padding: 20px 24px 24px; }
+.home-calculator #course-headers { padding-inline: 12px; margin-bottom: 10px; }
+.home-calculator #course-headers span { text-transform: none; letter-spacing: 0; color: var(--color-body) !important; font-weight: 500; font-size: 12px; }
+.home-calculator #courses-container { gap: 9px; }
+.home-calculator .gpa-home-row input[type="text"] { background: var(--color-canvas-soft); border-color: var(--color-hairline); }
+.home-calculator .gpa-home-row input[type="text"]:hover { border-color: var(--color-hairline-strong); }
+.home-calculator .gpa-home-row input[type="text"]:focus { border-color: var(--color-brand); }
+.home-calculator #add-course-btn { min-height: 44px; border: 1px solid var(--color-brand-soft) !important; background: var(--color-brand-bg); margin-top: 14px; }
+.home-calculator #add-course-btn:hover { border-color: var(--color-brand) !important; background: var(--color-brand-soft); }
+.home-calculator #result-panel { background: var(--color-brand-bg); padding: 24px; }
+.home-calculator #result-panel > .result-panel { background: transparent; border: 0; border-radius: 0; padding: 0 !important; }
+.home-calculator #gpa-result { font-size: 4.3rem !important; letter-spacing: -.065em !important; font-weight: 650 !important; }
+.home-calculator #gpa-label { color: var(--color-body) !important; font-size: 13px; }
+.home-calculator #result-panel .btn { font-size: 11px; gap: 6px; padding: 8px; }
+.home-calculator #result-panel .home-result-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.home-calculator #result-panel .home-result-actions .btn { min-height: 40px; font-size: 12px; }
+.home-calculator #share-btn { grid-column: 1 / -1; border-color: var(--color-brand-soft); color: var(--color-brand); }
+.home-calculator #result-panel .result-panel > .flex:first-child { display: block; }
+.home-calculator .remove-course-btn { color: var(--color-mute) !important; }
+.home-calculator .remove-course-btn:hover { color: var(--color-error) !important; }
+.home-tools { padding-top: 40px; }
+.home-tools h2 { font-size: 28px; letter-spacing: -.04em; }
+.home-tools .card { transition: transform .18s, border-color .18s, box-shadow .18s; }
+.home-tools .card:hover { transform: translateY(-3px); border-color: var(--color-brand-soft); box-shadow: var(--shadow-md); }
+.home-tools .tool-icon { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--color-hairline); background: var(--color-canvas-soft); border-radius: 11px; color: var(--color-brand); }
+.home-tools .card h3 { line-height: 1.45; }
+.home-field-caption { display: none; }
+.course-field-caption { display: none; }
+.weighted-workspace > *, #calculator:has(#panel-semester) > .grid > * { min-width: 0; }
+@media (max-width: 480px) {
+  .home-calculator .home-field-caption { display: block; color: var(--color-body); font-size: 12px; font-weight: 500; margin-bottom: 5px; }
+  .home-calculator .credits-wrap { flex-wrap: nowrap; }
+  .home-calculator .credits-wrap .home-field-caption { flex: 1; margin: 0; }
+}
+@media (min-width: 481px) {
+  .home-calculator #course-headers, .home-calculator .gpa-home-row { grid-template-columns: minmax(0, 1fr) 100px 112px 32px !important; }
+  .home-calculator:has(#no-credits-toggle:checked) #course-headers,
+  .home-calculator .gpa-home-row.no-credits-row { grid-template-columns: minmax(0, 1fr) 100px 32px !important; }
+  .home-calculator .credits-step { width: 32px; height: 32px; }
+}
+@media (min-width: 1100px) {
+  .home-calculator > .card { display: grid; grid-template-columns: minmax(0, 1fr) 300px; }
+  .home-calculator .home-calculator-header { grid-column: 1 / -1; }
+  .home-calculator #result-panel { grid-column: 2; grid-row: 2 / span 2; border-left: 1px solid var(--color-hairline); }
+  .home-calculator .home-course-editor { grid-column: 1; grid-row: 2; }
+  .home-calculator #empty-hint { grid-column: 2; grid-row: 2; padding: 32px; align-self: center; }
+}
+@media (min-width: 768px) and (max-width: 980px) {
+  .site-nav-links { gap: 0; }
+  .site-nav-links a { padding-inline: 7px; font-size: 11px; }
+  .site-brand { font-size: 15px; }
+  .brand-free { display: none; }
+}
+@media (max-width: 639px) {
+  .tab-btn { min-width: 0; padding-inline: 8px; }
+  .college-course-row { grid-template-columns: minmax(0, 1fr) 64px 44px !important; }
+  .college-course-row > :first-child { grid-column: 1 / -1; }
+  .college-course-row.no-credits-row { grid-template-columns: minmax(0, 1fr) 44px !important; }
+  .college-course-row > *, .weighted-course-row > * { min-width: 0; }
+  .college-course-row .input, .weighted-course-row .input { font-size: 16px !important; min-height: 44px; }
+  .college-course-row .college-credits-field .input { width: 100% !important; }
+  .college-course-row > :last-child { width: 44px !important; }
+  .college-course-row > :last-child button, .weighted-course-row > button { width: 44px; height: 44px; }
+  .weighted-course-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px !important; }
+  .weighted-course-row > input, .weighted-course-row .weighted-type-field { grid-column: 1 / -1; }
+  .weighted-course-row .weighted-credits-field .input { width: 100% !important; }
+  .weighted-course-row.no-credits-row .weighted-grade-field { grid-column: 1 / 3; }
+  .course-field-caption { display: block; margin-bottom: 5px; color: var(--color-body); font-size: 11px; font-weight: 500; }
+  .home-hero, .dark .home-hero { padding: 32px 0 20px; }
+  .home-eyebrow { font-size: 11px; }
+  .home-hero p.text-lg { font-size: 14px; max-width: 285px !important; }
+  .home-assurances { gap: 10px; font-size: 10px; }
+  .home-calculator .home-calculator-header { padding: 18px; }
+  .home-calculator .home-calculator-header > div { gap: 14px; }
+  .home-calculator .home-course-editor { padding: 16px 12px 18px; }
+  .home-calculator #result-panel { padding: 24px 20px; border-top: 1px solid var(--color-hairline); }
+  .page-hero, .dark .page-hero { padding-block: 2rem; }
+  .site-brand { font-size: 16px; }
+  .site-brand > svg { width: 28px; height: 28px; }
+  #dark-mode-toggle, #mobile-menu-toggle { min-width: 44px; min-height: 44px; }
+  #mobile-menu a { min-height: 44px; display: flex; align-items: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-tools .card { transition: none; }
+  .home-tools .card:hover { transform: none; }
+}
+
+/* Shared calculator controls and course editing, scoped away from content. */
+.calculator-settings { display: flex; flex-wrap: wrap; align-items: end; gap: 14px 20px; }
+.calculator-setting { border: 0; margin: 0; padding: 0; min-width: 0; }
+.calculator-setting .setting-compact { display: none; }
+.calculator-setting legend { color: var(--color-body); font-size: 12px; font-weight: 550; margin-bottom: 6px; padding: 0; }
+.setting-options { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--color-hairline); border-radius: 10px; background: var(--color-canvas-soft-2); }
+.setting-options label { position: relative; display: block; margin: 0; cursor: pointer; }
+.setting-options input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.setting-options label > span { display: block; padding: 9px 12px; border-radius: 7px; color: var(--color-body); font-size: 13px; font-weight: 550; }
+.setting-options input:checked + span { background: var(--color-canvas); color: var(--color-brand); box-shadow: 0 1px 3px #00000012; }
+.setting-options input:focus-visible + span { outline: 2px solid var(--color-brand); outline-offset: 1px; }
+.calculator-workspace > .grid > * { min-width: 0; }
+.calculator-workspace .calc-course-row { background: transparent; border: 0; border-bottom: 1px solid var(--color-hairline); border-radius: 0; padding: 12px 0; align-items: center; gap: 8px; }
+.calculator-workspace .calc-course-row:last-child { border-bottom: 0; }
+.calculator-workspace :is(#courses-container, .sem-courses, #prev-courses-container, #whatif-course-rows) { gap: 0; }
+.calculator-workspace .calc-course-row > * { min-width: 0; }
+.calculator-workspace .calc-remove-field { justify-self: end; }
+.calculator-workspace .calc-remove-field .btn, .calculator-workspace button.calc-remove-field { background: transparent; border-color: var(--color-hairline); color: var(--color-mute); }
+.calculator-workspace .calc-remove-field .btn:hover, .calculator-workspace button.calc-remove-field:hover { background: var(--color-error-soft); color: var(--color-error); }
+.calc-credit-control { display: grid; grid-template-columns: 32px minmax(0, 1fr) 32px; gap: 4px; align-items: center; }
+.calculator-workspace .calc-credit-control .input { width: 100% !important; min-width: 0; padding-inline: 3px; text-align: center; }
+.calc-credit-step { display: grid; place-items: center; width: 32px; height: 40px; padding: 0; background: var(--color-canvas); color: var(--color-ink); border: 1px solid var(--color-hairline-strong); border-radius: 8px; font-size: 16px; cursor: pointer; }
+.calc-credit-step:hover { background: var(--color-canvas-soft-2); }
+.semester-gpa { display: inline-flex; flex-shrink: 0; white-space: nowrap; border-radius: 6px; padding: 4px 6px; font-size: 12px; font-weight: 550; }
+.semester-gpa[hidden] { display: none; }
+.calculator-workspace .calc-remove-field button, .calculator-workspace button.calc-remove-field { min-width: 40px; min-height: 44px; }
+.calculator-workspace :is(#col-headers, .sem-col-headers) { padding-inline: 0; }
+.calculator-workspace :is(#col-headers, .sem-col-headers, #prev-course-headers) span { color: var(--color-body); font-size: 12px; font-weight: 600; text-transform: none; letter-spacing: 0; }
+.calculator-workspace :is(#proximity, #proximity-msg):empty { display: none; }
+.calculator-meter-scale { display: flex; justify-content: space-between; gap: 4px; color: var(--color-body); font-size: 12px; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.dark .home-calculator #add-course-btn { background: transparent; border-color: var(--color-hairline-strong) !important; }
+.dark .home-calculator #add-course-btn:hover { background: var(--color-brand-bg); border-color: var(--color-brand) !important; }
+@media (max-width: 639px) {
+  .calculator-workspace .calculator-settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; }
+  .calculator-setting .setting-full { display: none; }
+  .calculator-setting .setting-compact { display: inline; }
+  .calculator-workspace .setting-options { display: flex; }
+  .calculator-workspace .setting-options label { flex: 1; text-align: center; }
+  .calculator-workspace .setting-options label > span { padding: 9px 6px; font-size: 12px; }
+  .calculator-workspace .calc-course-row { grid-template-columns: minmax(0, 1fr) 96px 44px !important; align-items: end; gap: 8px; padding: 14px 0; }
+  /* Weighted: name | type | remove, then grade | credits — two lines, not three. */
+  .calculator-workspace .calc-course-row:has(.calc-type-field) { grid-template-columns: minmax(0, 1fr) 112px 44px !important; }
+  .calculator-workspace .calc-course-row .calc-name-field { grid-column: 1 / 3; grid-row: 1; }
+  .calculator-workspace .calc-course-row .calc-remove-field { grid-column: 3; grid-row: 1; width: 44px !important; }
+  .calculator-workspace .calc-course-row .calc-grade-field { grid-column: 1; grid-row: 2; }
+  .calculator-workspace .calc-course-row .calc-credit-field { grid-column: 2 / 4; grid-row: 2; }
+  .calculator-workspace .calc-course-row:not(:has(.calc-credit-field)) .calc-grade-field { grid-column: 1 / -1; }
+  .calculator-workspace .calc-course-row:has(.calc-type-field) .calc-name-field { grid-column: 1; grid-row: 1; }
+  .calculator-workspace .calc-course-row .calc-type-field { grid-column: 2; grid-row: 1; }
+  .calculator-workspace .calc-course-row:has(.calc-type-field) .calc-grade-field { grid-column: 1; grid-row: 2; }
+  .calculator-workspace .calc-course-row:has(.calc-type-field) .calc-credit-field { grid-column: 2 / 4; grid-row: 2; }
+  .calculator-workspace .calc-course-row:has(.calc-type-field):not(:has(.calc-credit-field)) .calc-grade-field { grid-column: 1 / -1; }
+  /* Calculator heroes: badges repeat what the page shows; keep the calculator near the top. */
+  .page-hero .flex.flex-wrap:has(> .badge) { display: none; }
+  .page-hero p.text-lg { font-size: 15px !important; line-height: 1.55; margin-bottom: 0 !important; }
+  .calculator-workspace .calc-credit-control { grid-template-columns: 44px minmax(0, 1fr) 44px; }
+  .calculator-workspace .calc-credit-step { width: 44px; height: 44px; }
+  .calculator-workspace .calc-course-row .input { width: 100% !important; min-height: 44px; font-size: 16px !important; }
+  .calculator-workspace .calc-course-row .course-field-caption { display: block; margin: 0 0 5px; color: var(--color-ink); font-size: 12px; font-weight: 550; }
+  .calculator-workspace .calc-course-row label { margin-bottom: 5px; }
+  .calculator-workspace [data-semester-id] > .flex { flex-wrap: wrap; gap: 8px; }
+  .calculator-workspace [data-semester-id] > .flex > .flex:first-child { flex: 1; min-width: 0; gap: 6px; }
+  .calculator-workspace [aria-label="Semester name"] { min-width: 0; width: 100%; }
+}
+.whatif-hero .breadcrumb { margin-bottom: 16px; }
+@media (max-width: 639px) {
+  .whatif-hero, .dark .whatif-hero { padding-block: 20px 16px; }
+  .whatif-hero p.text-lg { font-size: 15px; line-height: 1.6; margin-bottom: 0; }
+}

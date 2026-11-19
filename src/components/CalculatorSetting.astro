@@ -1,0 +1,23 @@
+---
+interface Props { id: string; label: string; off: string; on: string }
+const { id, label, off, on } = Astro.props;
+const compact = (text: string) => ({ 'Enter grades as': 'Grades', 'Weight courses by': 'Weight by', 'Credit hours': 'Credits', 'Percentages': 'Percent' }[text] || text);
+---
+<fieldset class="calculator-setting" data-calculator-setting>
+  <legend><span class="setting-full">{label}</span><span class="setting-compact">{compact(label)}</span></legend>
+  <div class="setting-options">
+    <label><input type="radio" name={`${id}-choice`} value="off" checked /><span><span class="setting-full">{off}</span><span class="setting-compact">{compact(off)}</span></span></label>
+    <label><input type="radio" name={`${id}-choice`} value="on" id={id} /><span><span class="setting-full">{on}</span><span class="setting-compact">{compact(on)}</span></span></label>
+  </div>
+</fieldset>
+<script>
+  // Existing calculator handlers read the 'on' input's checked state.
+  // Forward the other radio's change too, preserving native radio keyboard use.
+  document.querySelectorAll('[data-calculator-setting]').forEach(group => {
+    group.addEventListener('change', event => {
+      const input = event.target as HTMLInputElement;
+      if (input.value === 'off') group.querySelector<HTMLInputElement>('input[value="on"]')!
+        .dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  });
+</script>
