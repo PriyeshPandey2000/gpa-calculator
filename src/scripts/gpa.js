@@ -62,6 +62,8 @@ export function getGradePoints(letter) {
 export function getWeightedPoints(letter, courseType, scale = 4.0) {
   const base = getGradePoints(letter);
   if (base === null) return null;
+  // A failing grade earns no course-weight bonus.
+  if (base === 0) return 0;
   const bonus = COURSE_WEIGHT[courseType] ?? 0;
   return Math.min(base + bonus, scale);
 }
