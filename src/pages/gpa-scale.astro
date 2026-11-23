@@ -1,213 +1,96 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "What is the 4.0 GPA scale?", "acceptedAnswer": { "@type": "Answer", "text": "The 4.0 GPA scale is the standard grade point system used by most US colleges and high schools. It assigns A=4.0, B=3.0, C=2.0, D=1.0, and F=0. Plus and minus grades have fractional values: A-=3.7, B+=3.3, etc." } },
-    { "@type": "Question", "name": "What GPA is an A-?", "acceptedAnswer": { "@type": "Answer", "text": "An A- equals 3.7 on the 4.0 GPA scale. The percentage range for an A- is typically 90–92%." } },
-    { "@type": "Question", "name": "What GPA is a B+?", "acceptedAnswer": { "@type": "Answer", "text": "A B+ equals 3.3 on the 4.0 GPA scale. The percentage range for a B+ is typically 87–89%." } },
-    { "@type": "Question", "name": "What is the 5.0 weighted GPA scale?", "acceptedAnswer": { "@type": "Answer", "text": "The 5.0 weighted scale is used in high schools to reward AP and Honors courses. AP and IB courses add +1.0 points, Honors add +0.5 points. An A in an AP course equals 5.0 on the weighted scale." } },
-    { "@type": "Question", "name": "Do all colleges use the same GPA scale?", "acceptedAnswer": { "@type": "Answer", "text": "Most US colleges and universities use the 4.0 scale, but some variations exist. Colleges often recalculate applicants' GPAs on their own scale for fair comparison." } },
-    { "@type": "Question", "name": "What percentage is a 3.0 GPA?", "acceptedAnswer": { "@type": "Answer", "text": "A 3.0 GPA corresponds to a B grade, which is approximately 83–86% on the standard percentage scale." } },
-  ]
+import GradeReferenceTable from '../components/GradeReferenceTable.astro';
+import { gradeReference } from '../data/grade-reference';
+const title = 'GPA Scale Chart: 4.0 Grades, Percentages & Weighted GPA';
+const description = 'Compare letter grades and grade points on a 4.0 GPA scale, see an example percentage chart, and understand A-minus, college and weighted GPA differences.';
+const schema = {
+  '@context': 'https://schema.org', '@type': 'Article', headline: title, description,
+  mainEntityOfPage: 'https://gpacalculatorfree.com/gpa-scale/',
+  author: { '@type': 'Organization', name: 'GPA Calculator Free', url: 'https://gpacalculatorfree.com/about/' },
+  dateModified: '2026-11-23',
 };
+const faqs = [
+  { q: 'What is a 3.0 GPA in letter grades?', a: 'On the scale shown here, a B earns 3.0 grade points. A 3.0 overall GPA can also come from a mix of higher and lower grades; it does not mean every course was a B.' },
+  { q: 'Is a 4.0 GPA always 100%?', a: 'No. A 4.0 GPA describes grade points, not a percentage average. Different percentage marks can earn an A, and schools set their own cutoffs.' },
+  { q: 'Do P and W grades count toward GPA?', a: 'Pass and withdrawal marks are usually excluded from both grade points and GPA credits. A failing grade usually counts as zero points while its credits stay in the denominator. Check your school’s policy, especially for incomplete and repeated courses.' },
+];
 ---
-
-<Layout
-  title="GPA Scale — Complete 4.0 GPA Scale Chart with Letter Grades"
-  description="Complete GPA scale chart showing letter grades, percentage ranges, and GPA points on the 4.0 scale. Plus weighted 5.0 scale for AP/Honors courses."
-  canonical="/gpa-scale"
-  schema={[faqSchema]}
->
-
+<Layout title={title} description={description} canonical="/gpa-scale" ogType="article" schema={schema}>
   <section class="page-hero">
-    <div class="max-w-6xl mx-auto px-4">
-      <nav class="breadcrumb mb-4"><a href="/">Home</a><span class="sep">/</span><span>GPA Scale</span></nav>
+    <div class="max-w-3xl mx-auto px-4">
+      <nav class="breadcrumb mb-4" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep" aria-hidden="true">/</span><span aria-current="page">GPA Scale</span></nav>
       <h1 class="mb-3">GPA Scale Chart</h1>
-      <p class="text-lg mb-4" style="color:var(--color-body);max-width:600px">Complete reference charts for the standard 4.0 GPA scale and the weighted 5.0 scale used for AP, Honors, and IB courses.</p>
-      <div class="flex flex-wrap gap-2">
-        <span class="badge badge-blue">4.0 Standard Scale</span>
-        <span class="badge badge-green">5.0 Weighted Scale</span>
-        <span class="badge badge-blue">All Letter Grades</span>
-      </div>
+      <p class="text-lg mb-4">On a 4.0 GPA scale, <strong>A = 4.0, B = 3.0, C = 2.0, D = 1.0 and F = 0.0</strong>. Plus/minus grades fill the gaps. Your school's rules determine the exact points and percentage cutoffs.</p>
+      <p class="text-sm">By <a href="/about/">GPA Calculator Free</a> · Updated <time datetime="2026-11-23">November 23, 2026</time></p>
+      <nav class="flex flex-wrap gap-2 mt-4" aria-label="On this page">
+        {[["4.0 chart", "#standard-scale"], ["A-minus GPA", "#a-minus"], ["College scales", "#college-scale"], ["Weighted GPA", "#weighted-scale"], ["Sources", "#sources"]].map(([label, href]) => <a class="btn btn-secondary btn-sm" href={href}>{label}</a>)}
+      </nav>
     </div>
   </section>
 
-  <section class="max-w-5xl mx-auto px-4 py-10">
-    <div class="grid md:grid-cols-2 gap-8">
+  <article class="max-w-3xl mx-auto px-4 py-8 prose">
+    <section aria-labelledby="standard-scale">
+      <h2 id="standard-scale">4.0 GPA scale: letters, points and example percentages</h2>
+      <p>The grade-point column below matches the undergraduate scale published by the <a href="https://registrar.umd.edu/grades-records/grades/gpa-calculation">University of Maryland registrar</a>. The percentage bands are this site's example convention, used in our calculator percentage modes. They are <strong>not Maryland's published percentage cutoffs or a nationwide standard</strong>.</p>
+      <p>For decimal marks, “83–&lt;87%” means at least 83% but less than 87%. It includes 86.5%. Follow your course's rounding policy before converting a mark.</p>
+      <GradeReferenceTable />
+      <p>Have a number such as 75, 86 or 103? Read <a href="/percentage-to-gpa/">how to convert a percentage to GPA</a> before treating a percentage average as a GPA.</p>
+      <p><a class="btn btn-primary" href="/college-gpa-calculator/">Calculate GPA with grades and credits</a></p>
+    </section>
 
-      <!-- 4.0 Scale Table -->
-      <div>
-        <h2 class="text-xl font-bold mb-4" style="color:var(--color-ink)">Standard 4.0 GPA Scale</h2>
-        <div class="card overflow-hidden">
-          <table class="w-full text-sm" style="border-collapse:collapse">
-            <thead style="background:var(--color-canvas-soft-2)">
-              <tr>
-                <th class="text-left px-4 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Grade</th>
-                <th class="text-center px-4 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">GPA</th>
-                <th class="text-center px-4 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Percentage</th>
-                <th class="text-left px-4 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Standing</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["A+", "4.0", "97–100%", "Excellent", "#0070f3"],
-                ["A",  "4.0", "93–96%",  "Excellent", "#0070f3"],
-                ["A-", "3.7", "90–92%",  "Excellent", "#0070f3"],
-                ["B+", "3.3", "87–89%",  "Good",      "#16a34a"],
-                ["B",  "3.0", "83–86%",  "Good",      "#16a34a"],
-                ["B-", "2.7", "80–82%",  "Good",      "#16a34a"],
-                ["C+", "2.3", "77–79%",  "Average",   "#f5a623"],
-                ["C",  "2.0", "73–76%",  "Average",   "#f5a623"],
-                ["C-", "1.7", "70–72%",  "Average",   "#f5a623"],
-                ["D+", "1.3", "67–69%",  "Below Avg", "#ee0000"],
-                ["D",  "1.0", "63–66%",  "Below Avg", "#ee0000"],
-                ["D-", "0.7", "60–62%",  "Below Avg", "#ee0000"],
-                ["F",  "0.0", "< 60%",   "Failing",   "#ee0000"],
-              ].map(([grade, gpa, pct, standing, color], i) => (
-                <tr style={i % 2 === 1 ? "background:var(--color-canvas-soft-2)" : ""}>
-                  <td class="px-4 py-2.5 font-bold tabular" style={`color:${color};border-bottom:1px solid var(--color-hairline)`}>{grade}</td>
-                  <td class="px-4 py-2.5 text-center tabular font-semibold" style={`color:${color};border-bottom:1px solid var(--color-hairline)`}>{gpa}</td>
-                  <td class="px-4 py-2.5 text-center" style="color:var(--color-body);border-bottom:1px solid var(--color-hairline)">{pct}</td>
-                  <td class="px-4 py-2.5" style="color:var(--color-body);border-bottom:1px solid var(--color-hairline)">{standing}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p class="text-xs mt-2" style="color:var(--color-mute)">Note: P (Pass), W (Withdrawal), I (Incomplete) excluded from GPA calculation.</p>
-      </div>
+    <section aria-labelledby="a-minus">
+      <h2 id="a-minus">What GPA is an A-minus?</h2>
+      <p><strong>An A-minus is 3.7 grade points on this site's scale.</strong> Maryland uses 3.7, while the <a href="https://catalog.ufl.edu/UGRD/academic-regulations/grades-grading-policies/">University of Florida uses 3.67</a>. Use the value on your school's official grading scale.</p>
+      <p>One A-minus is a course grade, not your whole GPA. If every GPA-bearing course is an A-minus, the average stays 3.7 on the scale used here, even when course credits differ. With a mix of grades, multiply each course's points by its credits before averaging.</p>
+      <p>For example, a 3-credit A and a 3-credit A-minus give (4.0 × 3 + 3.7 × 3) ÷ 6 = <strong>3.85 GPA</strong>. At a school using 3.67 for A-minus, the same two grades average 3.835 before that school's rounding or truncation rules.</p>
+      <p>For several A's and one lower grade, use the <a href="/what-gpa-is-all-as-and-one-b/">A/B grade-mix tables</a>. They also cover all A-minuses and A's with a C, D or F.</p>
+    </section>
 
-      <!-- 5.0 Weighted Scale -->
-      <div>
-        <h2 class="text-xl font-bold mb-4" style="color:var(--color-ink)">Weighted 5.0 GPA Scale</h2>
-        <div class="card overflow-hidden">
-          <table class="w-full text-sm" style="border-collapse:collapse">
-            <thead style="background:var(--color-canvas-soft-2)">
-              <tr>
-                <th class="text-left px-4 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Grade</th>
-                <th class="text-center px-3 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Regular</th>
-                <th class="text-center px-3 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">Honors</th>
-                <th class="text-center px-3 py-3 font-semibold" style="color:var(--color-ink);border-bottom:2px solid var(--color-hairline)">AP/IB</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["A+/A", "4.0", "4.5", "5.0"],
-                ["A-",   "3.7", "4.2", "4.7"],
-                ["B+",   "3.3", "3.8", "4.3"],
-                ["B",    "3.0", "3.5", "4.0"],
-                ["B-",   "2.7", "3.2", "3.7"],
-                ["C+",   "2.3", "2.8", "3.3"],
-                ["C",    "2.0", "2.5", "3.0"],
-                ["C-",   "1.7", "2.2", "2.7"],
-                ["D+",   "1.3", "1.8", "2.3"],
-                ["D",    "1.0", "1.5", "2.0"],
-                ["F",    "0.0", "0.0", "0.0"],
-              ].map(([grade, reg, hon, ap], i) => (
-                <tr style={i % 2 === 1 ? "background:var(--color-canvas-soft-2)" : ""}>
-                  <td class="px-4 py-2.5 font-bold" style="color:var(--color-ink);border-bottom:1px solid var(--color-hairline)">{grade}</td>
-                  <td class="px-3 py-2.5 text-center tabular" style="color:var(--color-body);border-bottom:1px solid var(--color-hairline)">{reg}</td>
-                  <td class="px-3 py-2.5 text-center tabular font-medium" style="color:var(--color-brand);border-bottom:1px solid var(--color-hairline)">{hon}</td>
-                  <td class="px-3 py-2.5 text-center tabular font-bold" style="color:var(--color-brand);border-bottom:1px solid var(--color-hairline)">{ap}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p class="text-xs mt-2" style="color:var(--color-mute)">Honors adds +0.5, AP and IB add +1.0 to base grade points.</p>
-      </div>
-    </div>
-  </section>
+    <section aria-labelledby="college-scale">
+      <h2 id="college-scale">Do colleges use the same GPA scale?</h2>
+      <p>A 4.0 maximum does not make two schools' policies identical. Compare Maryland's A-minus of 3.7 and B-plus of 3.3 with Florida's 3.67 and 3.33. Schools can also differ on A-plus, retakes, transfer work and which courses enter the GPA.</p>
+      <p>Calculate <strong>GPA = total quality points ÷ total GPA credits</strong>. Quality points are a course's grade points multiplied by its credits. An A in a 4-credit course contributes 16 quality points; a B in a 2-credit course contributes 6. Together, 22 ÷ 6 = <strong>3.67</strong> when rounded to two decimals.</p>
+      <p>Use your registrar's GPA credits rather than every credit on your transcript. Pass/fail courses, withdrawals and transfer credit may be handled differently. The <a href="/cumulative-gpa-calculator/">cumulative GPA calculator</a> combines semesters by their credits; simply averaging semester GPAs only works when the credit totals are equal.</p>
+    </section>
 
-  <!-- Explanation -->
-  <section class="max-w-3xl mx-auto px-4 py-6 prose">
-    <h2>Understanding the GPA Scale</h2>
-    <p>The Grade Point Average (GPA) scale converts letter grades into numerical values, allowing academic performance to be summarized as a single number. In the United States, the standard scale runs from 0.0 to 4.0, with 4.0 representing the highest possible GPA.</p>
-    <p>Each letter grade corresponds to a specific point value. An A or A+ equals 4.0 points — the maximum. Minus grades slightly lower the value (A- = 3.7), and plus grades slightly raise it (B+ = 3.3). The F grade equals 0.0 points.</p>
+    <section aria-labelledby="weighted-scale">
+      <h2 id="weighted-scale">Weighted GPA: the 5.0 scale for AP, IB and honors</h2>
+      <p>This site's weighted calculator uses a model that adds 0.5 points for honors and 1.0 for AP/IB to a passing grade. An F stays at zero. Under this model, the same A earns 4.0 in a regular course, 4.5 in honors and 5.0 in AP/IB.</p>
+      <table>
+        <caption class="text-left mb-3">Example weighted model used by our calculator</caption>
+        <thead><tr><th scope="col">Grade</th><th scope="col">Regular</th><th scope="col">Honors</th><th scope="col">AP/IB</th></tr></thead>
+        <tbody>{gradeReference.filter(r => r.grade !== 'A+').map(({ grade, points }) => <tr><th scope="row">{grade}</th><td>{points.toFixed(1)}</td><td>{(points === 0 ? 0 : points + 0.5).toFixed(1)}</td><td>{(points === 0 ? 0 : points + 1).toFixed(1)}</td></tr>)}</tbody>
+      </table>
+      <p>High schools decide which courses receive extra weight and how much. A college may recalculate an applicant's GPA using its own rules. Do not convert a weighted GPA to unweighted by subtracting the same amount from the final average; the adjustment belongs to each eligible course.</p>
+      <p><a href="/weighted-gpa-calculator/">Compare weighted and unweighted GPA</a>, or enter regular, honors and AP/IB courses in the <a href="/high-school-gpa-calculator/">high school GPA calculator</a>.</p>
+    </section>
 
-    <h2>Plus and Minus Grades</h2>
-    <p>Most colleges and high schools use a plus/minus system that creates 13 distinct grade levels between A+ and F. Not all institutions use plus/minus grades — some schools only use A, B, C, D, and F (a 5-point scale). Always check your school's grading policy.</p>
+    <section aria-labelledby="thresholds">
+      <h2 id="thresholds">What counts as a good GPA?</h2>
+      <p>Scholarships, graduation honors and academic-standing rules each have their own criteria. There is no single GPA that guarantees Dean's List, magna cum laude, admission or a scholarship at every school. Check the policy for your college, program and term rather than treating a generic threshold as a promise.</p>
+    </section>
 
-    <p>Not sure what a mix of grades works out to? <a href="/what-gpa-is-all-as-and-one-b">See what GPA all A's and one B is</a>, with tables for A's plus a C, D or F, all A minuses and A/B combinations.</p>
+    <section aria-labelledby="questions">
+      <h2 id="questions">Common GPA scale questions</h2>
+      {faqs.map(({ q, a }) => <div><h3>{q}</h3><p>{a}</p></div>)}
+    </section>
 
-    <h2>GPA Thresholds That Matter</h2>
-    <ul>
-      <li><strong>4.0</strong> — Perfect GPA, Summa Cum Laude at many schools</li>
-      <li><strong>3.9+</strong> — Summa Cum Laude at most universities</li>
-      <li><strong>3.7+</strong> — Magna Cum Laude, competitive for top graduate programs</li>
-      <li><strong>3.5+</strong> — Dean's List at most colleges, Cum Laude at many schools</li>
-      <li><strong>3.0+</strong> — Good academic standing, required for most scholarships</li>
-      <li><strong>2.0+</strong> — Minimum for good academic standing at most colleges</li>
-      <li><strong>Below 2.0</strong> — Academic probation risk at most institutions</li>
-    </ul>
-
-    <h2>The Weighted 5.0 Scale</h2>
-    <p>Many high schools use a weighted GPA scale to reward students who take rigorous coursework. On this scale, Honors courses add +0.5 bonus points and AP/IB courses add +1.0 bonus points to grade values. This means an A in an AP course equals 5.0 on the weighted scale (vs. 4.0 unweighted).</p>
-    <p>Weighted GPA allows the scale to exceed 4.0. A student who earns straight A's in all AP courses would have a perfect weighted GPA of 5.0. Colleges often recalculate GPAs on an unweighted basis for fair comparison between students from different school systems.</p>
-  </section>
-
-  <!-- GPA threshold visual -->
-  <section class="max-w-3xl mx-auto px-4 py-6">
-    <h2 class="text-xl font-bold mb-5" style="color:var(--color-ink)">GPA Threshold Reference</h2>
-    <div class="flex flex-col gap-3">
-      {[
-        { range: "3.9 – 4.0", label: "Summa Cum Laude / Perfect", color: "#0070f3", bg: "#eff6ff" },
-        { range: "3.7 – 3.89", label: "Magna Cum Laude / Excellent", color: "#0070f3", bg: "#eff6ff" },
-        { range: "3.5 – 3.69", label: "Dean's List / Cum Laude", color: "#16a34a", bg: "#f0fdf4" },
-        { range: "3.0 – 3.49", label: "Good Academic Standing", color: "#16a34a", bg: "#f0fdf4" },
-        { range: "2.0 – 2.99", label: "Satisfactory / Passing", color: "#f5a623", bg: "#fffbeb" },
-        { range: "1.0 – 1.99", label: "Below Average — At Risk", color: "#ee0000", bg: "#fff5f5" },
-        { range: "0.0 – 0.99", label: "Failing / Academic Probation", color: "#ee0000", bg: "#fff5f5" },
-      ].map(({ range, label, color, bg }) => (
-        <div class="flex items-center gap-4 rounded-lg px-4 py-3" style={`background:${bg};border:1px solid ${color}22`}>
-          <span class="tabular font-bold text-sm w-24 shrink-0" style={`color:${color}`}>{range}</span>
-          <span class="text-sm" style="color:var(--color-body)">{label}</span>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="max-w-3xl mx-auto px-4 py-6 pb-12">
-    <h2 class="text-2xl font-bold mb-6" style="color:var(--color-ink)">Frequently Asked Questions</h2>
-    <div>
-      {[
-        { q: "What is the 4.0 GPA scale?", a: "The 4.0 scale is the standard US grade point system: A=4.0, B=3.0, C=2.0, D=1.0, F=0. Plus and minus grades have fractional values (A-=3.7, B+=3.3, etc.). It's used by nearly every US college and high school." },
-        { q: "What GPA is an A-?", a: "An A- equals 3.7 on the 4.0 GPA scale. The percentage range for A- is typically 90–92%." },
-        { q: "What GPA is a B+?", a: "A B+ equals 3.3 on the 4.0 GPA scale. The typical percentage range for B+ is 87–89%." },
-        { q: "What is the 5.0 weighted GPA scale?", a: "The 5.0 weighted scale used in high schools adds bonus points for rigorous courses. AP and IB courses add +1.0 points, Honors add +0.5. An A in an AP class = 5.0 on the weighted scale." },
-        { q: "Do all colleges use the same GPA scale?", a: "Most US colleges use the 4.0 scale, but some variation exists in how they handle plus/minus grades and course weights. Colleges typically recalculate applicants' GPAs on their own scale for fair comparison." },
-        { q: "What percentage is a 3.0 GPA?", a: "A 3.0 GPA corresponds to a B grade, approximately 83–86% on the standard percentage scale." },
-      ].map(({ q, a }) => (
-        <div class="faq-item">
-          <button class="faq-question"><span>{q}</span><svg class="faq-chevron w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
-          <div class="faq-answer">{a}</div>
-        </div>
-      ))}
-    </div>
-
-    <div class="mt-8">
-      <h3 class="text-lg font-semibold mb-3" style="color:var(--color-ink)">Calculate Your GPA</h3>
-      <div class="flex flex-wrap gap-3">
-        {[["GPA Calculator","/"],["College GPA Calculator","/college-gpa-calculator"],["High School GPA Calculator","/high-school-gpa-calculator"],["Weighted GPA Calculator","/weighted-gpa-calculator"]].map(([l,h])=>(
-          <a href={h} class="btn btn-secondary btn-sm">{l}</a>
-        ))}
-      </div>
-    </div>
-  </section>
-
+    <section aria-labelledby="sources">
+      <h2 id="sources">Sources and calculation notes</h2>
+      <ul>
+        <li><a href="https://registrar.umd.edu/grades-records/grades/gpa-calculation">University of Maryland: GPA calculation</a>: undergraduate grade-point values and credit-weighted calculation.</li>
+        <li><a href="https://catalog.ufl.edu/UGRD/academic-regulations/grades-grading-policies/">University of Florida: grades and grading policies</a>: an example of a different plus/minus scale.</li>
+      </ul>
+      <p>Examples were calculated for this guide using the stated points and credits. Decimal percentage bands describe our calculator's convention, not a rule inferred from either university. This is an independent reference; your transcript and school's policy determine your official GPA.</p>
+    </section>
+  </article>
 </Layout>
 
-<script>
-document.querySelectorAll('.faq-question').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const item = btn.closest('.faq-item');
-    const open = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
-    if (!open) item.classList.add('open');
-  });
-});
-</script>
+<style>
+  h2[id] { scroll-margin-top: 5rem; }
+  table { table-layout: fixed; }
+  th, td { overflow-wrap: anywhere; }
+  tbody th { background: transparent; }
+  @media (max-width: 400px) { .prose table th, .prose table td { padding: .6rem .4rem; font-size: .8rem; } }
+</style>

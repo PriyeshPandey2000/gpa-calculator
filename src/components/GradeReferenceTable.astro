@@ -1,0 +1,21 @@
+---
+import { gradeReference } from '../data/grade-reference';
+---
+<table>
+  <caption class="text-left mb-3">Example conversion used by this site's percentage input modes</caption>
+  <thead><tr><th scope="col">Percentage</th><th scope="col">Letter</th><th scope="col">Grade points</th></tr></thead>
+  <tbody>
+    {gradeReference.map(({ grade, points, range }) => (
+      <tr><td>{range}</td><th scope="row">{grade}</th><td>{points.toFixed(1)}</td></tr>
+    ))}
+  </tbody>
+</table>
+
+<style>
+  table { table-layout: fixed; }
+  th, td { overflow-wrap: anywhere; }
+  tbody th { background: transparent; border-bottom: 1px solid var(--color-hairline); }
+  @media (max-width: 400px) {
+    table th, table td { padding: .6rem .4rem; font-size: .8rem; }
+  }
+</style>

@@ -87,10 +87,21 @@ const faqSchema = {
     }
   ]
 };
+
+// Worked example shown in "How to Calculate Cumulative GPA".
+const exampleTerms = [
+  { name: 'Freshman fall', gpa: 3.4, credits: 15 },
+  { name: 'Freshman spring', gpa: 3.1, credits: 16 },
+  { name: 'Sophomore fall', gpa: 3.75, credits: 12 },
+  { name: 'Sophomore spring', gpa: 2.9, credits: 17 },
+];
+const exampleCredits = exampleTerms.reduce((sum, t) => sum + t.credits, 0);
+const examplePoints = exampleTerms.reduce((sum, t) => sum + t.gpa * t.credits, 0);
+const exampleSimpleAverage = exampleTerms.reduce((sum, t) => sum + t.gpa, 0) / exampleTerms.length;
 ---
 
 <Layout
-  title="Cumulative GPA Calculator — Calculate Overall GPA Across All Semesters"
+  title="Cumulative GPA Calculator: Calculate Overall GPA Across All Semesters"
   description="Calculate your cumulative GPA across all semesters instantly. Enter each semester's GPA and credits to see your overall cumulative GPA. Free, no signup."
   canonical="/cumulative-gpa-calculator"
   schema={[webAppSchema, faqSchema]}
@@ -327,16 +338,16 @@ const faqSchema = {
       <div class="prose">
         <h2>What is Cumulative GPA?</h2>
         <p>
-          Your cumulative GPA — sometimes written as CGPA — is a single number that represents your academic performance across <em>every</em> semester you have completed. Unlike a semester GPA, which only reflects one term, your cumulative GPA is a weighted average that accounts for both the grades you earned and the number of credits each term carried.
+          Your cumulative GPA, sometimes written as CGPA, is a single number that represents your academic performance across <em>every</em> semester you have completed. Unlike a semester GPA, which only reflects one term, your cumulative GPA is a weighted average that accounts for both the grades you earned and the number of credits each term carried.
         </p>
         <p>
           Most universities in the United States report GPA on a 4.0 scale, where A = 4.0 and F = 0.0. Each letter grade is converted to grade points, multiplied by the credit hours for that course, and summed to produce "quality points." The quality points for all completed semesters are then divided by the total credit hours to arrive at the cumulative GPA.
         </p>
         <p>
-          Cumulative GPA matters for academic standing, scholarship eligibility, honor societies, graduate school applications, and many internship or job applications. A GPA of 3.5 or higher typically qualifies students for the Dean's List, while 3.7+ may earn Magna Cum Laude distinction at graduation.
+          Cumulative GPA matters for academic standing, scholarship eligibility, honor societies, graduate school applications, and many internship or job applications. The cutoffs for each one vary by school, so check your college's policy. The Dean's List and Latin honors markers in this calculator are common reference points, not your school's rules.
         </p>
         <p>
-          Because cumulative GPA is a weighted average, early semesters have an outsized impact when you have few total credits completed. As you progress, each new semester's influence on the overall average decreases proportionally. This means students who struggled early can absolutely recover — it simply requires sustained strong performance over multiple terms.
+          Because cumulative GPA is a weighted average, early semesters have an outsized impact when you have few total credits completed. As you progress, each new semester's influence on the overall average decreases proportionally. This means students who struggled early can recover, but it takes strong grades over several terms.
         </p>
       </div>
 
@@ -362,8 +373,33 @@ const faqSchema = {
           </div>
         </div>
 
+
+        <h3 id="four-semester-example">Worked example: four semesters</h3>
+        <p>Say you have finished two years with the term GPAs below. Multiply each GPA by that term's credits, add the results, then divide by all your credits.</p>
+        <div class="overflow-x-auto">
+          <table>
+            <thead><tr><th scope="col">Semester</th><th scope="col">GPA</th><th scope="col">Credits</th><th scope="col">Quality points</th></tr></thead>
+            <tbody>
+              {exampleTerms.map((t) => (
+                <tr><th scope="row">{t.name}</th><td>{t.gpa.toFixed(2)}</td><td>{t.credits}</td><td>{(t.gpa * t.credits).toFixed(1)}</td></tr>
+              ))}
+              <tr><th scope="row">Total</th><td></td><td><strong>{exampleCredits}</strong></td><td><strong>{examplePoints.toFixed(1)}</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Cumulative GPA: {examplePoints.toFixed(1)} ÷ {exampleCredits} = <strong>{(examplePoints / exampleCredits).toFixed(2)}</strong>.</p>
+        <p>Averaging the four GPAs gives {exampleSimpleAverage.toFixed(2)} instead. That shortcut is wrong because it lets the 12-credit term count as much as the 17-credit term. It only works when every term has the same number of credits.</p>
+
+        <h3>Three things that can change your official number</h3>
+        <ul>
+          <li><strong>GPA credits are not always earned credits.</strong> A Pass usually earns credit without affecting GPA. An F usually does the opposite: it earns no credit but its hours still count in the GPA.</li>
+          <li><strong>Retaken classes.</strong> Some schools replace the old grade and others average both attempts. If yours replaces it, remove the old attempt's credits and quality points before calculating.</li>
+          <li><strong>Transfer credits.</strong> These often count toward your degree but not toward your GPA at the new school.</li>
+        </ul>
+        <p>Your registrar's policy decides each of these, so treat your transcript as the final word.</p>
+
         <p class="mt-4">
-          This calculator handles all the math automatically. Just enter each semester's GPA and credit hours — or switch to Mode 2 to enter your existing cumulative GPA alongside a new semester's courses.
+          This calculator handles all the math automatically. Enter each semester's GPA and credit hours, or switch to Mode 2 to enter your existing cumulative GPA alongside a new semester's courses.
         </p>
       </div>
 
@@ -404,7 +440,7 @@ const faqSchema = {
             <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <div class="faq-answer">
-            Yes. CGPA stands for Cumulative Grade Point Average and refers to the same measurement. CGPA is the term more commonly used in international academic systems — particularly in India, Pakistan, and parts of Europe — while "cumulative GPA" is the standard term used in the United States. Both are calculated the same way.
+            Yes. CGPA stands for Cumulative Grade Point Average and refers to the same measurement. CGPA is the term more commonly used in international academic systems, particularly in India, Pakistan, and parts of Europe, while "cumulative GPA" is the standard term used in the United States. Both are calculated the same way.
           </div>
         </div>
 
@@ -424,7 +460,7 @@ const faqSchema = {
             <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <div class="faq-answer">
-            Most graduate programs require a minimum cumulative GPA of 3.0 on a 4.0 scale. Highly competitive programs at top universities typically expect 3.5 or higher. Professional programs — including medical, law, and dental schools — often have their own competitive thresholds, with many successful applicants above 3.6 or 3.7. Research universities may have program-specific minimums, so always check the requirements for your target schools.
+            Most graduate programs require a minimum cumulative GPA of 3.0 on a 4.0 scale. Highly competitive programs at top universities typically expect 3.5 or higher. Professional programs, including medical, law, and dental schools, often have their own competitive thresholds, with many successful applicants above 3.6 or 3.7. Research universities may have program-specific minimums, so always check the requirements for your target schools.
           </div>
         </div>
 
@@ -434,7 +470,7 @@ const faqSchema = {
             <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <div class="faq-answer">
-            Yes. Use Mode 1 — "Semester by Semester" — on this calculator. Enter each semester's label (e.g., Fall 2022), its GPA, and the credits completed that term. The calculator will display your running cumulative GPA after each semester and show your overall cumulative GPA in the result panel.
+            Yes. Use Mode 1 ("Semester by Semester") on this calculator. Enter each semester's label (e.g., Fall 2022), its GPA, and the credits completed that term. The calculator will display your running cumulative GPA after each semester and show your overall cumulative GPA in the result panel.
           </div>
         </div>
 
