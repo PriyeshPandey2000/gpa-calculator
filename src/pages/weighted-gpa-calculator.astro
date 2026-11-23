@@ -297,7 +297,8 @@ import { readCourseDraft, restoreCourseDraft, decorateCourseRow, resetSettings }
       if(!(grade in GRADE_POINTS))return;
       const basePoints=GRADE_POINTS[grade];
       const bonus=WEIGHTS[type]||0;
-      const weightedPoints=Math.min(basePoints+bonus,scale);
+      // A failing grade earns no course-weight bonus.
+      const weightedPoints=basePoints>0?Math.min(basePoints+bonus,scale):0;
       const credits=noCredits?1:parseFloat(row.querySelector('input[type="number"]')?.value||'0');
       if(!credits||credits<=0)return;
       totalUQP+=basePoints*credits;

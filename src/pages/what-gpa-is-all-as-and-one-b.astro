@@ -39,7 +39,7 @@ const v = {
   b3: fmt(gpa(2, 'B')), b4: fmt(gpa(3, 'B')), b5: fmt(gpa(4, 'B')),
   b6: fmt(gpa(5, 'B')), b10: fmt(gpa(9, 'B')),
   c5: fmt(gpa(4, 'C')), c6: fmt(gpa(5, 'C')), c8: fmt(gpa(7, 'C')),
-  allAminus: fmt(POINTS['A-']),
+  allAminus: POINTS['A-'].toFixed(1),
   aMinusOne5: fmt(gpa(4, 'A-')),
   a4b2: fmt(gpa(4, 'B', 2)),
 };
@@ -50,6 +50,13 @@ const w4 = fmt(weighted(4));
 const w1 = fmt(weighted(1));
 const wGap = fmt(weighted(1) - weighted(4));
 const aPts = POINTS['A'] * 4 + POINTS['B'];
+
+// Grade strings people search for, in the order they usually type them.
+const mixes = ['A A B B', 'A B B B', 'A A A B C', 'A A A B B C', 'A A B B B C', 'A A A A B B C'].map((mix) => {
+  const grades = mix.split(' ');
+  const total = grades.reduce((sum, g) => sum + POINTS[g], 0);
+  return { mix, total: total.toFixed(1), classes: grades.length, gpa: fmt(total / grades.length) };
+});
 
 const faq = [
   {
@@ -164,6 +171,17 @@ const faqSchema = {
       </tbody>
     </table>
 
+    <h2>Mixes with A's, B's and C's</h2>
+    <p>Add the points for each grade (A = 4, B = 3, C = 2), then divide by the number of classes. These assume equal credits.</p>
+    <table>
+      <thead><tr><th>Grades</th><th>Points</th><th>Classes</th><th>GPA</th></tr></thead>
+      <tbody>
+        {mixes.map((row) => (
+          <tr><td>{row.mix}</td><td>{row.total}</td><td>{row.classes}</td><td><strong>{row.gpa}</strong></td></tr>
+        ))}
+      </tbody>
+    </table>
+
     <h2 id="different-credits">When classes have different credits</h2>
     <p>Most colleges weight each grade by credit hours. A B in a 4-credit lab counts for more than a B in a 1-credit seminar. Here is the same set of grades with two different credit loads:</p>
     <ul>
@@ -181,6 +199,7 @@ const faqSchema = {
     </ul>
 
     <h2>Work out your own grades</h2>
+    <p>Have percentage marks instead of letters? See <a href="/percentage-to-gpa/">how to convert percentages to GPA</a> using your school's grading scale.</p>
     <p>Enter your actual classes, grades and credits in the <a href="/">GPA calculator</a>. It uses the same point values as the tables above and handles unequal credits.</p>
     <p><a href="/" class="btn btn-primary">Open the GPA calculator</a></p>
   </section>

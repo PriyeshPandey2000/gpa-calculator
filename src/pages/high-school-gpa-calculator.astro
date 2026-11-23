@@ -981,7 +981,8 @@ import { createCalculatorFeedback } from '../scripts/calculator-feedback';
         const typeEl = row.querySelector('.course-type') as HTMLSelectElement;
         const type   = typeEl?.value || 'Regular';
         const bonus  = TYPE_BONUS[type] || 0;
-        const weightedPoints = Math.min(gradePoints + bonus, 5.0);
+        // A failing grade earns no course-weight bonus.
+        const weightedPoints = gradePoints > 0 ? Math.min(gradePoints + bonus, 5.0) : 0;
 
         const credits = noCredits
           ? 1

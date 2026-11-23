@@ -1,0 +1,101 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GradeReferenceTable from '../components/GradeReferenceTable.astro';
+import { gradeReference } from '../data/grade-reference';
+const title = 'Percentage to GPA: Conversion Chart & Worked Examples';
+const description = 'Convert course percentages to GPA using a stated grading scale. See 75%, 86% and 94% examples, weighted marks above 100, and why averages can mislead.';
+const examples = [94, 90, 88.7, 86, 85, 84, 83, 80, 78, 75].map(percentage => ({ percentage, ...gradeReference.find(row => percentage >= row.minimum)! }));
+const schema = {
+  '@context': 'https://schema.org', '@type': 'Article', headline: title, description,
+  mainEntityOfPage: 'https://gpacalculatorfree.com/percentage-to-gpa/',
+  author: { '@type': 'Organization', name: 'GPA Calculator Free', url: 'https://gpacalculatorfree.com/about/' },
+  datePublished: '2026-11-23', dateModified: '2026-11-23',
+};
+---
+<Layout title={title} description={description} canonical="/percentage-to-gpa" ogType="article" schema={schema}>
+  <section class="page-hero">
+    <div class="max-w-3xl mx-auto px-4">
+      <nav class="breadcrumb mb-4" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep" aria-hidden="true">/</span><a href="/gpa-scale/">GPA Scale</a><span class="sep" aria-hidden="true">/</span><span aria-current="page">Percentage to GPA</span></nav>
+      <h1 class="mb-3">How to Convert a Percentage to GPA</h1>
+      <p class="text-lg mb-4"><strong>Convert each course's percentage to a letter grade using your school's cutoffs, convert that letter to grade points, then average by credits.</strong> There is no universal formula that converts any percentage average into a US 4.0 GPA.</p>
+      <p class="text-sm">By <a href="/about/">GPA Calculator Free</a> · Published <time datetime="2026-11-23">November 23, 2026</time></p>
+      <nav class="flex flex-wrap gap-2 mt-4" aria-label="On this page">
+        {[["Conversion chart", "#conversion-chart"], ["Worked examples", "#examples"], ["A mark of 103", "#above-100"], ["Calculate GPA", "#calculate"], ["Sources", "#sources"]].map(([label, href]) => <a class="btn btn-secondary btn-sm" href={href}>{label}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  <article class="max-w-3xl mx-auto px-4 py-8 prose">
+    <section aria-labelledby="conversion-chart">
+      <h2 id="conversion-chart">Percentage-to-GPA conversion chart</h2>
+      <p>This is the example percentage scale used by our college and high school calculators. The grade-point values match Maryland's undergraduate scale, but <strong>the percentage cutoffs are our convention, not a policy published by Maryland</strong>. Use this chart only when its cutoffs match your course or school.</p>
+      <GradeReferenceTable />
+      <p>“83–&lt;87%” includes 86 and 86.5 but stops before 87. Do not round 86.5 to 87 unless your course policy says to round it. Schools that use different boundaries, omit plus/minus grades or award different points need a different conversion.</p>
+    </section>
+
+    <section aria-labelledby="examples">
+      <h2 id="examples">What GPA is a 94, 90, 86, 85, 83, 80 or 75?</h2>
+      <p>For <strong>one course</strong>, the chart above gives these results. These are grade points for that course, not an official overall GPA:</p>
+      <table>
+        <caption class="text-left mb-3">Worked lookups using the example scale above</caption>
+        <thead><tr><th scope="col">Course mark</th><th scope="col">Letter grade</th><th scope="col">Grade points</th></tr></thead>
+        <tbody>{examples.map(({ percentage, grade, points }) => <tr><th scope="row">{percentage}%</th><td>{grade}</td><td>{points.toFixed(1)}</td></tr>)}</tbody>
+      </table>
+      <p>So <strong>86% is a B, worth 3.0 points</strong> in this example. If 86 is your average across several courses, you need the individual grades and credits to calculate GPA reliably. The average percentage alone leaves out information.</p>
+      <h3>Why multiplying a percentage by 4 ÷ 100 can give the wrong answer</h3>
+      <p>That shortcut turns 86% into 3.44. But our stated letter-grade scale turns 86% into a B worth 3.0. The shortcut assumes a continuous, linear scale; letter-grade conversions use bands. Use a linear conversion only if the institution requesting it explicitly prescribes that method.</p>
+      <h3>The same percentage average can produce different GPAs</h3>
+      <p>Consider two equal-credit courses. Marks of 86 and 86 average 86%, and both are B's: (3.0 + 3.0) ÷ 2 = <strong>3.00 GPA</strong>. Marks of 94 and 78 also average 86%, but they convert to an A and a C-plus: (4.0 + 2.3) ÷ 2 = <strong>3.15 GPA</strong>. Both examples use the same chart; the overall percentage cannot tell you which GPA is correct.</p>
+    </section>
+
+    <section aria-labelledby="credits">
+      <h2 id="credits">Calculate GPA when courses have different credits</h2>
+      <ol>
+        <li>Find each course's final letter grade using its syllabus or transcript.</li>
+        <li>Look up that letter's points on your school's official GPA scale.</li>
+        <li>Multiply the points by the course's GPA credits to get quality points.</li>
+        <li>Divide total quality points by total GPA credits.</li>
+      </ol>
+      <p>Using our example scale, an 86% in a 4-credit course is 3.0 × 4 = 12 quality points. A 94% in a 2-credit course is 4.0 × 2 = 8 quality points. Together: (12 + 8) ÷ (4 + 2) = <strong>3.33 GPA</strong>, rounded to two decimals.</p>
+      <p>Do not give a 1-credit course the same influence as a 4-credit course. When combining semesters, the <a href="/cumulative-gpa-calculator/">cumulative GPA calculator</a> uses each term's GPA and credits. Your school may also have specific repeat, transfer and pass/fail rules.</p>
+    </section>
+
+    <section aria-labelledby="above-100">
+      <h2 id="above-100">What is a 103 average on a 4.0 GPA scale?</h2>
+      <p><strong>A mark of 103 cannot be assigned an official GPA without knowing why it exceeds 100.</strong> It could include extra credit or a school's added course weight. Those are different situations.</p>
+      <ul>
+        <li><strong>Extra credit in one course:</strong> if the syllabus awards an A and the school's scale gives an A 4.0 points, that course contributes 4.0 unweighted grade points. The extra percentage points do not automatically create extra GPA points.</li>
+        <li><strong>A weighted transcript average:</strong> identify the underlying course grades and the school's weighting rules. Do not convert the aggregate 103 directly or count the same honors/AP bonus twice.</li>
+      </ul>
+      <p>For an AP/IB A, our <a href="/weighted-gpa-calculator/">weighted GPA calculator</a> uses 5.0 points and 4.0 unweighted points. That is a stated model, not a guarantee of how your school treats a 103 average.</p>
+    </section>
+
+    <section aria-labelledby="international">
+      <h2 id="international">Can I use this chart for a non-US transcript?</h2>
+      <p>Not automatically. A percentage from another education system may describe a different level of achievement from the same number in a US course. Follow the receiving university's application instructions and report the original grade and scale when requested. Do not replace an official mark with an unofficial conversion unless the institution asks for one.</p>
+    </section>
+
+    <section aria-labelledby="calculate">
+      <h2 id="calculate">Enter your course grades and credits</h2>
+      <p>If your school's percentage cutoffs match this example, open the <a href="/college-gpa-calculator/">college GPA calculator</a> and turn on percentage input. For AP, IB and honors courses, use the <a href="/high-school-gpa-calculator/">high school GPA calculator</a>.</p>
+      <p>If the percentage cutoffs differ but the letter-grade points match, enter the letter grades from your transcript instead. If the point values also differ, use your school's official scale; our default calculator is an estimate for that transcript.</p>
+      <p><a href="/college-gpa-calculator/" class="btn btn-primary">Open the college GPA calculator</a></p>
+      <p>Already know your letters? Compare the <a href="/gpa-scale/">4.0 GPA scale</a> or find an equal-credit combination in the <a href="/what-gpa-is-all-as-and-one-b/">A's and B's GPA tables</a>.</p>
+    </section>
+
+    <section aria-labelledby="sources">
+      <h2 id="sources">Sources and method</h2>
+      <p>The <a href="https://registrar.umd.edu/grades-records/grades/gpa-calculation">University of Maryland registrar's GPA calculation guide</a> documents the undergraduate letter-point scale and the credit-weighted method used in our examples. It does not establish the percentage bands shown here.</p>
+      <p>The <a href="https://catalog.ufl.edu/UGRD/academic-regulations/grades-grading-policies/">University of Florida's grading policy</a> illustrates why point values must be checked: its A-minus is 3.67, rather than the 3.7 used here.</p>
+      <p>We calculated the worked examples for this guide using the displayed assumptions. This independent guide provides estimates, not an official transcript conversion. <a href="/contact/">Report a correction</a> if you find an error.</p>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  h2[id] { scroll-margin-top: 5rem; }
+  table { table-layout: fixed; }
+  th, td { overflow-wrap: anywhere; }
+  tbody th { background: transparent; }
+  @media (max-width: 400px) { .prose table th, .prose table td { padding: .6rem .4rem; font-size: .8rem; } }
+</style>
