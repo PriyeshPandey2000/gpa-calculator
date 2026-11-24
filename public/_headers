@@ -1,10 +1,10 @@
-# Prevent indexing of the .pages.dev subdomain (Cloudflare Pages preview URL)
-# This avoids duplicate content penalty
-https://gpacalculatorfree.pages.dev/*
+# Keep every *.pages.dev host (production alias and previews) out of search results.
+# The :project placeholder matches any Cloudflare Pages subdomain.
+https://:project.pages.dev/*
   X-Robots-Tag: noindex
 
-# Security headers for production domain
-https://gpacalculatorfree.com/*
+# Security headers for every host that serves the site (apex, www and pages.dev).
+/*
   X-Frame-Options: SAMEORIGIN
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

@@ -7,7 +7,7 @@ const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Weighted GPA Calculator",
-  "url": "https://gpacalculatorfree.com/weighted-gpa-calculator",
+  "url": "https://gpacalculatorfree.com/weighted-gpa-calculator/",
   "applicationCategory": "EducationalApplication",
   "operatingSystem": "Any",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
@@ -28,7 +28,7 @@ const faqSchema = {
 ---
 
 <Layout
-  title="Weighted GPA Calculator — Calculate Weighted & Unweighted GPA Free"
+  title="Weighted GPA Calculator: Calculate Weighted & Unweighted GPA Free"
   description="Calculate your weighted GPA with AP, Honors, and IB courses. See both weighted and unweighted GPA side by side instantly. Free weighted GPA calculator."
   canonical="/weighted-gpa-calculator"
   schema={[webAppSchema, faqSchema]}
@@ -202,7 +202,7 @@ const faqSchema = {
   <section class="max-w-6xl mx-auto px-4 py-6 pb-12">
     <h2 class="text-xl font-bold mb-4" style="color:var(--color-ink)">Related Calculators</h2>
     <div class="flex flex-wrap gap-3">
-      {[["Unweighted GPA Calculator","/unweighted-gpa-calculator"],["High School GPA Calculator","/high-school-gpa-calculator"],["College GPA Calculator","/college-gpa-calculator"],["Cumulative GPA Calculator","/cumulative-gpa-calculator"],["What If GPA Calculator","/what-if-gpa-calculator"]].map(([l,h])=>(
+      {[["Unweighted GPA Calculator","/unweighted-gpa-calculator/"],["High School GPA Calculator","/high-school-gpa-calculator/"],["College GPA Calculator","/college-gpa-calculator/"],["Cumulative GPA Calculator","/cumulative-gpa-calculator/"],["What If GPA Calculator","/what-if-gpa-calculator/"]].map(([l,h])=>(
         <a href={h} class="btn btn-secondary btn-sm">{l}</a>
       ))}
     </div>

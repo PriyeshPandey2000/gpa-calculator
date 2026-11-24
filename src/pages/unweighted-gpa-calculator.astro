@@ -17,7 +17,7 @@ const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Unweighted GPA Calculator",
-  "url": "https://gpacalculatorfree.com/unweighted-gpa-calculator",
+  "url": "https://gpacalculatorfree.com/unweighted-gpa-calculator/",
   "applicationCategory": "EducationalApplication",
   "operatingSystem": "Any",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
@@ -25,7 +25,7 @@ const webAppSchema = {
 ---
 
 <Layout
-  title="Unweighted GPA Calculator — Calculate Your 4.0 Scale GPA Free"
+  title="Unweighted GPA Calculator: Calculate Your 4.0 Scale GPA Free"
   description="Calculate your unweighted GPA on the standard 4.0 scale. All courses count equally regardless of difficulty. Free unweighted GPA calculator."
   canonical="/unweighted-gpa-calculator"
   schema={[webAppSchema, faqSchema]}
@@ -113,7 +113,7 @@ const webAppSchema = {
     <p>An unweighted GPA is the standard Grade Point Average calculated on the 4.0 scale, treating every course equally regardless of difficulty. Whether you take AP Physics or regular English, an A earns 4.0 grade points in both cases.</p>
     <p>This is the most universal form of GPA measurement. Almost every college and university in the United States uses the unweighted 4.0 scale as a baseline for comparison. Even if your high school uses a weighted system, colleges often recalculate applicants' GPAs on an unweighted basis to ensure fair comparisons.</p>
     <p>The unweighted GPA scale: A=4.0, A-=3.7, B+=3.3, B=3.0, B-=2.7, C+=2.3, C=2.0, C-=1.7, D+=1.3, D=1.0, D-=0.7, F=0.0. Plus/minus grades vary by school — some schools don't use them.</p>
-    <p>If you want to see both your weighted and unweighted GPA, use our <a href="/weighted-gpa-calculator">Weighted GPA Calculator</a> which shows both side by side.</p>
+    <p>If you want to see both your weighted and unweighted GPA, use our <a href="/weighted-gpa-calculator/">Weighted GPA Calculator</a> which shows both side by side.</p>
     <p>Only have a weighted GPA? Follow our <a href="/weighted-to-unweighted-gpa/">guide to recalculating unweighted GPA</a> with examples that show how course grades and credits affect the answer.</p>
   </section>
 
@@ -137,7 +137,7 @@ const webAppSchema = {
     <div class="mt-8">
       <h3 class="text-lg font-semibold mb-3" style="color:var(--color-ink)">Related Calculators</h3>
       <div class="flex flex-wrap gap-3">
-        {[["Weighted GPA Calculator","/weighted-gpa-calculator"],["High School GPA Calculator","/high-school-gpa-calculator"],["College GPA Calculator","/college-gpa-calculator"],["GPA Scale Chart","/gpa-scale"]].map(([l,h])=>(
+        {[["Weighted GPA Calculator","/weighted-gpa-calculator/"],["High School GPA Calculator","/high-school-gpa-calculator/"],["College GPA Calculator","/college-gpa-calculator/"],["GPA Scale Chart","/gpa-scale/"]].map(([l,h])=>(
           <a href={h} class="btn btn-secondary btn-sm">{l}</a>
         ))}
       </div>

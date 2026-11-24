@@ -5,7 +5,7 @@ const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Grade Calculator",
-  "url": "https://gpacalculatorfree.com/grade-calculator",
+  "url": "https://gpacalculatorfree.com/grade-calculator/",
   "applicationCategory": "EducationalApplication",
   "operatingSystem": "Any",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -51,7 +51,7 @@ const faqSchema = {
 ---
 
 <Layout
-  title="Grade Calculator — Calculate Your Current Grade & What You Need"
+  title="Grade Calculator: Calculate Your Current Grade & What You Need"
   description="Calculate your current grade and find out what score you need on your final exam. Free grade calculator for college and high school students."
   canonical="/grade-calculator"
   schema={[webAppSchema, faqSchema]}
@@ -395,11 +395,11 @@ const faqSchema = {
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {[
         { href: "/", title: "GPA Calculator", desc: "Calculate your semester or cumulative GPA on the 4.0 scale." },
-        { href: "/college-gpa-calculator", title: "College GPA Calculator", desc: "Standard GPA calculation for college courses and credit hours." },
-        { href: "/weighted-gpa-calculator", title: "Weighted GPA Calculator", desc: "Factor in AP, Honors, and IB bonuses." },
-        { href: "/what-if-gpa-calculator", title: "What If GPA Calculator", desc: "Simulate future grades to project your GPA." },
-        { href: "/high-school-gpa-calculator", title: "High School GPA Calculator", desc: "GPA calculation for high school courses." },
-        { href: "/gpa-scale", title: "GPA Scale Chart", desc: "Full reference for letter grades, percentages, and GPA points." },
+        { href: "/college-gpa-calculator/", title: "College GPA Calculator", desc: "Standard GPA calculation for college courses and credit hours." },
+        { href: "/weighted-gpa-calculator/", title: "Weighted GPA Calculator", desc: "Factor in AP, Honors, and IB bonuses." },
+        { href: "/what-if-gpa-calculator/", title: "What If GPA Calculator", desc: "Simulate future grades to project your GPA." },
+        { href: "/high-school-gpa-calculator/", title: "High School GPA Calculator", desc: "GPA calculation for high school courses." },
+        { href: "/gpa-scale/", title: "GPA Scale Chart", desc: "Full reference for letter grades, percentages, and GPA points." },
       ].map(card => (
         <a
           href={card.href}
