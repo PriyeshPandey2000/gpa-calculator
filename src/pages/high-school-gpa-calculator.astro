@@ -26,81 +26,126 @@ const webAppSchema = {
   ]
 };
 
+// Mirrors the calculator script at the bottom of this file. Keep both in sync.
+const POINTS: Record<string, number> = {
+  'A+': 4.0, 'A': 4.0, 'A-': 3.7,
+  'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+  'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+  'D+': 1.3, 'D': 1.0, 'D-': 0.7,
+  'F': 0.0,
+};
+const BONUS: Record<string, number> = { Regular: 0, Honors: 0.5, AP: 1.0, IB: 1.0 };
+const MAX_WEIGHTED = 5.0;
+// A failing grade earns no bonus, and no class is worth more than the maximum.
+const weightedPoints = (points: number, type: string) =>
+  points > 0 ? Math.min(points + BONUS[type], MAX_WEIGHTED) : 0;
+// Same rounding as the calculator: three decimals, then two shown.
+const fmt = (x: number) => (Math.round(x * 1000) / 1000).toFixed(2);
+const one = (x: number) => x.toFixed(1);
+
+// Grade-by-course-type table.
+const typeRows = [
+  { label: 'AP / IB', type: 'AP' },
+  { label: 'Honors', type: 'Honors' },
+  { label: 'Regular', type: 'Regular' },
+].flatMap(({ label, type }) =>
+  ['A', 'B', 'C'].map((grade) => ({
+    label, grade,
+    unweighted: one(POINTS[grade]),
+    weighted: one(weightedPoints(POINTS[grade], type)),
+  })));
+
+// One student, six classes, different credits.
+type Course = { name: string; type: string; grade: string; credits: number; core: boolean };
+const courses: Course[] = [
+  { name: 'English 11', type: 'Honors', grade: 'A-', credits: 1, core: true },
+  { name: 'U.S. History', type: 'AP', grade: 'B+', credits: 1, core: true },
+  { name: 'Calculus AB', type: 'AP', grade: 'B-', credits: 1, core: true },
+  { name: 'Chemistry', type: 'Honors', grade: 'A', credits: 1, core: true },
+  { name: 'Spanish III', type: 'Regular', grade: 'A-', credits: 1, core: true },
+  { name: 'Physical education', type: 'Regular', grade: 'A', credits: 0.5, core: false },
+];
+const exampleRows = courses.map((c) => {
+  const points = POINTS[c.grade];
+  return { ...c,
+    uwQp: one(points * c.credits),
+    wQp: one(weightedPoints(points, c.type) * c.credits) };
+});
+const gpaFor = (list: Course[], ignorePlusMinus = false) => {
+  let credits = 0, uw = 0, w = 0;
+  for (const c of list) {
+    const points = POINTS[ignorePlusMinus ? c.grade[0] : c.grade];
+    credits += c.credits;
+    uw += points * c.credits;
+    w += weightedPoints(points, c.type) * c.credits;
+  }
+  return { credits, uwQp: uw, wQp: w, uw: fmt(uw / credits), w: fmt(w / credits) };
+};
+const base = gpaFor(courses);
+const ruleSets = [
+  { label: "This calculator's rules", ...base },
+  { label: 'No plus or minus grades (A- scores 4.0, B+ and B- score 3.0)', ...gpaFor(courses, true) },
+  { label: 'Core classes only (physical education left out)', ...gpaFor(courses.filter((c) => c.core)) },
+];
+const apBMinus = one(weightedPoints(POINTS['B-'], 'AP'));
+
+const faq = [
+  {
+    q: "What is the difference between weighted and unweighted high school GPA?",
+    a: "An unweighted GPA uses a fixed 4.0 scale, so an A is worth 4.0 in every class. A weighted GPA adds points for harder classes. In this calculator honors adds 0.5 and AP or IB adds 1.0, so an A is worth 4.5 in honors and 5.0 in AP or IB. The weighted maximum is 5.0.",
+  },
+  {
+    q: "How is weighted high school GPA calculated?",
+    a: "For each passing class, add the course bonus to the grade points. Multiply the result by the class's credits, add up all the classes and divide by total credits. A B+ in an AP class, for example, is worth 3.3 plus 1.0, which is 4.3 points. No class is worth more than 5.0, and an F always stays at 0.",
+  },
+  {
+    q: "Do colleges look at weighted or unweighted GPA?",
+    a: "Many colleges recalculate your GPA from your transcript using their own rules, often counting only core academic classes. Some publish how they do it, so check the admissions page of each college you are applying to. They also see which courses you took, so a harder schedule can say more than the number alone.",
+  },
+  {
+    q: "Can I calculate GPA without credit hours?",
+    a: "Yes. Turn on the No Credits toggle in a semester and every class in it counts equally, so your GPA is a simple average of the grade points. This suits schools that give every class the same weight, or students who do not know their credits.",
+  },
+  {
+    q: "What is the highest possible weighted GPA?",
+    a: "On the scale this calculator uses, it is 5.0: an A or A+ in every AP or IB class. A school with a different bonus or a different maximum can have a different top number, so check your own school's policy.",
+  },
+  {
+    q: "How do AP courses affect my GPA?",
+    a: "On this scale an AP class adds 1.0 to the grade points, so an A is worth 5.0 weighted and a B is worth 4.0 weighted, the same as an A in a regular class. Your unweighted GPA ignores the bonus and uses only the letter grade.",
+  },
+  {
+    q: "Is a 4.0 GPA weighted or unweighted?",
+    a: "A 4.0 is a perfect unweighted GPA, which means straight A's. A weighted 4.0 is a different result: a student with B's in AP classes can reach about 4.0 weighted. Always check which scale a number comes from.",
+  },
+  {
+    q: "What is a good high school GPA?",
+    a: "There is no single cutoff. It depends on the college, the program and the rest of your application. For reference, a 3.0 unweighted GPA is a B average and 3.5 sits between a B+ and an A-. Look up the typical GPA of admitted students at each college you are considering, and compare it with your unweighted GPA, since many colleges recalculate.",
+  },
+  {
+    q: "Do pass, fail and withdrawn classes count?",
+    a: "In this calculator a P (pass) or W (withdrawn) is left out, so it neither raises nor lowers your GPA. An F counts as 0 points. Schools differ, so check how yours treats them.",
+  },
+  {
+    q: "Does high school GPA include all 4 years?",
+    a: "A cumulative high school GPA normally covers all four years, grades 9 to 12. Some colleges and scholarships look at grades 9 to 11 only, because senior year grades may not exist yet when you apply. Add a semester for each term in the calculator to see how every year moves your cumulative GPA.",
+  },
+];
+
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is the difference between weighted and unweighted high school GPA?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "An unweighted GPA uses the standard 4.0 scale for all courses regardless of difficulty — an A always equals 4.0 points, a B equals 3.0, and so on. A weighted GPA adds bonus points for rigorous coursework such as AP and IB courses (+1.0) and Honors courses (+0.5), pushing the maximum above 4.0 to a 5.0 scale. Unweighted GPA treats every class equally, while weighted GPA rewards students who challenge themselves with advanced coursework."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How is weighted high school GPA calculated?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Weighted GPA is calculated the same way as unweighted GPA, but course-type bonuses are added before the calculation. For AP and IB courses, add 1.0 to the standard grade points (so an A in AP = 5.0). For Honors courses, add 0.5 (an A in Honors = 4.5). Regular courses get no bonus. Then multiply each course's (grade points + bonus) by its credit hours to get weighted quality points, sum all weighted quality points, and divide by total credit hours. The result is capped at 5.0."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do colleges look at weighted or unweighted GPA?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Most colleges recalculate applicants' GPAs on their own unweighted 4.0 scale for fair comparison across different schools. However, colleges do see your weighted GPA and transcript, which shows the rigor of your coursework. Taking AP and Honors courses signals academic challenge even if admissions offices standardize the GPA. Both numbers matter: unweighted for direct comparison, weighted for demonstrating rigor."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I calculate GPA without credit hours?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Use the 'No Credits' toggle in the calculator to switch to equal-weight mode, where every course counts the same regardless of credit hours. This is useful if you don't know your credit hours or if your school assigns equal weight to all courses. Simply enable the toggle and your GPA will be calculated as a simple average of your grade points."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the highest possible weighted GPA?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The highest possible weighted GPA is 5.0, achieved by earning an A or A+ in every AP or IB course. On the weighted scale, an A in an AP or IB class earns 5.0 grade points (4.0 base + 1.0 bonus), and an A in an Honors class earns 4.5 (4.0 + 0.5). A 5.0 weighted GPA requires a perfect record in the most demanding courses available."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do AP courses affect my GPA?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AP courses add a +1.0 bonus to your weighted GPA grade points. This means an A in an AP class contributes 5.0 weighted points instead of the standard 4.0 unweighted points. A B in an AP class contributes 4.0 weighted points — the same as an A in a regular class. However, for unweighted GPA purposes, an A in AP still only counts as 4.0 points. AP courses can significantly boost your weighted GPA while your unweighted GPA reflects only your raw grades."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is a good high school GPA for college applications?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A 3.5 or higher unweighted GPA is considered competitive for most four-year colleges. For selective universities, a 3.7 or above unweighted is typically expected. For highly competitive schools (Ivy League, MIT, Stanford), applicants commonly have unweighted GPAs of 3.9 or higher. Remember, colleges also look at the rigor of your coursework — a 3.5 GPA with many AP classes may be viewed more favorably than a 3.7 GPA with only regular courses."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does high school GPA include all 4 years?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Cumulative high school GPA typically includes all four years (grades 9–12). However, some colleges and scholarship programs calculate a 'junior-year GPA' using only grades 9 through 11, since 12th-grade grades may not be available at the time of application. Some schools also weight later grades more heavily. Use the semester-by-semester feature in this calculator to see how each year affects your overall cumulative GPA."
-      }
-    }
-  ]
+  "mainEntity": faq.map(({ q, a }) => ({
+    "@type": "Question",
+    "name": q,
+    "acceptedAnswer": { "@type": "Answer", "text": a },
+  })),
 };
 ---
 
 <Layout
   title="High School GPA Calculator: Weighted & Unweighted (Free)"
-  description="Calculate your high school GPA with weighted and unweighted results. Supports AP, Honors, and IB courses. Free, instant, no signup required."
+  description="Calculate your weighted and unweighted high school GPA with AP, honors and IB points. Includes a worked example and how school scales change the result."
   canonical="/high-school-gpa-calculator"
   schema={[webAppSchema, faqSchema]}
 >
@@ -130,7 +175,7 @@ const faqSchema = {
       </h1>
 
       <p class="text-lg mb-2" style="color: var(--color-body); max-width: 580px; margin-left: auto; margin-right: auto; line-height: 1.65;">
-        Calculate both your <strong>weighted</strong> and <strong>unweighted</strong> high school GPA instantly. Supports AP, Honors, IB, and Regular courses across multiple semesters.
+        Enter your classes, grades and credits to get your <strong>unweighted</strong> GPA (4.0 scale) and your <strong>weighted</strong> GPA (5.0 scale) at once. Honors adds 0.5 and AP or IB adds 1.0.
       </p>
       <p class="text-sm mb-0" style="color: var(--color-mute);">
         Unweighted 4.0 scale &middot; Weighted 5.0 scale &middot; Works for all 4 years of high school
@@ -302,63 +347,84 @@ const faqSchema = {
   </section>
 
   <!-- ══════════════════════════════════════════════
-       WEIGHTED VS UNWEIGHTED EXPLANATION
+       HOW IT WORKS, WORKED EXAMPLE, SCHOOL DIFFERENCES
   ══════════════════════════════════════════════ -->
-  <section class="max-w-3xl mx-auto px-4 py-10" aria-labelledby="wvu-heading">
-    <div class="card p-8" style="background: var(--color-canvas-soft);">
-      <h2 id="wvu-heading" class="mb-4">Weighted vs. Unweighted High School GPA</h2>
-      <div class="prose">
-        <p>
-          Every high school student has two GPAs: an <strong>unweighted GPA</strong> on the standard 4.0 scale, and a <strong>weighted GPA</strong> that goes up to 5.0 and reflects the difficulty of your courses. Understanding the difference is essential for interpreting your transcript and preparing college applications.
-        </p>
-        <p>
-          Your <strong>unweighted GPA</strong> treats every course identically, regardless of whether it is a regular class or an Advanced Placement course. An A earns 4.0 points, a B earns 3.0, and so on. This scale is used for direct, apples-to-apples comparisons between students at different schools with different curricula.
-        </p>
-        <p>
-          Your <strong>weighted GPA</strong> adds bonus points to reward academic rigor. AP and IB courses earn +1.0 extra points per grade level, so an A in AP Calculus is worth 5.0 weighted points rather than 4.0. Honors courses earn +0.5, so an A in Honors English is worth 4.5. These bonuses mean a student taking all AP classes could achieve a weighted GPA above 4.0 even with a few B grades.
-        </p>
-        <p>
-          <strong>Which matters more for college?</strong> Most colleges recalculate applicants' GPAs on an unweighted basis to compare students from different schools fairly. However, your weighted GPA and your course selection (how many AP, IB, or Honors courses you took) are both visible on your transcript. Admissions officers want to see that you challenged yourself — a 3.5 unweighted GPA earned in a rigorous schedule often impresses more than a 3.8 earned in only easy courses.
-        </p>
-        <p>
-          Use this calculator to see both numbers simultaneously so you always know exactly where you stand on both scales.
-        </p>
-      </div>
+  <section class="max-w-3xl mx-auto px-4 py-8 prose">
+    <h2 id="wvu-heading">Weighted vs. unweighted high school GPA</h2>
+    <p>Your <strong>unweighted GPA</strong> uses a fixed 4.0 scale, so an A is worth 4.0 in every class. Your <strong>weighted GPA</strong> adds points for harder classes, so the same A is worth {one(weightedPoints(4, 'Honors'))} in honors and {one(weightedPoints(4, 'AP'))} in AP or IB. This calculator shows both at once. It adds {one(BONUS.Honors)} for honors and {one(BONUS.AP)} for AP and IB, with a maximum of {one(MAX_WEIGHTED)} for any class.</p>
 
-      <!-- Comparison table -->
-      <div class="mt-6 overflow-x-auto rounded-lg" style="border: 1px solid var(--color-hairline);">
-        <table class="w-full text-sm" style="border-collapse: collapse; margin: 0;">
-          <thead>
-            <tr style="background: var(--color-canvas-soft-2);">
-              <th class="text-left px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Course Type</th>
-              <th class="text-center px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Grade</th>
-              <th class="text-center px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Unweighted</th>
-              <th class="text-center px-4 py-2.5 font-semibold text-xs uppercase tracking-wide" style="color: var(--color-mute); border-bottom: 1px solid var(--color-hairline);">Weighted</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              ["AP / IB", "A", "4.0", "5.0"],
-              ["AP / IB", "B", "3.0", "4.0"],
-              ["AP / IB", "C", "2.0", "3.0"],
-              ["Honors", "A", "4.0", "4.5"],
-              ["Honors", "B", "3.0", "3.5"],
-              ["Honors", "C", "2.0", "2.5"],
-              ["Regular", "A", "4.0", "4.0"],
-              ["Regular", "B", "3.0", "3.0"],
-              ["Regular", "C", "2.0", "2.0"],
-            ].map(([type, grade, uw, w], i) => (
-              <tr style={i % 2 === 0 ? "" : "background: var(--color-canvas-soft-2);"}>
-                <td class="px-4 py-2 font-medium" style="color: var(--color-ink); border-bottom: 1px solid var(--color-hairline);">{type}</td>
-                <td class="px-4 py-2 text-center" style="color: var(--color-body); border-bottom: 1px solid var(--color-hairline);">{grade}</td>
-                <td class="px-4 py-2 text-center tabular" style="color: var(--color-body); border-bottom: 1px solid var(--color-hairline);">{uw}</td>
-                <td class="px-4 py-2 text-center tabular font-semibold" style="color: var(--color-brand); border-bottom: 1px solid var(--color-hairline);">{w}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <table>
+      <thead>
+        <tr><th>Course type</th><th>Grade</th><th>Unweighted</th><th>Weighted</th></tr>
+      </thead>
+      <tbody>
+        {typeRows.map((row) => (
+          <tr><td>{row.label}</td><td>{row.grade}</td><td>{row.unweighted}</td><td><strong>{row.weighted}</strong></td></tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p>Two things follow from this table. A B in an AP class is worth 4.0 weighted, the same as an A in a regular class. And the bonus is only added to passing grades, so an F stays at 0 in every class.</p>
+    <p>Unweighted GPA is the number most often used to compare students from different schools. Weighted GPA shows that you took harder classes. Neither one is the GPA. Which one you need depends on the form, the scholarship or the college asking.</p>
+
+    <h2 id="worked-example">Worked example: one student, two GPAs</h2>
+    <p>Here is one semester with six classes. Each class has credits, and a 1-credit class counts twice as much as a half-credit class. Quality points are grade points multiplied by credits.</p>
+    <div class="overflow-x-auto">
+      <table>
+        <thead>
+          <tr><th>Class</th><th>Type</th><th>Grade</th><th>Credits</th><th>Unweighted quality points</th><th>Weighted quality points</th></tr>
+        </thead>
+        <tbody>
+          {exampleRows.map((row) => (
+            <tr><td>{row.name}</td><td>{row.type}</td><td>{row.grade}</td><td>{row.credits}</td><td>{row.uwQp}</td><td>{row.wQp}</td></tr>
+          ))}
+          <tr><td><strong>Total</strong></td><td></td><td></td><td><strong>{base.credits}</strong></td><td><strong>{one(base.uwQp)}</strong></td><td><strong>{one(base.wQp)}</strong></td></tr>
+        </tbody>
+      </table>
     </div>
+    <ul>
+      <li>Unweighted GPA: {one(base.uwQp)} ÷ {base.credits} = <strong>{base.uw}</strong></li>
+      <li>Weighted GPA: {one(base.wQp)} ÷ {base.credits} = <strong>{base.w}</strong></li>
+    </ul>
+    <p>The B- in AP Calculus is the lowest grade here at 2.7 unweighted. With the AP bonus it is worth {apBMinus}, the same as the A- in regular Spanish. That is how a weighted scale rewards a harder schedule. You can enter these same classes in the calculator above to check the result.</p>
+
+    <h2 id="school-scales">Why your school's GPA may not match this calculator</h2>
+    <p>A calculator follows one set of rules. Your school follows its own, and small differences move the result:</p>
+    <ul>
+      <li><strong>Plus and minus grades.</strong> Some schools score an A- the same as an A, or give an A+ more than 4.0. This calculator scores A+ and A as 4.0, A- as 3.7 and B+ as 3.3.</li>
+      <li><strong>Size of the bonus.</strong> Honors +0.5 and AP or IB +1.0 is a common model, but schools can use other bonuses or a different maximum.</li>
+      <li><strong>Which classes count.</strong> Some schools leave out physical education, electives or pass/fail classes. Others count everything. Here, P and W grades are left out and every other class counts.</li>
+      <li><strong>Rounding.</strong> Schools may round each semester, or round your final number differently.</li>
+    </ul>
+    <p>Here are the same six classes under three example rule sets. They are illustrations, not any one school's policy.</p>
+    <div class="overflow-x-auto">
+      <table>
+        <thead>
+          <tr><th>Rule set</th><th>Unweighted</th><th>Weighted</th></tr>
+        </thead>
+        <tbody>
+          {ruleSets.map((row) => (
+            <tr><td>{row.label}</td><td><strong>{row.uw}</strong></td><td><strong>{row.w}</strong></td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p>The grades did not change, but the numbers did. If your school reports a different GPA, check the grading scale and weighting policy in your student handbook. For the standard letter-grade values, see the <a href="/gpa-scale/">GPA scale guide</a>. If your grades are percentages, the <a href="/percentage-to-gpa/">percentage to GPA guide</a> shows how they convert.</p>
+
+    <h2 id="colleges">What colleges do with your GPA</h2>
+    <p>Many colleges recalculate your GPA from your transcript using their own rules, often counting only core academic classes. Some publish how they do it, so check the admissions page of each college you are applying to. They also see which courses you took, so a harder schedule can say more than the number alone.</p>
+    <p>If you only know a weighted number, <a href="/weighted-to-unweighted-gpa/">see why it cannot be turned into one exact unweighted GPA</a>.</p>
+
+    <h2 id="how-to-enter">How to enter your grades</h2>
+    <ol>
+      <li>Start with your first semester. Add one row per class. The class name is optional.</li>
+      <li>Pick the course type: Regular, Honors, AP or IB.</li>
+      <li>Choose a letter grade. If you only know a percentage, switch the semester's <strong>%</strong> toggle on and type the number. It converts using the standard bands.</li>
+      <li>Enter the credits for each class. If you do not know them, turn on <strong>No Credits</strong> and every class in that semester counts equally.</li>
+      <li>Use <strong>Add Semester</strong> for each term. Your cumulative GPA is weighted by credits across all semesters, so it is not just the average of your semester GPAs.</li>
+      <li>Already have a GPA from earlier years? Turn on <strong>Include Previous GPA</strong> and enter your unweighted GPA, weighted GPA and credits.</li>
+    </ol>
+    <p>Classes graded P (pass) or W (withdrawn) are left out of both GPAs. For a longer view across several years, the <a href="/cumulative-gpa-calculator/">cumulative GPA calculator</a> works the same way.</p>
   </section>
 
   <!-- ══════════════════════════════════════════════
@@ -367,49 +433,15 @@ const faqSchema = {
   <section class="max-w-3xl mx-auto px-4 py-10" aria-labelledby="hs-faq-heading">
     <div class="text-center mb-8">
       <h2 id="hs-faq-heading" class="mb-2">Frequently Asked Questions</h2>
-      <p class="text-base m-0" style="color: var(--color-body);">Everything you need to know about high school GPA.</p>
+      <p class="text-base m-0" style="color: var(--color-body);">Common questions about weighted, unweighted and cumulative high school GPA.</p>
     </div>
 
     <div class="card" style="padding: 0;">
-      {[
-        {
-          q: "What is the difference between weighted and unweighted high school GPA?",
-          a: "An unweighted GPA uses the standard 4.0 scale for all courses — an A always equals 4.0 points regardless of whether the class is Regular, Honors, or AP. A weighted GPA adds bonus points for rigorous coursework: +1.0 for AP and IB courses and +0.5 for Honors courses, pushing the maximum to 5.0. Weighted GPA rewards students who challenge themselves with advanced coursework."
-        },
-        {
-          q: "How is weighted high school GPA calculated?",
-          a: "Weighted GPA adds a course-type bonus before multiplying by credit hours. For AP/IB courses, add 1.0 to the standard grade points (A in AP = 5.0). For Honors, add 0.5 (A in Honors = 4.5). Regular courses receive no bonus. Then multiply each course's adjusted grade points by its credits to get quality points, sum all quality points, and divide by total credits. The result is capped at 5.0."
-        },
-        {
-          q: "Do colleges look at weighted or unweighted GPA?",
-          a: "Most colleges recalculate applicants' GPAs on their own unweighted 4.0 scale for fair comparison. However, both your weighted GPA and transcript are visible, showing admissions officers the rigor of your coursework. A 3.5 unweighted GPA earned in an AP-heavy schedule may be viewed more favorably than a higher GPA earned in less challenging courses."
-        },
-        {
-          q: "Can I calculate GPA without credit hours?",
-          a: "Yes. Use the 'No Credits' toggle in any semester section to switch to equal-weight mode, where every course counts equally regardless of credit hours. This is useful if your school assigns equal weight to all courses or if you simply don't have credit-hour information."
-        },
-        {
-          q: "What is the highest possible weighted GPA?",
-          a: "The highest possible weighted GPA is 5.0, achieved by earning an A or A+ in every AP or IB course. An A in AP or IB earns 5.0 weighted points (4.0 base + 1.0 bonus). To achieve a 5.0, a student would need perfect grades across an entirely AP/IB schedule."
-        },
-        {
-          q: "How do AP courses affect my GPA?",
-          a: "AP courses add a +1.0 bonus to your weighted GPA grade points. An A in AP = 5.0 weighted (vs. 4.0 unweighted). A B in AP = 4.0 weighted — the same as an A in a regular class. AP courses boost your weighted GPA and signal academic rigor to colleges, but your unweighted GPA only reflects the raw letter grade."
-        },
-        {
-          q: "What is a good high school GPA for college applications?",
-          a: "A 3.5+ unweighted GPA is competitive for most four-year colleges. For selective universities, aim for 3.7+. For highly competitive schools such as Ivy League institutions, applicants commonly have 3.9+ unweighted GPAs. Course rigor matters too — admissions offices consider both the GPA and the difficulty of your schedule."
-        },
-        {
-          q: "Does high school GPA include all 4 years?",
-          a: "Cumulative high school GPA typically includes all four years (grades 9–12). However, some colleges compute a junior-year GPA using only grades 9–11 because senior year grades may not be available at application time. Some scholarship programs also use only certain years. Use the semester-by-semester feature to track how each year affects your running cumulative GPA."
-        }
-      ].map((item, i) => (
-        <div class={`faq-item${i === 0 ? ' open' : ''}`} itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      {faq.map((item, i) => (
+        <div class={`faq-item${i === 0 ? ' open' : ''}`}>
           <button
             class="faq-question"
             aria-expanded={i === 0 ? "true" : "false"}
-            itemprop="name"
             style="padding: 1rem 1.5rem;"
           >
             <span>{item.q}</span>
@@ -419,12 +451,9 @@ const faqSchema = {
           </button>
           <div
             class="faq-answer"
-            itemscope
-            itemprop="acceptedAnswer"
-            itemtype="https://schema.org/Answer"
             style="padding: 0 1.5rem 1rem;"
           >
-            <p itemprop="text" class="m-0 text-sm leading-relaxed" style="color: var(--color-body);">{item.a}</p>
+            <p class="m-0 text-sm leading-relaxed" style="color: var(--color-body);">{item.a}</p>
           </div>
         </div>
       ))}
@@ -470,6 +499,21 @@ const faqSchema = {
             href: "/grade-calculator/",
             title: "Grade Calculator",
             desc: "Find out what grade you need on your final exam to hit your target course grade."
+          },
+          {
+            href: "/gpa-scale/",
+            title: "GPA Scale Chart",
+            desc: "See what each letter grade is worth and how schools treat plus and minus grades."
+          },
+          {
+            href: "/percentage-to-gpa/",
+            title: "Percentage to GPA",
+            desc: "Convert a percentage grade to a letter grade and GPA points."
+          },
+          {
+            href: "/weighted-to-unweighted-gpa/",
+            title: "Weighted to Unweighted GPA",
+            desc: "Why a weighted GPA has no single unweighted answer, and how to recalculate it."
           }
         ].map(card => (
           <a
